@@ -62,6 +62,7 @@ class DefaultController extends BaseController
      */
     public function actionIndex()
     {
+        \Yii::$app->user->logout();
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
 

@@ -49,8 +49,10 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            'suffix' => '/',
             'rules' => [
-                'admin/auth' => 'admin/default/auth',
+
+                'auth' => 'admin/default/auth/',
                 '404' => 'site/error404',
 
             ],
