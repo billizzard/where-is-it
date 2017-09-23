@@ -69,4 +69,13 @@ class Category extends \yii\db\ActiveRecord
         return $map;
     }
 
+    public static function getCategoryStructure() {
+        $models = self::find()->select(['id', 'name', 'parent_id'])->asArray()->orderBy(['name' => SORT_ASC])->all();
+        if ($models) {
+            foreach ($models as $model) {
+
+            }
+        }
+    }
+
 }

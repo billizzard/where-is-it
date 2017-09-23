@@ -40,12 +40,7 @@ AppAsset::register($this);
     </h2>
     <ul>
         <li><a href="#1">Один</a>
-        <li><a href="#2">Два <div style="position:absolute; right:5px;"> + </div></a>
-            <ul>
-                <li><a href="#111">111</a></li>
-                <li><a href="#222">222</a></li>
-            </ul>
-        </li>
+        <li><a href="#2">Два</a>
         <li><a href="#3">Три</a>
         <li><a href="#4">Четыре</a>
         <li><a href="#5">Пять</a>
@@ -87,6 +82,57 @@ AppAsset::register($this);
 
 
     /**
+     * Кнопка переключения панели
+     * тег <label>
+     */
+
+    .nav-toggle {
+        /* абсолютно позиционируем */
+        position: absolute;
+        /* относительно левого края панели */
+        left: 320px;
+        /* отступ от верхнего края панели */
+        top: 1em;
+        /* внутренние отступы */
+        padding: 0.5em;
+        /* определяем цвет фона переключателя
+         * чаще вчего в соответствии с цветом фона панели
+        */
+        background: inherit;
+        /* цвет текста */
+        color: #dadada;
+        /* вид курсора */
+        cursor: pointer;
+        /* размер шрифта */
+        font-size: 1.2em;
+        line-height: 1;
+        /* всегда поверх других элементов страницы */
+        z-index: 2001;
+        /* анимируем цвет текста при наведении */
+        -webkit-transition: color .25s ease-in-out;
+        -moz-transition: color .25s ease-in-out;
+        transition: color .25s ease-in-out;
+    }
+
+
+    /* определяем текст кнопки
+     * символ Unicode (TRIGRAM FOR HEAVEN)
+    */
+
+    .nav-toggle:after {
+        content: '\2630';
+        text-decoration: none;
+    }
+
+
+    /* цвет текста при наведении */
+
+    .nav-toggle:hover {
+        color: #f4f4f4;
+    }
+
+
+    /**
      * Скрытый чекбокс (флажок)
      * невидим и недоступен :)
      * имя селектора атрибут флажка
@@ -95,6 +141,19 @@ AppAsset::register($this);
     [id='nav-toggle'] {
         position: absolute;
         display: none;
+    }
+
+
+    /**
+     * изменение положения переключателя
+     * при просмотре на мобильных устройствах
+     * когда навигация раскрыта, распологаем внутри панели
+    */
+
+    [id='nav-toggle']:checked ~ .nav-menu > .nav-toggle {
+        left: auto;
+        right: 2px;
+        top: 1em;
     }
 
 
@@ -122,6 +181,17 @@ AppAsset::register($this);
         -webkit-transform: translateX(320px);
         -moz-transform: translateX(320px);
         transform: translateX(320px);
+    }
+
+
+    /*
+     * изменение символа переключателя,
+     * привычный крестик (MULTIPLICATION X),
+     * вы можете испльзовать любой другой значок
+    */
+
+    [id='nav-toggle']:checked ~ .nav-menu > .nav-toggle:after {
+        content: '\2715';
     }
 
 
@@ -225,26 +295,6 @@ AppAsset::register($this);
         list-style: none;
     }
 
-    .nav-menu > ul > li > ul {
-        display: none;
-        margin-left: 20px;
-        padding: 0;
-        list-style: none;
-    }
-
-    .nav-menu > ul > li > ul > li {
-        line-height: 2.0;
-        /*opacity: 0;*/
-        /*-webkit-transform: translateX(-50%);*/
-        /*-moz-transform: translateX(-50%);*/
-        /*-ms-transform: translateX(-50%);*/
-        /*transform: translateX(-50%);*/
-        -webkit-transition: opacity .5s .1s, -webkit-transform .5s .1s;
-        -moz-transition: opacity .5s .1s, -moz-transform .5s .1s;
-        -ms-transition: opacity .5s .1s, -ms-transform .5s .1s;
-        transition: opacity .5s .1s, transform .5s .1s;
-    }
-
     .nav-menu > ul > li {
         line-height: 2.5;
         opacity: 0;
@@ -320,35 +370,13 @@ AppAsset::register($this);
         transition: color .5s ease, padding .5s ease;
     }
 
-    .nav-menu > ul > li > ul > li > a {
-        display: inline-block;
-        position: relative;
-        padding: 0;
-        font-family: 'Open Sans', sans-serif;
-        font-weight: 300;
-        font-size: 1.2em;
-        color: #dadada;
-        width: 100%;
-        text-decoration: none;
-        /* плавный переход */
-        -webkit-transition: color .5s ease, padding .5s ease;
-        -moz-transition: color .5s ease, padding .5s ease;
-        transition: color .5s ease, padding .5s ease;
-    }
-
 
     /**
      * состояние ссылок меню при наведении
      */
 
     .nav-menu > ul > li > a:hover,
-    .nav-menu > ul > li.opened {
-        color: white;
-        padding-left: 15px;
-    }
-
-    .nav-menu > ul > li > ul > li > a:hover,
-    .nav-menu > ul > li > ul > li > a:focus {
+    .nav-menu > ul > li > a:focus {
         color: white;
         padding-left: 15px;
     }
@@ -383,31 +411,6 @@ AppAsset::register($this);
         transition: width .5s ease;
     }
 
-    .nav-menu > ul > li > ul > li > a:before {
-        content: '';
-        display: block;
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        height: 1px;
-        width: 100%;
-        -webkit-transition: width 0s ease;
-        transition: width 0s ease;
-    }
-
-    .nav-menu > ul > li > ul > li >a:after {
-        content: '';
-        display: block;
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        height: 1px;
-        width: 100%;
-        background: #3bc1a0;
-        -webkit-transition: width .5s ease;
-        transition: width .5s ease;
-    }
-
 
     /**
      * анимируем линию подчеркивания
@@ -422,20 +425,6 @@ AppAsset::register($this);
     }
 
     .nav-menu > ul > li > a:hover:after {
-        width: 0%;
-        background: transparent;
-        -webkit-transition: width 0s ease;
-        transition: width 0s ease;
-    }
-
-    .nav-menu > ul > li > ul > li > a:hover:before {
-        width: 0%;
-        background: #3bc1a0;
-        -webkit-transition: width .5s ease;
-        transition: width .5s ease;
-    }
-
-    .nav-menu > ul > li > ul > li > a:hover:after {
         width: 0%;
         background: transparent;
         -webkit-transition: width 0s ease;
@@ -475,7 +464,7 @@ AppAsset::register($this);
 
 
 
-<div class="wrap" style="padding:0; height:100%;">
+<div class="wrap" style="padding:0;">
 
 
     <nav id="w0" class="navbar-inverse navbar-fixed-top navbar" role="navigation"><div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#w0-collapse"><span class="sr-only">Toggle navigation</span>

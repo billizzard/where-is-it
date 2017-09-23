@@ -9,9 +9,33 @@ function Menu() {
         var inputHidden = document.querySelector('#nav-toggle');
 
         elem.addEventListener('click', function() {
-            console.log(inputHidden);
             inputHidden.checked = inputHidden.checked ? inputHidden.checked = false : inputHidden.checked = true;
         })
+    };
+
+    init();
+}
+
+function LeftMenu() {
+
+    var menu = $('nav.nav-menu');
+    var links = menu.find('ul li');
+
+    var init = function() {
+        addEvents();
+    };
+
+    var addEvents = function() {
+        links.on('click', function() {
+            showSubMenu($(this));
+        });
+    };
+
+    var showSubMenu = function(li) {
+        var subUl = li.find('ul');
+        if (subUl.length) {
+            subUl.slideToggle(500);
+        }
     };
 
     init();
@@ -32,11 +56,8 @@ function MapAdd() {
         ymaps.ready(function () {
             var myMap = new ymaps.Map("ymap", {
                 center: [55.76, 37.64],
-                zoom: 10,
-                type: "yandex#satellite",
-                // Карта будет создана без
-                // элементов управления.
-                controls: []
+                controls: ['geolocationControl', 'zoomControl'],
+                zoom: 10
             });
 
             myMap.events.add('click', function(e) {
@@ -112,15 +133,12 @@ function MapAdd() {
         });
     };
 
-
-
-
-
     init();
 }
 
 var mapAdd = new MapAdd();
- var menu = new Menu();
+var menu = new Menu();
+var leftMenu = new LeftMenu();
 
 
 // ymaps.ready(function () {
