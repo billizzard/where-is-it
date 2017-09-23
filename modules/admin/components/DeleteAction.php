@@ -21,7 +21,7 @@ class DeleteAction extends Action
 
     public function run($id)
     {
-        if (!$this->has_access) throw new ForbiddenHttpException('У вас не достаточно прав');
+        //if (!$this->has_access) throw new ForbiddenHttpException('У вас не достаточно прав');
         $model_name = $this->model_class;
         $model = $model_name::findOne($id);
         if (!$model) throw new NotFoundHttpException();

@@ -24,7 +24,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     const RULE_ADMIN_PANEL = 1;
     const RULE_DELETE_USER = 2;
 
-    public $loginUrl = ['admin/auth'];
+    public $loginUrl = ['/auth/'];
 
     /**
      * @inheritdoc

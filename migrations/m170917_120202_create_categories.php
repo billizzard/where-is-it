@@ -10,8 +10,9 @@ class m170917_120202_create_categories extends Migration
     {
         $this->createTable($this->table, [
             'id' => $this->primaryKey(),
-            'name' => $this->string(255),
-            'parent_id' => $this->integer()
+            'name' => $this->string(100),
+            'parent_id' => $this->integer()->defaultValue(0),
+            'sort' => $this->integer()->defaultValue(0)
         ]);
     }
 

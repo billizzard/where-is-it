@@ -26,6 +26,7 @@ class m170917_120217_create_user extends Migration
             'auth_key' => Yii::$app->security->generateRandomString(32),
             'email' => 'admin@gmail.com',
             'name' => 'admin',
+            'role' => 1,
             'password' => Yii::$app->security->generatePasswordHash('aaaaaa'),
             'created_at' => time(),
             'updated_at' => time()

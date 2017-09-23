@@ -122,4 +122,5 @@ a.desc:after {
     padding: 10px;
     background-color: rgb(228, 128, 128);
     color: #fff;
+    z-index: 820;
 }
