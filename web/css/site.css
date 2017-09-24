@@ -119,8 +119,21 @@ a.desc:after {
     bottom: 0;
     width: 100%;
     text-align: center;
-    padding: 10px;
-    background-color: rgb(228, 128, 128);
+    padding: 7px;
+    background-color: rgba(224, 0, 0, 0.54);
     color: #fff;
     z-index: 820;
+}
+
+.flash-errors .flash-errors__close {
+    display: inline-block;
+    float: right;
+    font-size: 29px;
+    line-height: 20px;
+    margin-top: -2px;
+    cursor: pointer;
+}
+
+input.error {
+    border:1px solid red;
 }

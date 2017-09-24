@@ -14,14 +14,20 @@ class Helper
     public $errors = [];
 
     public static function setErrors($error) {
-        $_SESSION['errors'][] = $error;
+        if (is_array($error)) {
+            $error_shift = array_shift($error);
+            $_SESSION['errors'][] = $error_shift[0];
+        } else {
+            $_SESSION['errors'][] = $error;
+        }
+
     }
 
     public static function getErrors() {
         if (!empty($_SESSION['errors'])) {
             $error = $_SESSION['errors'][0];
             unset($_SESSION['errors']);
-            return '<div class="flash-errors">' . $error . '</div>';
+            return '<div class="flash-errors"><span class="flash-errors__text">' . $error . '</span><div class="flash-errors__close">x</div></div>';
         }
     }
 }

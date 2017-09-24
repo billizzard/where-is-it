@@ -71,11 +71,24 @@ class Category extends \yii\db\ActiveRecord
 
     public static function getCategoryStructure() {
         $models = self::find()->select(['id', 'name', 'parent_id'])->asArray()->orderBy(['name' => SORT_ASC])->all();
+        $menu = [];
         if ($models) {
+            /** @var Category $model */
             foreach ($models as $model) {
+                if (!$model['parent_id']) {
+                    $menu[$model['id']] = $model;
+                }
+            }
 
+            foreach ($models as $model) {
+                if ($model['parent_id']) {
+                    if (isset($menu[$model['parent_id']])) {
+                        $menu[$model['parent_id']]['children'][$model['id']] = $model;
+                    }
+                }
             }
         }
+        return $menu;
     }
 
 }

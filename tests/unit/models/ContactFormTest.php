@@ -2,7 +2,7 @@
 
 namespace tests\models;
 
-use app\models\ContactForm;
+use app\models\PlaceForm;
 
 class ContactFormTest extends \Codeception\Test\Unit
 {
@@ -14,8 +14,8 @@ class ContactFormTest extends \Codeception\Test\Unit
 
     public function testEmailIsSentOnContact()
     {
-        /** @var ContactForm $model */
-        $this->model = $this->getMockBuilder('app\models\ContactForm')
+        /** @var PlaceForm $model */
+        $this->model = $this->getMockBuilder('app\models\PlaceForm')
             ->setMethods(['validate'])
             ->getMock();
 

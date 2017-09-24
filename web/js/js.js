@@ -5,11 +5,19 @@ function Menu() {
     };
 
     var addEvents = function() {
-        var elem = document.querySelector('.nav-toggle1');
         var inputHidden = document.querySelector('#nav-toggle');
 
-        elem.addEventListener('click', function() {
+        $('.nav-toggle1').on('click', function() {
             inputHidden.checked = inputHidden.checked ? inputHidden.checked = false : inputHidden.checked = true;
+            $('.wrap').addClass('slide');
+            return false;
+        });
+
+        $('body').on('click', '.slide', function() {
+            if (inputHidden.checked) {
+                inputHidden.checked = false;
+                $('.wrap').removeClass('slide');
+            }
         })
     };
 
@@ -19,7 +27,8 @@ function Menu() {
 function LeftMenu() {
 
     var menu = $('nav.nav-menu');
-    var links = menu.find('ul li');
+    var links = menu.find('ul li a');
+    var placeContainer = $('#add-place');
 
     var init = function() {
         addEvents();
@@ -27,7 +36,10 @@ function LeftMenu() {
 
     var addEvents = function() {
         links.on('click', function() {
-            showSubMenu($(this));
+            var li = $(this).closest('li');
+            changeClass(li);
+            showSubMenu(li);
+            addToInput(li);
         });
     };
 
@@ -35,6 +47,24 @@ function LeftMenu() {
         var subUl = li.find('ul');
         if (subUl.length) {
             subUl.slideToggle(500);
+        }
+    };
+
+    var changeClass = function(li) {
+        if (li.hasClass('opened')) {
+            li.removeClass('opened');
+        } else {
+            li.addClass('opened');
+        }
+    };
+
+    var addToInput = function(li) {
+        var a = li.find('a');
+        if (placeContainer.length) {
+            if (!li.find('ul').length) {
+                placeContainer.find('.js-point-category_id').val(a.data('id'));
+                placeContainer.find('.js-point-category').val(a.text());
+            }
         }
     };
 
@@ -136,9 +166,78 @@ function MapAdd() {
     init();
 }
 
+function FormPlace() {
+    var form = $('#form-place');
+    var error = false;
+    var init = function() {
+        addEvents();
+    };
+
+    var addEvents = function() {
+        form.submit(function() {
+            clearError();
+            checkRequired();
+            if (error) {
+                return false;
+            }
+        })
+    };
+
+    var checkRequired = function() {
+        form.find('.required').each(function() {
+            if (!$.trim($(this).val())) {
+                $(this).addClass('error');
+                flashError.setErrors('Заполните обязательные поля');
+                error = true;
+            }
+        });
+
+        form.find('.required_coord').each(function() {
+            if (!$.trim($(this).val())) {
+                $(this).addClass('error');
+                flashError.setErrors('Выберите точку на карте');
+                error = true;
+            }
+        });
+    };
+
+    var clearError = function() {
+        error = false;
+        form.find('.error').removeClass('error');
+    };
+
+    init();
+}
+
+
+function FlashError() {
+
+    var init = function() {
+        addEvents();
+    };
+
+    var addEvents = function() {
+        $('body').on('click', '.flash-errors .flash-errors__close', function() {
+            $(this).closest('.flash-errors').remove();
+        });
+    };
+
+    this.setErrors = function(error) {
+        if (!$('.flash-errors__text').length) {
+            $('body').append('<div class="flash-errors"><span class="flash-errors__text">' + error + '</span><div class="flash-errors__close">x</div></div>');
+        } else {
+            $('.flash-errors__text').text(error);
+        }
+    };
+
+    init();
+}
+
 var mapAdd = new MapAdd();
 var menu = new Menu();
 var leftMenu = new LeftMenu();
+var formPlace = new FormPlace();
+var flashError = new FlashError();
 
 
 // ymaps.ready(function () {
