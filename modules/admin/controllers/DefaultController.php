@@ -92,7 +92,7 @@ class DefaultController extends BaseController
                     if ($user->isAdmin()) {
                         return $this->redirect('/admin');
                     } else {
-                        Helper::setErrors('Доступ запрещен');
+                        Helper::setMessage('Доступ запрещен');
                     }
                 }
             }

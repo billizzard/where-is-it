@@ -20,6 +20,8 @@ $categoryMap = \app\models\Category::getCategoriesMap();
     <?= $form->field($model, 'parent_id')->dropDownList($categoryMap, ['prompt' => 'Выберите категорию']) ?>
     <? } ?>
 
+    <?= $form->field($model, 'color')->textInput(['maxlength' => true]) ?>
+
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Обновить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

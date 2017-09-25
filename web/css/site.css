@@ -125,6 +125,10 @@ a.desc:after {
     z-index: 820;
 }
 
+.flash-errors.success {
+    background-color: rgba(1, 140, 0, 0.65);
+}
+
 .flash-errors .flash-errors__close {
     display: inline-block;
     float: right;

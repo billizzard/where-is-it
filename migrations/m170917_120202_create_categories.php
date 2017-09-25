@@ -12,6 +12,7 @@ class m170917_120202_create_categories extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string(100),
             'parent_id' => $this->integer()->defaultValue(0),
+            'color' => $this->string()->defaultValue('000000'),
             'sort' => $this->integer()->defaultValue(0)
         ]);
     }

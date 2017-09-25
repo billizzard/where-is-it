@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\components\Helper;
+use app\models\Place;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -63,14 +64,14 @@ class SiteController extends Controller
      */
     public function actionContact()
     {
-        $model = new PlaceForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-
-
-            return $this->refresh();
-        } else {
-            Helper::setErrors($model->getErrors());
-
+        $model = new Place();
+        if (Yii::$app->request->post()) {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                Helper::setMessage('После проверки, точка появится на карте', Helper::TYPE_MESSAGE_SUCCESS);
+                return $this->refresh();
+            } else {
+                Helper::setMessage($model->getErrors());
+            }
         }
 
         return $this->render('contact', [

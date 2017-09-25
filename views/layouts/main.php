@@ -94,7 +94,7 @@ AppAsset::register($this);
 </footer>-->
 
 <?php $this->endBody() ?>
-<?= \app\components\Helper::getErrors() ?>
+<?= \app\components\Helper::getMessage() ?>
 <!--<div class="flash-errors">222222222<div class="close-flash">x</div></div>-->
 </body>
 </html>

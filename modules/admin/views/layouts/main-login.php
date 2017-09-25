@@ -25,7 +25,7 @@ dmstr\web\AdminLteAsset::register($this);
     <?= $content ?>
 
 <?php $this->endBody() ?>
-<?= \app\components\Helper::getErrors() ?>
+<?= \app\components\Helper::getMessage() ?>
 </body>
 </html>
 <?php $this->endPage() ?>

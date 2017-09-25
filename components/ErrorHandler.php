@@ -19,7 +19,7 @@ class ErrorHandler extends \yii\web\ErrorHandler
             parent::renderException($exception);
         } else {
             if ($exception->statusCode == 403) {
-                Helper::setErrors('Доступ запрещен');
+                Helper::setMessage('Доступ запрещен');
                 header('Location: /auth/');
                 die();
             } else if ($exception->statusCode == 404) {

@@ -40,7 +40,12 @@ function LeftMenu() {
             changeClass(li);
             showSubMenu(li);
             addToInput(li);
+            addToMap(li);
         });
+    };
+
+    var addToMap = function(li) {
+        
     };
 
     var showSubMenu = function(li) {
@@ -76,15 +81,14 @@ function MapAdd() {
     var myPlacemark;
 
     var init = function() {
-        if (document.querySelector('#ymap')) {
-            console.log('yes');
+        if (document.querySelector('#ymapAdd')) {
             addEvents();
         }
     };
 
     var addEvents = function() {
         ymaps.ready(function () {
-            var myMap = new ymaps.Map("ymap", {
+            var myMap = new ymaps.Map("ymapAdd", {
                 center: [55.76, 37.64],
                 controls: ['geolocationControl', 'zoomControl'],
                 zoom: 10
@@ -93,6 +97,26 @@ function MapAdd() {
             myMap.events.add('click', function(e) {
                 mapClickEvent(e, myMap);
             });
+
+            //myPlacemark = new ymaps.Placemark([55.76, 37.64], { hintContent: 'Москва!', balloonContent: 'Столица России' });
+
+            var lat, lon = '';
+            if ($('.js-point-lat').length) {
+                lat = $('.js-point-lat').val();
+                lon = $('.js-point-lon').val();
+            }
+
+            if (lat && lon) {
+                var mark = new ymaps.Placemark(
+                    [lat, lon],
+                    {},
+                    {
+                        //iconColor: '#00000'
+                    }
+                );
+
+                myMap.geoObjects.add(mark);
+            }
 
         });
     };
@@ -158,7 +182,6 @@ function MapAdd() {
         return new ymaps.Placemark(coords, {
             iconCaption: 'поиск...'
         }, {
-            preset: 'islands#violetDotIconWithCaption',
             draggable: true
         });
     };
@@ -223,11 +246,37 @@ function FlashError() {
     };
 
     this.setErrors = function(error) {
-        if (!$('.flash-errors__text').length) {
-            $('body').append('<div class="flash-errors"><span class="flash-errors__text">' + error + '</span><div class="flash-errors__close">x</div></div>');
-        } else {
-            $('.flash-errors__text').text(error);
+        if ($('.flash-errors__text').length) {
+            $('.flash-errors').remove();
         }
+
+        $('body').append('<div class="flash-errors"><span class="flash-errors__text">' + error + '</span><div class="flash-errors__close">x</div></div>');
+    };
+
+    init();
+}
+
+function MapMain() {
+
+    var myPlacemark;
+
+    var init = function() {
+        if (document.querySelector('#ymap')) {
+            addEvents();
+        }
+    };
+
+    var addEvents = function() {
+        ymaps.ready(function () {
+            var myMap = new ymaps.Map("ymap", {
+                center: [55.76, 37.64],
+                controls: ['geolocationControl', 'zoomControl'],
+                zoom: 10
+            });
+
+
+
+        });
     };
 
     init();

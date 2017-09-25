@@ -12,22 +12,28 @@ namespace app\components;
 class Helper
 {
     public $errors = [];
+    const TYPE_MESSAGE_ERROR = 1;
+    const TYPE_MESSAGE_SUCCESS = 2;
 
-    public static function setErrors($error) {
-        if (is_array($error)) {
-            $error_shift = array_shift($error);
-            $_SESSION['errors'][] = $error_shift[0];
+    public static function setMessage($mes, $type = 1) {
+        $message = ['type' => $type];
+        if (is_array($mes)) {
+            $mes_shift = array_shift($mes);
+            $message['message'] = $mes_shift[0];
         } else {
-            $_SESSION['errors'][] = $error;
+            $message['message'] = $mes;
         }
+        $_SESSION['messages'][] = $message;
 
     }
 
-    public static function getErrors() {
-        if (!empty($_SESSION['errors'])) {
-            $error = $_SESSION['errors'][0];
-            unset($_SESSION['errors']);
-            return '<div class="flash-errors"><span class="flash-errors__text">' . $error . '</span><div class="flash-errors__close">x</div></div>';
+    public static function getMessage() {
+
+        if (!empty($_SESSION['messages'])) {
+            $message = $_SESSION['messages'][0];
+            $class = $message['type'] == self::TYPE_MESSAGE_SUCCESS ? 'success' : '';
+            unset($_SESSION['messages']);
+            return '<div class="flash-errors ' . $class . '"><span class="flash-errors__text">' . $message['message'] . '</span><div class="flash-errors__close">x</div></div>';
         }
     }
 }

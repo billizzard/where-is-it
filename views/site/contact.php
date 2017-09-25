@@ -12,24 +12,30 @@ use yii\captcha\Captcha;
 ?>
 <div class="add-place">
     <div class="add-place__header"></div>
-    <div class="add-place__map" id="ymap"></div>
+    <div class="add-place__map" id="ymapAdd"></div>
     <div id="add-place" class="add-place__footer">
+        <?
 
+//
+//        echo "<pre>";
+//        var_dump($_POST);
+//        die();
+        ?>
         <form id="form-place" class="form-place" method="post">
             <input type="hidden" name="<?= Yii::$app->request->csrfParam; ?>" value="<?= Yii::$app->request->csrfToken; ?>" />
-            <input type="hidden" name="PlaceForm[lat]" class="js-point-lat required_coord" value="">
-            <input type="hidden" name="PlaceForm[lon]" class="js-point-lon required_coord" value="">
-            <input type="hidden" name="PlaceForm[address]" class="js-point-address" value="">
-            <input type="hidden" name="PlaceForm[category_id]" class="js-point-category_id required" value="">
+            <input type="hidden" name="Place[lat]" class="js-point-lat required_coord" value="<?= isset($_POST['Place']['lat']) ? $_POST['Place']['lat'] : '' ?>">
+            <input type="hidden" name="Place[lon]" class="js-point-lon required_coord" value="<?= isset($_POST['Place']['lon']) ? $_POST['Place']['lon'] : '' ?>">
+            <input type="hidden" name="Place[address]" class="js-point-address" value="<?= isset($_POST['Place']['address']) ? $_POST['Place']['address'] : '' ?>">
+            <input type="hidden" name="Place[category_id]" class="js-point-category_id required" value="<?= isset($_POST['Place']['category_id']) ? $_POST['Place']['category_id'] : '' ?>">
             <div class="form-place__column">
-            <input type="text" name="PlaceForm[category]" disabled class="js-point-category required" value=""
+            <input type="text" name="Place[category]" class="js-point-category required" value="<?= isset($_POST['Place']['category']) ? $_POST['Place']['category'] : '' ?>"
                    placeholder="Выберите категорию в меню"><br>
-            <input style="margin-top:5px;" type="text" name="PlaceForm[name]" class="js-point-name required" placeholder="Ввдете название" value="">
+            <input style="margin-top:5px;" type="text" name="Place[name]" class="js-point-name required" placeholder="Ввдете название" value="<?= isset($_POST['Place']['name']) ? $_POST['Place']['name'] : '' ?>">
             </div>
             <div class="form-place__column">
-            <textarea name="PlaceForm[description]" class="js-point-description description"
-                      placeholder="Дополнительная информация"></textarea>
-            <input type="submit" style="vertical-align: top;" name="savePoint" class="save-point" value="Сохранить">
+            <textarea name="Place[description]" class="js-point-description description"
+                      placeholder="Дополнительная информация"><?= isset($_POST['Place']['description']) ? $_POST['Place']['description'] : '' ?></textarea>
+            <input type="submit" style="vertical-align: top;" name="savePoint" class="save-point btn btn-primary btn-flat" value="Сохранить">
             </div>
         </form>
 

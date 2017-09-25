@@ -8,6 +8,7 @@ namespace app\models;
  * @property integer id
  * @property string name
  * @property string parent_id
+ * @property string color
  * @property string sort
  */
 
@@ -31,6 +32,7 @@ class Category extends \yii\db\ActiveRecord
             [['name'], 'required'],
             [['parent_id', 'sort'], 'integer'],
             [['name'], 'string', 'max' => 100],
+            [['color'], 'string', 'max' => 6],
 
         ];
     }
@@ -44,6 +46,7 @@ class Category extends \yii\db\ActiveRecord
             'name' => 'Название',
             'parent_id' => 'Родитель',
             'sort' => 'Сортировка',
+            'color' => 'Цвет',
         ];
     }
 

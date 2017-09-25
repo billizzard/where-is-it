@@ -59,7 +59,7 @@ use yii\helpers\Html;
     </div>
 
     <?php $this->endBody() ?>
-    <?= \app\components\Helper::getErrors() ?>
+    <?= \app\components\Helper::getMessage() ?>
     </body>
     </html>
     <?php $this->endPage() ?>
