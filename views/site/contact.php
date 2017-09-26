@@ -66,7 +66,7 @@ use yii\captcha\Captcha;
     }
     .add-place__header {
         width:100%;
-        flex-basis:50px;
+        flex-basis:45px;
         flex-grow: 0;
     }
     .add-place__map {

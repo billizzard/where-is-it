@@ -26,7 +26,14 @@ AppAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 
-
+<script>
+    navigator.geolocation.getCurrentPosition(
+        function(position) {
+            alert('Последний раз вас засекали здесь: ' +
+                position.coords.latitude + ", " + position.coords.longitude);
+        }
+    );
+</script>
 
 <input type="checkbox" id="nav-toggle" hidden>
 <nav class="nav-menu">
@@ -37,8 +44,9 @@ AppAsset::register($this);
 Здесь размещаете любую разметку,
 если это меню, то скорее всего неупорядоченный список <ul>
 -->
+    <div class="nav-menu__close">X</div>
     <h2 class="logo">
-        <a href="//dbmast.ru/">DBmast.ru</a>
+        <a href="/">where-is-it</a>
     </h2>
     <ul>
         <li><a href="#1">Один</a>
@@ -63,6 +71,16 @@ AppAsset::register($this);
         <li><a href="#5">Пять</a>
         <li><a href="#6">Шесть</a>
         <li><a href="#7">Семь</a>
+        <li><a href="#3">Три</a>
+        <li><a href="#4">Четыре</a>
+        <li><a href="#5">Пять</a>
+        <li><a href="#6">Шесть</a>
+        <li><a href="#7">Семь</a>
+        <li><a href="#3">Три</a>
+        <li><a href="#4">Четыре</a>
+        <li><a href="#5">Пять</a>
+        <li><a href="#6">Шесть</a>
+        <li><a href="#7">Семь</a>
     </ul>
 </nav>
 
@@ -70,14 +88,20 @@ AppAsset::register($this);
 
 <div class="wrap" style="padding:0; height:100%;">
 
-
-    <nav id="w0" class="navbar-inverse navbar-fixed-top navbar" role="navigation"><div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#w0-collapse"><span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span></button><a class="navbar-brand" href="/">My Company</a></div><div id="w0-collapse" class="collapse navbar-collapse"><ul id="w1" class="navbar-nav navbar-right nav"><li class="active"><a href="/site/index">Home</a></li>
-                    <li><a href="#" class="nav-toggle1">About</a></li>
-                    <li><a href="/site/contact">Contact</a></li>
-                    <li><a href="/site/login">Login</a></li></ul></div></div></nav>
+    <nav id="w0" class="navbar-inverse navbar-fixed-top navbar" role="navigation">
+        <div class="container">
+<!--            <div class="navbar-header" style="float:left">
+                <a class="navbar-brand" href="/">My Company</a>
+            </div>-->
+            <div >
+                <ul id="w1" class="navbar-nav navbar-left nav" >
+                    <li style="float:left"><a class="menu-butt nav-toggle1"><span></span></a></li>
+                    <li style="float:left"><a href="/add/" style="font-size:38px;">+</a></li>
+                    <!--<li style="float:left"><a href="/site/login">Login</a></li>-->
+                </ul>
+            </div>
+        </div>
+    </nav>
 
 
 

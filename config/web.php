@@ -53,6 +53,7 @@ $config = [
             'rules' => [
 
                 'auth' => 'admin/default/auth/',
+                'add' => 'site/add/',
                 '404' => 'site/error404',
 
             ],

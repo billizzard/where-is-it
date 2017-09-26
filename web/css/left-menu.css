@@ -6,8 +6,8 @@
 
 .nav-menu {
     /*  ширна произвольная, не стесняйтесь экспериментировать */
-    width: 320px;
-    min-width: 320px;
+    width: 300px;
+    min-width: 300px;
     /* фиксируем и выставляем высоту панели на максимум */
     height: 100%;
     position: fixed;
@@ -17,7 +17,7 @@
     /* сдвигаем (прячем) панель относительно левого края страницы */
     left: -320px;
     /* внутренние отступы */
-    padding: 15px 20px;
+    padding: 10px 20px;
     /* плавный переход смещения панели */
     -webkit-transition: left 0.3s;
     -moz-transition: left 0.3s;
@@ -62,9 +62,9 @@
 */
 
 [id='nav-toggle']:checked ~ div.wrap {
-    -webkit-transform: translateX(320px);
-    -moz-transform: translateX(320px);
-    transform: translateX(320px);
+    -webkit-transform: translateX(300px);
+    -moz-transform: translateX(300px);
+    transform: translateX(300px);
 }
 
 
@@ -104,7 +104,7 @@ body {
         overflow-x: hidden;
     }
     .nav-menu {
-        width: 100%;
+        width: 300px;
         box-shadow: none
     }
 }
@@ -425,4 +425,13 @@ body {
 }
 .nav-menu ul li.opened .more:after {
     content: '-';
+}
+.nav-menu .nav-menu__close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #dadada;
+    font-size: 20px;
+    padding: 5px 10px;
+    cursor:pointer;
 }

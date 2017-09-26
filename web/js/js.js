@@ -29,6 +29,7 @@ function LeftMenu() {
     var menu = $('nav.nav-menu');
     var links = menu.find('ul li a');
     var placeContainer = $('#add-place');
+    var inputHidden = document.querySelector('#nav-toggle');
 
     var init = function() {
         addEvents();
@@ -40,12 +41,10 @@ function LeftMenu() {
             changeClass(li);
             showSubMenu(li);
             addToInput(li);
-            addToMap(li);
         });
-    };
-
-    var addToMap = function(li) {
-        
+        menu.find('.nav-menu__close').on('click', function() {
+            leftMenu.close();
+        });
     };
 
     var showSubMenu = function(li) {
@@ -71,6 +70,14 @@ function LeftMenu() {
                 placeContainer.find('.js-point-category').val(a.text());
             }
         }
+    };
+
+    this.show = function() {
+        inputHidden.checked = true;
+    };
+
+    this.close = function() {
+        inputHidden.checked = false;
     };
 
     init();
@@ -145,15 +152,26 @@ function MapAdd() {
         myPlacemark.properties.set('iconCaption', 'поиск...');
         ymaps.geocode(coords).then(function (res) {
             var firstGeoObject = res.geoObjects.get(0);
+            // var address = [
+            //     // Название населенного пункта или вышестоящее административно-территориальное образование.
+            //     firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas(),
+            //     // Получаем путь до топонима, если метод вернул null, запрашиваем наименование здания.
+            //     firstGeoObject.getThoroughfare() || firstGeoObject.getPremise()
+            // ].filter(Boolean).join(', ');
+
             var address = [
                 // Название населенного пункта или вышестоящее административно-территориальное образование.
                 firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas(),
                 // Получаем путь до топонима, если метод вернул null, запрашиваем наименование здания.
                 firstGeoObject.getThoroughfare() || firstGeoObject.getPremise()
-            ].filter(Boolean).join(', ');
+            ];
+            console.log(address[0]);
+            console.log(address[1]);
+            var add = firstGeoObject.getAddressLine();
+            console.log(add);
 
 
-            insertAddress(firstGeoObject.getAddressLine());
+            insertAddress(add);
             insertCoords(coords);
 
             myPlacemark.properties
@@ -187,6 +205,23 @@ function MapAdd() {
     };
 
     init();
+}
+
+function TopMenu() {
+    var init = function() {
+        addEvents();
+    };
+
+    var addEvents = function() {
+        $('.menu-butt').hover(function() {
+            $('.menu-butt span').addClass('hover');
+        }, function() {
+            $('.menu-butt span').removeClass('hover');
+        });
+    };
+
+    init();
+
 }
 
 function FormPlace() {
@@ -258,7 +293,7 @@ function FlashError() {
 
 function MapMain() {
 
-    var myPlacemark;
+    var myMap;
 
     var init = function() {
         if (document.querySelector('#ymap')) {
@@ -268,15 +303,118 @@ function MapMain() {
 
     var addEvents = function() {
         ymaps.ready(function () {
-            var myMap = new ymaps.Map("ymap", {
+            myMap = new ymaps.Map("ymap", {
                 center: [55.76, 37.64],
                 controls: ['geolocationControl', 'zoomControl'],
                 zoom: 10
             });
 
+            createPlacemark();
 
+            $('nav.nav-menu a').on('click', function() {
+                addToMap($(this));
+            })
 
         });
+
+        var addToMap = function(a) {
+            if (!a.closest('li').find('ul').length) {
+                var data = {};
+                data['category_id'] = a.data('id');
+                var csrfName = $('#csrfParam').attr('name');
+                var csrfVal = $('#csrfParam').val();
+                data[csrfName] = csrfVal;
+
+                $.ajax({
+                    type: "POST",
+                    url: "/place/get-by-category/",
+                    data:  data,
+                    dataType: "json",
+                    success: function(data, textStatus, xhr){
+                        if (data.length) {
+                            data.forEach(function(item) {
+                                leftMenu.close();
+                                createPlacemark(item)
+                            });
+
+                        }
+
+
+                    }
+                });
+
+            }
+        };
+
+        var createPlacemark = function(item) {
+            if (item) {
+                var color = '#' + (item.color ? item.color : '000000');
+
+                var myGroup = new ymaps.GeoObjectCollection({}, {});
+
+                if (item.places && item.places.length) {
+                    item.places.forEach(function (item) {
+                        // Добавляем в группу метки и линию.
+                        myGroup.add(new ymaps.Placemark([item.lat, item.lon], {
+                            hintContent: item.name,
+                            balloonContentHeader: false,
+                            balloonContentBody: "" +
+                            "<div class='cus-balloon'>" +
+                            "<div class='cus-balloon__header'>" + item.name + "</div>" +
+                            "<div class='cus-balloon__body'>" + item.description + "</div>" +
+                            "<div class='cus-balloon__footer'>подробнее</div>" +
+                            "</div>" +
+                            "",
+                        }, {
+                            iconColor: color,
+                            balloonCloseButton: false,
+                            hideIconOnBalloonOpen: false,
+                            balloonOffset: [0, -37]
+                        }));
+                    });
+
+                    // myGroup.add(new ymaps.Placemark(["55.774709776995", "37.839813842773"], {
+                    //     hintContent: '#cccccc',
+                    // }, {
+                    //     iconColor: '#cccccc',
+                    // }));
+                    //
+                    // myGroup.add(new ymaps.Placemark(["55.794709776995", "37.839813842773"], {
+                    //     hintContent: '#9dc2fb',
+                    // }, {
+                    //     iconColor: '#9dc2fb',
+                    // }));
+                    //
+                    // myGroup.add(new ymaps.Placemark(["55.814709776995", "37.839813842773"], {
+                    //     hintContent: '#dcdcdc',
+                    // }, {
+                    //     iconColor: '#dcdcdc',
+                    // }));
+                    //
+                    // myGroup.add(new ymaps.Placemark(["55.834709776995", "37.839813842773"], {
+                    //     hintContent: '#001dff',
+                    // }, {
+                    //     iconColor: '#001dff',
+                    // }));
+                    //
+                    // myGroup.add(new ymaps.Placemark(["55.854709776995", "37.839813842773"], {
+                    //     hintContent: '#fff67f',
+                    // }, {
+                    //     iconColor: '#fff67f',
+                    // }));
+
+                    // Добавляем группу на карту.
+                    myMap.geoObjects.add(myGroup);
+                    // Устанавливаем карте центр и масштаб так, чтобы охватить группу целиком.
+                    myMap.setBounds(myGroup.getBounds());
+
+                    //myMap.geoObjects.add(mark);
+                }
+            }
+
+
+
+        };
     };
 
     init();
@@ -287,6 +425,8 @@ var menu = new Menu();
 var leftMenu = new LeftMenu();
 var formPlace = new FormPlace();
 var flashError = new FlashError();
+var mapMain = new MapMain();
+var topMenu = new TopMenu();
 
 
 // ymaps.ready(function () {

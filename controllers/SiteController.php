@@ -62,7 +62,7 @@ class SiteController extends Controller
      *
      * @return Response|string
      */
-    public function actionContact()
+    public function actionAdd()
     {
         $model = new Place();
         if (Yii::$app->request->post()) {
