@@ -10,8 +10,6 @@ use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
 AppAsset::register($this);
-$cityMap = \app\models\City::getCityMap();
-$cityId = \app\components\Geo::getUserCityId();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -98,17 +96,15 @@ $cityId = \app\components\Geo::getUserCityId();
 
 <div class="wrap" style="padding:0; height:100%;">
 
-    <!-- Modal -->
-    <div class="modal geo-popup" id="accept-city" style="<?= isset($_COOKIE['city_id']) ? '' : 'display:block' ?>">
+    <!-- Попап на всякий случай -->
+    <div class="modal geo-popup" id="accept-city" style="">
         <div class="modal-sandbox"></div>
         <div class="modal-box">
             <div class="modal-header" style="">
                 <div class="close-modal">&#10006;</div>
                 <p class="select-city">Информация по:
                     <select name="selectGeoCity" id="selectGeoCity">
-                        <? foreach ($cityMap as $id => $name) { ?>
-                            <option value="<?=$id?>" <?=$cityId == $id ? 'selected' : ''?>><?=$name?></option>
-                        <? } ?>
+
                     </select>
                 </p>
             </div>
@@ -119,23 +115,6 @@ $cityId = \app\components\Geo::getUserCityId();
         </div>
     </div>
 
-    <!-- Aditional Styles -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     <nav id="w0" class="navbar-inverse navbar-fixed-top navbar" role="navigation">
         <div class="container">
@@ -144,6 +123,7 @@ $cityId = \app\components\Geo::getUserCityId();
             </div>-->
             <div >
                 <ul id="w1" class="navbar-nav navbar-left nav" >
+                    <li style="float:left"><a href="/" class="glyphicon glyphicon-home" style="font-size:22px;"></a></li>
                     <li style="float:left"><a class="menu-butt nav-toggle1"><span></span></a></li>
                     <li style="float:left"><a href="/add/" style="font-size:38px;">+</a></li>
                     <li style="float:left"><a href="#" onclick="return false;" data-modal="accept-city" class="modal-trigger glyphicon glyphicon-map-marker" style="font-size:22px;"></a></li>

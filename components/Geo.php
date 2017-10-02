@@ -10,9 +10,8 @@ class Geo
     const TIME = 60 * 60 * 24 * 300;
     const SITE_YANDEX = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=";
 
-    private static function getCityNameFromSite()
+    private static function getJsonFromSite()
     {
-        $cityName = '';
         $content = '';
         $ip = $_SERVER['REMOTE_ADDR'];
         $fp = fopen(self::SITE . $ip, "r");
@@ -22,12 +21,31 @@ class Geo
         fclose($fp);
 
         $json = json_decode($content);
+        return $json;
+    }
+
+    private static function getCityNameFromSite()
+    {
+        $cityName = '';
+        $json = self::getJsonFromSite();
 
         if ($json && $json->city && $json->city->name_ru) {
             $cityName = $json->city->name_ru;
         }
 
         return $cityName;
+    }
+
+    private static function getLatLonFromSite()
+    {
+        $result = [];
+        $json = self::getJsonFromSite();
+        if ($json && $json->city && $json->city->name_ru) {
+            $result[] = $json->city->lat;
+            $result[] = $json->city->lon;
+        }
+
+        return $result;
     }
     
     public static function getCoordsByCityName($name) 
@@ -59,6 +77,26 @@ class Geo
     {
         setcookie("city_id", $city_id, time() + self::TIME);
         setcookie("city_name", $city_name, time() + self::TIME);
+    }
+
+    public static function setUserLatLon($coords)
+    {
+        setcookie("lat", $coords[0], time() + self::TIME);
+        setcookie("lon", $coords[1], time() + self::TIME);
+    }
+
+    private static function getDefaultUserLatLon()
+    {
+        return [53.904098, 27.556899];
+    }
+
+    public static function getUserLatLon()
+    {
+        $coords = self::getLatLonFromSite();
+        if (!$coords) {
+            $coords = self::getDefaultUserLatLon();
+        }
+        return $coords;
     }
 
     public static function getUserCityId()

@@ -1,19 +1,19 @@
 function Menu() {
 
-    var init = function() {
+    var init = function () {
         addEvents();
     };
 
-    var addEvents = function() {
+    var addEvents = function () {
         var inputHidden = document.querySelector('#nav-toggle');
 
-        $('.nav-toggle1').on('click', function() {
+        $('.nav-toggle1').on('click', function () {
             inputHidden.checked = inputHidden.checked ? inputHidden.checked = false : inputHidden.checked = true;
             $('.wrap').addClass('slide');
             return false;
         });
 
-        $('body').on('click', '.slide', function() {
+        $('body').on('click', '.slide', function () {
             if (inputHidden.checked) {
                 inputHidden.checked = false;
                 $('.wrap').removeClass('slide');
@@ -31,30 +31,30 @@ function LeftMenu() {
     var placeContainer = $('#add-place');
     var inputHidden = document.querySelector('#nav-toggle');
 
-    var init = function() {
+    var init = function () {
         addEvents();
     };
 
-    var addEvents = function() {
-        links.on('click', function() {
+    var addEvents = function () {
+        links.on('click', function () {
             var li = $(this).closest('li');
             changeClass(li);
             showSubMenu(li);
             addToInput(li);
         });
-        menu.find('.nav-menu__close').on('click', function() {
+        menu.find('.nav-menu__close').on('click', function () {
             leftMenu.close();
         });
     };
 
-    var showSubMenu = function(li) {
+    var showSubMenu = function (li) {
         var subUl = li.find('ul');
         if (subUl.length) {
             subUl.slideToggle(500);
         }
     };
 
-    var changeClass = function(li) {
+    var changeClass = function (li) {
         if (li.hasClass('opened')) {
             li.removeClass('opened');
         } else {
@@ -62,7 +62,7 @@ function LeftMenu() {
         }
     };
 
-    var addToInput = function(li) {
+    var addToInput = function (li) {
         var a = li.find('a');
         if (placeContainer.length) {
             if (!li.find('ul').length) {
@@ -72,11 +72,11 @@ function LeftMenu() {
         }
     };
 
-    this.show = function() {
+    this.show = function () {
         inputHidden.checked = true;
     };
 
-    this.close = function() {
+    this.close = function () {
         inputHidden.checked = false;
     };
 
@@ -87,13 +87,13 @@ function MapAdd() {
 
     var myPlacemark;
 
-    var init = function() {
+    var init = function () {
         if (document.querySelector('#ymapAdd')) {
             addEvents();
         }
     };
 
-    var addEvents = function() {
+    var addEvents = function () {
         ymaps.ready(function () {
             var myMap = new ymaps.Map("ymapAdd", {
                 center: [55.76, 37.64],
@@ -101,7 +101,7 @@ function MapAdd() {
                 zoom: 10
             });
 
-            myMap.events.add('click', function(e) {
+            myMap.events.add('click', function (e) {
                 mapClickEvent(e, myMap);
             });
 
@@ -128,7 +128,7 @@ function MapAdd() {
         });
     };
 
-    var mapClickEvent = function(e, map) {
+    var mapClickEvent = function (e, map) {
         var coords = e.get('coords');
 
         // Если метка уже создана – просто передвигаем ее.
@@ -181,18 +181,18 @@ function MapAdd() {
 
             myPlacemark.properties
                 .set({
-                    iconCaption:'',
+                    iconCaption: '',
                     // В качестве контента балуна задаем строку с адресом объекта.
                     balloonContent: ''
                 });
         });
     };
 
-    var insertAddress = function(address) {
+    var insertAddress = function (address) {
         document.querySelector('.js-point-address').value = address;
     };
 
-    var insertCoords = function(coords) {
+    var insertCoords = function (coords) {
         if (coords.length) {
             document.querySelector('.js-point-lat').value = coords[0];
             document.querySelector('.js-point-lon').value = coords[1];
@@ -200,7 +200,7 @@ function MapAdd() {
 
     };
 
-    var createPlacemark = function(coords) {
+    var createPlacemark = function (coords) {
 
         return new ymaps.Placemark(coords, {
             iconCaption: 'поиск...'
@@ -213,14 +213,14 @@ function MapAdd() {
 }
 
 function TopMenu() {
-    var init = function() {
+    var init = function () {
         addEvents();
     };
 
-    var addEvents = function() {
-        $('.menu-butt').hover(function() {
+    var addEvents = function () {
+        $('.menu-butt').hover(function () {
             $('.menu-butt span').addClass('hover');
-        }, function() {
+        }, function () {
             $('.menu-butt span').removeClass('hover');
         });
     };
@@ -232,12 +232,12 @@ function TopMenu() {
 function FormPlace() {
     var form = $('#form-place');
     var error = false;
-    var init = function() {
+    var init = function () {
         addEvents();
     };
 
-    var addEvents = function() {
-        form.submit(function() {
+    var addEvents = function () {
+        form.submit(function () {
             clearError();
             checkRequired();
             if (error) {
@@ -246,8 +246,8 @@ function FormPlace() {
         })
     };
 
-    var checkRequired = function() {
-        form.find('.required').each(function() {
+    var checkRequired = function () {
+        form.find('.required').each(function () {
             if (!$.trim($(this).val())) {
                 $(this).addClass('error');
                 flashError.setErrors('Заполните обязательные поля');
@@ -255,7 +255,7 @@ function FormPlace() {
             }
         });
 
-        form.find('.required_coord').each(function() {
+        form.find('.required_coord').each(function () {
             if (!$.trim($(this).val())) {
                 $(this).addClass('error');
                 flashError.setErrors('Выберите точку на карте');
@@ -264,7 +264,7 @@ function FormPlace() {
         });
     };
 
-    var clearError = function() {
+    var clearError = function () {
         error = false;
         form.find('.error').removeClass('error');
     };
@@ -275,17 +275,17 @@ function FormPlace() {
 
 function FlashError() {
 
-    var init = function() {
+    var init = function () {
         addEvents();
     };
 
-    var addEvents = function() {
-        $('body').on('click', '.flash-errors .flash-errors__close', function() {
+    var addEvents = function () {
+        $('body').on('click', '.flash-errors .flash-errors__close', function () {
             $(this).closest('.flash-errors').remove();
         });
     };
 
-    this.setErrors = function(error) {
+    this.setErrors = function (error) {
         if ($('.flash-errors__text').length) {
             $('.flash-errors').remove();
         }
@@ -299,58 +299,60 @@ function FlashError() {
 function MapMain() {
 
     var myMap;
-    var maxZoom;
     var currPlace;
+    var minLat = 0;
+    var maxLat = 0;
+    var minLon = 0;
+    var maxLon = 0;
 
-    var init = function() {
+    var init = function () {
         if (document.querySelector('#ymap')) {
             addEvents();
         }
     };
 
-    var addEvents = function() {
+    var addEvents = function () {
         ymaps.ready(function () {
             myMap = new ymaps.Map("ymap", {
-                center: [55.76, 37.64],
+                center: [cookie.get('lat'), cookie.get('lon')],
                 controls: ['geolocationControl', 'zoomControl'],
                 zoom: 10
             });
 
             createPlacemark();
 
-            $('nav.nav-menu a').on('click', function() {
+            $('nav.nav-menu a').on('click', function () {
                 currPlace = $(this);
                 addToMap();
             });
 
             myMap.events.add('boundschange', function (event) {
-                if (event.get('newZoom') > maxZoom) {
-                    maxZoom = event.get('newZoom');
-                    if (currPlace) {
-                        addToMap();
-                    }
-                }
+                addToMap();
+            });
+
+            myMap.events.add('actionend', function (event) {
+                addToMap();
             });
 
         });
 
-        var addToMap = function() {
-            if (!currPlace.closest('li').find('ul').length) {
-                var data = {};
+        var addToMap = function () {
+            var data = {};
+            data['size'] = myMap.getBounds();
+            if (isNeedGetPlaces(data['size'])) {
                 data['category_id'] = currPlace.data('id');
                 var csrfName = $('#csrfParam').attr('name');
                 var csrfVal = $('#csrfParam').val();
                 data[csrfName] = csrfVal;
-                data['size'] = myMap.getBounds();
 
                 $.ajax({
                     type: "POST",
                     url: "/place/get-by-category/",
-                    data:  data,
+                    data: data,
                     dataType: "json",
-                    success: function(data, textStatus, xhr){
+                    success: function (data, textStatus, xhr) {
                         if (data.length) {
-                            data.forEach(function(item) {
+                            data.forEach(function (item) {
                                 leftMenu.close();
                                 clearMap();
                                 createPlacemark(item)
@@ -362,11 +364,32 @@ function MapMain() {
             }
         };
 
-        var clearMap = function() {
+        var isNeedGetPlaces = function (size) {
+            // Если выбрана категория
+            if (currPlace) {
+                // И если это не родительская категория
+                if (!currPlace.closest('li').find('ul').length) {
+                    if (size[0][0] < minLat ||
+                        size[1][0] > maxLat ||
+                        size[0][1] < minLon ||
+                        size[1][1] > maxLon) {
+
+                        minLat = size[0][0];
+                        maxLat = size[1][0];
+                        minLon = size[0][1];
+                        maxLon = size[1][1];
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
+
+        var clearMap = function () {
             myMap.geoObjects.removeAll();
         };
 
-        var createPlacemark = function(item) {
+        var createPlacemark = function (item) {
             if (item) {
                 var color = '#' + (item.color ? item.color : '000000');
 
@@ -425,16 +448,18 @@ function MapMain() {
 
                     // Добавляем группу на карту.
                     myMap.geoObjects.add(myGroup);
-                    myMap.setBounds(myGroup.getBounds());
+                    // if (setCenter) {
+                    //     myMap.setBounds(myGroup.getBounds());
+                    // }
                     // Устанавливаем карте центр и масштаб так, чтобы охватить группу целиком.
-                    if (item.places.length == 1) {
-                        myMap.setZoom(13);
-                    }
+                    // if (item.places.length == 1) {
+                    //     console.log();
+                    //     myMap.setZoom(13);
+                    // }
 
                     //myMap.geoObjects.add(mark);
                 }
             }
-
 
 
         };
@@ -444,30 +469,29 @@ function MapMain() {
 }
 
 
-
 function GeoPopup() {
     var time = 60 * 60 * 24 * 300;
 
-    var init = function() {
+    var init = function () {
         addEvents();
     };
 
-    var addEvents = function() {
-        $(".modal-trigger").click(function(e){
+    var addEvents = function () {
+        $(".modal-trigger").click(function (e) {
             e.preventDefault();
             show($(this).attr("data-modal"));
         });
 
-        $(".close-modal, .modal-sandbox").click(function(){
+        $(".close-modal, .modal-sandbox").click(function () {
             close();
         });
     };
 
-    var show = function(dataModal) {
-        $("#" + dataModal).css({"display":"block"});
+    var show = function (dataModal) {
+        $("#" + dataModal).css({"display": "block"});
     };
 
-    var close = function() {
+    var close = function () {
         var newCity = $('#selectGeoCity').val();
         var newCityName = $('#selectGeoCity option:selected').text();
         var oldCity = cookie.get('city_id');
@@ -476,36 +500,33 @@ function GeoPopup() {
             cookie.set('city_name', newCityName, time);
             document.location.reload();
         }
-        $(".modal").css({"display":"none"});
+        $(".modal").css({"display": "none"});
     };
 
     init();
 }
 
 function Cookie() {
-    this.set = function(name, value, sec) {
+    this.set = function (name, value, sec) {
         var date = new Date(new Date().getTime() + sec * 1000);
         document.cookie = name + "=" + value + "; path=/; expires=" + date.toUTCString();
     };
 
-    this.get = function(name) {
+    this.get = function (name) {
         var matches = document.cookie.match(new RegExp(
             "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
         ));
         return matches ? decodeURIComponent(matches[1]) : undefined;
     };
 
-    this.delete = function(name) {
+    this.delete = function (name) {
         this.set(name, "", -1);
     }
 }
 
 
-
-
-
 var cookie = new Cookie();
-var geoPopup = new GeoPopup();
+//var geoPopup = new GeoPopup();
 var mapAdd = new MapAdd();
 var menu = new Menu();
 var leftMenu = new LeftMenu();
@@ -619,19 +640,4 @@ var topMenu = new TopMenu();
 //     );
 // });
 
-
-/*
- ===============================================================
-
- Hi! Welcome to my little playground!
-
- My name is Tobias Bogliolo. 'Open source' by default and always 'responsive',
- I'm a publicist, visual designer and frontend developer based in Barcelona.
-
- Here you will find some of my personal experiments. Sometimes usefull,
- sometimes simply for fun. You are free to use them for whatever you want
- but I would appreciate an attribution from my work. I hope you enjoy it.
-
- ===============================================================
- */
 
