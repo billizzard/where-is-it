@@ -414,6 +414,9 @@ function MapMain() {
                             hideIconOnBalloonOpen: false,
                             balloonOffset: [0, -37]
                         }));
+
+
+
                     });
 
                     // myGroup.add(new ymaps.Placemark(["55.774709776995", "37.839813842773"], {
