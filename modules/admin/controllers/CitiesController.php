@@ -2,8 +2,12 @@
 
 namespace app\modules\admin\controllers;
 
+use app\models\Category;
+use app\models\City;
 use app\modules\admin\components\AccessRule;
 use app\modules\admin\components\DeleteAction;
+use app\modules\admin\models\search\CategorySearch;
+use app\modules\admin\models\search\CitySearch;
 use Yii;
 use app\models\User;
 use app\modules\admin\models\search\UserSearch;
@@ -16,15 +20,14 @@ use yii\filters\VerbFilter;
 /**
  * UsersController implements the CRUD actions for User model.
  */
-class UsersController extends BaseController
+class CitiesController extends BaseController
 {
-
     public function actions()
     {
         return [
             'delete' => [
                 'class' => DeleteAction::className(),
-                'model_class' => User::className(),
+                'model_class' => City::className(),
             ],
         ];
     }
@@ -35,7 +38,7 @@ class UsersController extends BaseController
      */
     public function actionIndex()
     {
-        $searchModel = new UserSearch();
+        $searchModel = new CitySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -51,10 +54,11 @@ class UsersController extends BaseController
      */
     public function actionView($id)
     {
-        $user = User::findOne($id);
-        if (!$user) return Yii::$app->response->redirect('/admin/users/index');
+        $model = City::findOne($id);
+        if (!$model) return Yii::$app->response->redirect('/admin/cities/index');
+
         return $this->render('view', [
-            'model' => $user,
+            'model' => $model,
         ]);
     }
 
@@ -65,7 +69,7 @@ class UsersController extends BaseController
      */
     public function actionCreate()
     {
-        $model = new User();
+        $model = new City();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -84,7 +88,7 @@ class UsersController extends BaseController
      */
     public function actionUpdate($id)
     {
-        $model = User::findOne($id);
+        $model = City::findOne($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -94,39 +98,6 @@ class UsersController extends BaseController
             'model' => $model,
         ]);
     }
-//
-//    /**
-//     * Deletes an existing User model.
-//     * If deletion is successful, the browser will be redirected to the 'index' page.
-//     * @param integer $id
-//     * @return mixed
-//     */
-//    public function actionDelete($id)
-//    {
-//
-//        $connection = Yii::$app->getDb();
-//
-//        // Лайки
-//        $connection->createCommand()->delete('user_like', ['like_from_user_id' => $id])->execute();
-//
-//        // Чаты. Удаляем те, где он создатель
-//        $connection->createCommand()->delete('chats', ['creator_id' => $id])->execute();
-//
-//
-//        $connection->createCommand()->delete('chat_users', ['user_id' => $id])->execute();
-//
-//
-//
-//
-//        $this->findModel($id)->delete();
-//
-//
-//        //$connection->createCommand()->delete('profile', ['creator_id' => $id])->execute();
-//
-//
-//        return $this->redirect(['index']);
-//    }
-
 
 
 }

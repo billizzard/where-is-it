@@ -53,6 +53,7 @@ class CategoriesController extends BaseController
     public function actionView($id)
     {
         $model = Category::findOne($id);
+        if (!$model) return Yii::$app->response->redirect('/admin/categories/index');
         return $this->render('view', [
             'model' => $model,
         ]);

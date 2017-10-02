@@ -144,6 +144,7 @@ function MapAdd() {
                 getAddress(myPlacemark.geometry.getCoordinates());
             });
         }
+        console.log(map.getBounds());
         getAddress(coords);
     };
 
@@ -152,6 +153,10 @@ function MapAdd() {
         myPlacemark.properties.set('iconCaption', 'поиск...');
         ymaps.geocode(coords).then(function (res) {
             var firstGeoObject = res.geoObjects.get(0);
+            //console.log('firstGeo');
+            var coordinates = firstGeoObject.geometry.getCoordinates();
+            //console.log(firstGeoObject);
+            console.log(coordinates);
             // var address = [
             //     // Название населенного пункта или вышестоящее административно-территориальное образование.
             //     firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas(),
@@ -294,6 +299,8 @@ function FlashError() {
 function MapMain() {
 
     var myMap;
+    var maxZoom;
+    var currPlace;
 
     var init = function() {
         if (document.querySelector('#ymap')) {
@@ -312,18 +319,29 @@ function MapMain() {
             createPlacemark();
 
             $('nav.nav-menu a').on('click', function() {
-                addToMap($(this));
-            })
+                currPlace = $(this);
+                addToMap();
+            });
+
+            myMap.events.add('boundschange', function (event) {
+                if (event.get('newZoom') > maxZoom) {
+                    maxZoom = event.get('newZoom');
+                    if (currPlace) {
+                        addToMap();
+                    }
+                }
+            });
 
         });
 
-        var addToMap = function(a) {
-            if (!a.closest('li').find('ul').length) {
+        var addToMap = function() {
+            if (!currPlace.closest('li').find('ul').length) {
                 var data = {};
-                data['category_id'] = a.data('id');
+                data['category_id'] = currPlace.data('id');
                 var csrfName = $('#csrfParam').attr('name');
                 var csrfVal = $('#csrfParam').val();
                 data[csrfName] = csrfVal;
+                data['size'] = myMap.getBounds();
 
                 $.ajax({
                     type: "POST",
@@ -334,16 +352,18 @@ function MapMain() {
                         if (data.length) {
                             data.forEach(function(item) {
                                 leftMenu.close();
+                                clearMap();
                                 createPlacemark(item)
                             });
 
                         }
-
-
                     }
                 });
-
             }
+        };
+
+        var clearMap = function() {
+            myMap.geoObjects.removeAll();
         };
 
         var createPlacemark = function(item) {
@@ -405,8 +425,11 @@ function MapMain() {
 
                     // Добавляем группу на карту.
                     myMap.geoObjects.add(myGroup);
-                    // Устанавливаем карте центр и масштаб так, чтобы охватить группу целиком.
                     myMap.setBounds(myGroup.getBounds());
+                    // Устанавливаем карте центр и масштаб так, чтобы охватить группу целиком.
+                    if (item.places.length == 1) {
+                        myMap.setZoom(13);
+                    }
 
                     //myMap.geoObjects.add(mark);
                 }
@@ -420,6 +443,69 @@ function MapMain() {
     init();
 }
 
+
+
+function GeoPopup() {
+    var time = 60 * 60 * 24 * 300;
+
+    var init = function() {
+        addEvents();
+    };
+
+    var addEvents = function() {
+        $(".modal-trigger").click(function(e){
+            e.preventDefault();
+            show($(this).attr("data-modal"));
+        });
+
+        $(".close-modal, .modal-sandbox").click(function(){
+            close();
+        });
+    };
+
+    var show = function(dataModal) {
+        $("#" + dataModal).css({"display":"block"});
+    };
+
+    var close = function() {
+        var newCity = $('#selectGeoCity').val();
+        var newCityName = $('#selectGeoCity option:selected').text();
+        var oldCity = cookie.get('city_id');
+        if (newCity !== oldCity) {
+            cookie.set('city_id', newCity, time);
+            cookie.set('city_name', newCityName, time);
+            document.location.reload();
+        }
+        $(".modal").css({"display":"none"});
+    };
+
+    init();
+}
+
+function Cookie() {
+    this.set = function(name, value, sec) {
+        var date = new Date(new Date().getTime() + sec * 1000);
+        document.cookie = name + "=" + value + "; path=/; expires=" + date.toUTCString();
+    };
+
+    this.get = function(name) {
+        var matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    };
+
+    this.delete = function(name) {
+        this.set(name, "", -1);
+    }
+}
+
+
+
+
+
+var cookie = new Cookie();
+var geoPopup = new GeoPopup();
 var mapAdd = new MapAdd();
 var menu = new Menu();
 var leftMenu = new LeftMenu();
@@ -532,4 +618,20 @@ var topMenu = new TopMenu();
 //         }
 //     );
 // });
+
+
+/*
+ ===============================================================
+
+ Hi! Welcome to my little playground!
+
+ My name is Tobias Bogliolo. 'Open source' by default and always 'responsive',
+ I'm a publicist, visual designer and frontend developer based in Barcelona.
+
+ Here you will find some of my personal experiments. Sometimes usefull,
+ sometimes simply for fun. You are free to use them for whatever you want
+ but I would appreciate an attribution from my work. I hope you enjoy it.
+
+ ===============================================================
+ */
 

@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\Geo;
 use app\components\Helper;
 use app\models\Place;
 use Yii;
@@ -12,7 +13,7 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\PlaceForm;
 
-class SiteController extends Controller
+class SiteController extends BaseMapController
 {
 
     /**
@@ -66,6 +67,7 @@ class SiteController extends Controller
     {
         $model = new Place();
         if (Yii::$app->request->post()) {
+
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 Helper::setMessage('После проверки, точка появится на карте', Helper::TYPE_MESSAGE_SUCCESS);
                 return $this->refresh();

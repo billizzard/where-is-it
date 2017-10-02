@@ -13,7 +13,7 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\PlaceForm;
 
-class PlaceController extends Controller
+class PlaceController extends BaseMapController
 {
 
     public function actionGetByCategory()
@@ -24,10 +24,10 @@ class PlaceController extends Controller
         if (isset($post['category_id'])) {
             $category = Category::findOne((int)$post['category_id']);
             $model = [];
-            if ($category) {
+            if ($category && is_array($post['size']) && (count($post['size']) == 2)) {
                 $model['color'] = $category->color;
 
-                $places = Place::findByCategoryId($post['category_id'])
+                $places = Place::findByCategoryId($post['category_id'], $post['size'])
                     ->select(['name', 'lat', 'lon', 'description', 'address', 'updated_at'])
                     ->asArray()->all();
 

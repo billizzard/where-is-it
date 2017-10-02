@@ -21,6 +21,7 @@ class AppAsset extends AssetBundle
         'css/bootstrap.min.css',
         'css/site.css',
         'css/left-menu.css',
+        'css/popup.css',
     ];
     public $js = [
         'js/jquery-3.2.1.min.js',

@@ -10,6 +10,8 @@ use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
 AppAsset::register($this);
+$cityMap = \app\models\City::getCityMap();
+$cityId = \app\components\Geo::getUserCityId();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -26,14 +28,22 @@ AppAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 
-<script>
-    navigator.geolocation.getCurrentPosition(
-        function(position) {
-            alert('Последний раз вас засекали здесь: ' +
-                position.coords.latitude + ", " + position.coords.longitude);
-        }
-    );
-</script>
+<? if (!\app\components\Geo::getAcceptedCityId()) {?>
+
+<? } ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <input type="checkbox" id="nav-toggle" hidden>
 <nav class="nav-menu">
@@ -88,6 +98,45 @@ AppAsset::register($this);
 
 <div class="wrap" style="padding:0; height:100%;">
 
+    <!-- Modal -->
+    <div class="modal geo-popup" id="accept-city" style="<?= isset($_COOKIE['city_id']) ? '' : 'display:block' ?>">
+        <div class="modal-sandbox"></div>
+        <div class="modal-box">
+            <div class="modal-header" style="">
+                <div class="close-modal">&#10006;</div>
+                <p class="select-city">Информация по:
+                    <select name="selectGeoCity" id="selectGeoCity">
+                        <? foreach ($cityMap as $id => $name) { ?>
+                            <option value="<?=$id?>" <?=$cityId == $id ? 'selected' : ''?>><?=$name?></option>
+                        <? } ?>
+                    </select>
+                </p>
+            </div>
+            <div class="modal-body">
+                <p>Выберите интересующий вас город и нажмите Ок</p>
+                <button class="close-modal">Ок</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aditional Styles -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <nav id="w0" class="navbar-inverse navbar-fixed-top navbar" role="navigation">
         <div class="container">
 <!--            <div class="navbar-header" style="float:left">
@@ -97,6 +146,7 @@ AppAsset::register($this);
                 <ul id="w1" class="navbar-nav navbar-left nav" >
                     <li style="float:left"><a class="menu-butt nav-toggle1"><span></span></a></li>
                     <li style="float:left"><a href="/add/" style="font-size:38px;">+</a></li>
+                    <li style="float:left"><a href="#" onclick="return false;" data-modal="accept-city" class="modal-trigger glyphicon glyphicon-map-marker" style="font-size:22px;"></a></li>
                     <!--<li style="float:left"><a href="/site/login">Login</a></li>-->
                 </ul>
             </div>
