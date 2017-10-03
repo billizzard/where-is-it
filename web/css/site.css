@@ -120,13 +120,13 @@ a.desc:after {
     width: 100%;
     text-align: center;
     padding: 7px;
-    background-color: rgba(224, 0, 0, 0.54);
+    background-color: rgba(224, 0, 0, 0.84);
     color: #fff;
     z-index: 820;
 }
 
 .flash-errors.success {
-    background-color: rgba(1, 140, 0, 0.65);
+    background-color: rgba(1, 140, 0, 0.84);
 }
 
 .flash-errors .flash-errors__close {
@@ -166,6 +166,9 @@ input.error {
     display: block;
     position:relative;
     cursor: pointer;
+}
+#w1>li>a:active {
+    background-color: #101010 !important;
 }
 .menu-butt span {
     display: block;

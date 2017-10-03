@@ -96,9 +96,9 @@ function MapAdd() {
     var addEvents = function () {
         ymaps.ready(function () {
             var myMap = new ymaps.Map("ymapAdd", {
-                center: [55.76, 37.64],
+                center: [cookie.get('lat'), cookie.get('lon')],
                 controls: ['geolocationControl', 'zoomControl'],
-                zoom: 10
+                zoom: 11
             });
 
             myMap.events.add('click', function (e) {
@@ -296,6 +296,31 @@ function FlashError() {
     init();
 }
 
+function BaseMap() {
+    this.getBalloonContent = function(name, description) {
+        return "" +
+        "<div class='cus-balloon'>" +
+        "<div class='cus-balloon__header'>" + name + "</div>" +
+        "<div class='cus-balloon__body'>" + description + "</div>" +
+        "<div class='cus-balloon__footer'>подробнее</div>" +
+        "</div>" +
+        "";
+    };
+
+    this.getPlacemark = function(lat, lon, name, color, description) {
+        new ymaps.Placemark([lat, lon], {
+            hintContent: name,
+            balloonContentHeader: false,
+            balloonContentBody: baseMap.getBalloonContent(name, description)
+        }, {
+            iconColor: color,
+            balloonCloseButton: false,
+            hideIconOnBalloonOpen: false,
+            balloonOffset: [0, -37]
+        })
+    }
+}
+
 function MapMain() {
 
     var myMap;
@@ -316,7 +341,7 @@ function MapMain() {
             myMap = new ymaps.Map("ymap", {
                 center: [cookie.get('lat'), cookie.get('lon')],
                 controls: ['geolocationControl', 'zoomControl'],
-                zoom: 10
+                zoom: 11
             });
 
             createPlacemark();
@@ -398,25 +423,7 @@ function MapMain() {
                 if (item.places && item.places.length) {
                     item.places.forEach(function (item) {
                         // Добавляем в группу метки и линию.
-                        myGroup.add(new ymaps.Placemark([item.lat, item.lon], {
-                            hintContent: item.name,
-                            balloonContentHeader: false,
-                            balloonContentBody: "" +
-                            "<div class='cus-balloon'>" +
-                            "<div class='cus-balloon__header'>" + item.name + "</div>" +
-                            "<div class='cus-balloon__body'>" + item.description + "</div>" +
-                            "<div class='cus-balloon__footer'>подробнее</div>" +
-                            "</div>" +
-                            "",
-                        }, {
-                            iconColor: color,
-                            balloonCloseButton: false,
-                            hideIconOnBalloonOpen: false,
-                            balloonOffset: [0, -37]
-                        }));
-
-
-
+                        myGroup.add(baseMap.getPlacemark(item.lat, item.lon, item.name, color, item.description));
                     });
 
                     // myGroup.add(new ymaps.Placemark(["55.774709776995", "37.839813842773"], {
@@ -530,6 +537,7 @@ function Cookie() {
 
 var cookie = new Cookie();
 //var geoPopup = new GeoPopup();
+var baseMap = new BaseMap();
 var mapAdd = new MapAdd();
 var menu = new Menu();
 var leftMenu = new LeftMenu();

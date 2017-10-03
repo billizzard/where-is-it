@@ -35,7 +35,7 @@ use yii\captcha\Captcha;
             <div class="form-place__column">
             <textarea name="Place[description]" class="js-point-description description"
                       placeholder="Дополнительная информация"><?= isset($_POST['Place']['description']) ? $_POST['Place']['description'] : '' ?></textarea>
-            <input type="submit" style="vertical-align: top;" name="savePoint" class="save-point btn btn-primary btn-flat" value="Сохранить">
+                <button type="submit" style="vertical-align: top;" name="savePoint" class="save-point btn btn-primary btn-flat">Сохранить</button>
             </div>
         </form>
 
@@ -63,6 +63,7 @@ use yii\captcha\Captcha;
         display:flex;
         flex-direction: column;
         height:100%;
+        background-color: #2d2d2d;
     }
     .add-place__header {
         width:100%;
@@ -76,7 +77,7 @@ use yii\captcha\Captcha;
     }
     .add-place__footer {
         width:100%;
-        flex-basis:100px;
+        flex-basis:77px;
         flex-grow: 0;
     }
     .form-place {
@@ -84,8 +85,18 @@ use yii\captcha\Captcha;
         flex-wrap: wrap;
         justify-content: left;
     }
+    .form-place input, .form-place textarea {
+        border: 2px solid #7b7b7b;
+        border-radius: 5px;
+        padding: 0 5px;
+    }
     .form-place .description {
         height:45px;
+    }
+    .form-place .btn-primary {
+        border: 1px solid #7b7b7b;
+        height: 57px;
+        background-color: transparent;
     }
 
     .form-place .form-place__column {
@@ -100,6 +111,10 @@ use yii\captcha\Captcha;
     .form-place .form-place__column textarea {
         height: 57px;
         width:300px;
+    }
+
+    .form-place .btn-primary:active:focus {
+        background-color: #101010;
     }
 
 </style>

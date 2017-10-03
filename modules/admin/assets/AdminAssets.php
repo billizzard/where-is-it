@@ -6,7 +6,8 @@ class AdminAssets extends AssetBundle
 {
 
     public $js = [
-
+        'js/js.js',
+        'js/adminPlaceMap.js'
         // more plugin Js here
     ];
     public $css = [

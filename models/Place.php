@@ -23,6 +23,7 @@ use yii\behaviors\TimestampBehavior;
 class Place extends \yii\db\ActiveRecord
 {
     public $category;
+    public $image;
 
     const STATUS_NO_MODERATE = 0;
     const STATUS_MODERATE = 1;
@@ -46,6 +47,7 @@ class Place extends \yii\db\ActiveRecord
             [['name', 'address'], 'string', 'max' => 255],
             [['description'], 'string'],
             [['category'], 'string'],
+            //[['image'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'],
 
         ];
     }
@@ -94,6 +96,32 @@ class Place extends \yii\db\ActiveRecord
                 //'updatedAtAttribute' => false
             ]
         ];
+    }
+
+    public static function getStatusesMap()
+    {
+        return [
+            self::STATUS_NO_MODERATE => 'Не проверено',
+            self::STATUS_MODERATE => 'Проверено'
+        ];
+    }
+
+    public function upload()
+    {
+        $image = new Image();
+        $url = 'uploads/' . $this->image->baseName . '.' . $this->image->extension;
+        $this->image->saveAs($url);
+        if ($image->upload($this->id)) {
+            $this->image = 'yes';
+            if (!$image->save()) {
+                echo "<pre>";
+                var_dump($image->getErrors());
+                die();
+            }
+            return true;
+        }
+        return false;
+
     }
 
 }

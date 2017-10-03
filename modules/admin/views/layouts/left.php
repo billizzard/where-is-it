@@ -31,6 +31,7 @@
             <li><a href="/admin/users"><i>1.</i>  <span>Users</span></a></li>
             <li><a href="/admin/categories"><i>2.</i>  <span>Categories</span></a></li>
             <li><a href="/admin/cities"><i>3.</i>  <span>Cities</span></a></li>
+            <li><a href="/admin/places"><i>4.</i>  <span>Места</span></a></li>
             <!--<li><a href="/debug"><i class="fa fa-dashboard"></i>  <span>Categories</span></a></li>
             <li class="active"><a href="#"><i class="fa fa-share"></i>  <span>Same tools</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                 <ul class="treeview-menu menu-open" style="display: block;">
