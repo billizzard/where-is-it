@@ -8,6 +8,7 @@ use app\models\Place;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
@@ -15,6 +16,15 @@ use app\models\PlaceForm;
 
 class PlaceController extends BaseMapController
 {
+    public function actionIndex($id) {
+        $model = Place::findPlaceById($id)->one();
+        if (!$model) throw new NotFoundHttpException();
+        return $this->render('index', [
+            'model' => $model,
+            'mainImage' => $model->mainImage
+        ]);
+
+    }
 
     public function actionGetByCategory()
     {
@@ -28,9 +38,13 @@ class PlaceController extends BaseMapController
                 $model['color'] = $category->color;
 
                 $places = Place::findByCategoryId($post['category_id'], $post['size'])
-                    ->select(['name', 'lat', 'lon', 'description', 'address', 'updated_at'])
+                    ->select(['id', 'name', 'lat', 'lon', 'yes', 'no', 'type', 'work_time', 'description', 'address', 'updated_at'])
                     ->asArray()->all();
 
+                foreach ($places as $key => $val) {
+                    $places[$key]['work_time'] = nl2br($val['work_time']);
+                    $places[$key]['description'] = nl2br($val['description']);
+                }
                 $model['places'] = $places;
             }
             $response[] = $model;

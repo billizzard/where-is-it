@@ -23,6 +23,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 
     const RULE_ADMIN_PANEL = 1;
     const RULE_DELETE_USER = 2;
+    const RULE_OWNER = 3;
 
     public $loginUrl = ['/auth/'];
 
@@ -151,10 +152,17 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      * @param $rule
      * @return bool
      */
-    public function hasAccess($rule) {
+    public function hasAccess($rule, $data = []) {
         switch($rule) {
             case self::RULE_DELETE_USER: return $this->isAdmin(); break;
             case self::RULE_ADMIN_PANEL: return $this->isAdmin(); break;
+            case self::RULE_OWNER:
+                if ($this->isAdmin()) return true;
+                if ($data['model'] && $data['model']->user_id) {
+                    return $this->getId() === $data['model']->user_id;
+                }
+                return false;
+                break;
         }
         return false;
     }

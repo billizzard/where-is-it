@@ -29,12 +29,15 @@ use yii\captcha\Captcha;
             <input type="hidden" name="Place[category_id]" class="js-point-category_id required" value="<?= isset($_POST['Place']['category_id']) ? $_POST['Place']['category_id'] : '' ?>">
             <div class="form-place__column">
             <input type="text" name="Place[category]" class="js-point-category required" value="<?= isset($_POST['Place']['category']) ? $_POST['Place']['category'] : '' ?>"
-                   placeholder="Выберите категорию в меню"><br>
-            <input style="margin-top:5px;" type="text" name="Place[name]" class="js-point-name required" placeholder="Ввдете название" value="<?= isset($_POST['Place']['name']) ? $_POST['Place']['name'] : '' ?>">
+                   placeholder="*Выберите категорию в меню"><br>
+            <input style="margin-top:5px;" type="text" name="Place[name]" class="js-point-name required" placeholder="*Ввдете название" value="<?= isset($_POST['Place']['name']) ? $_POST['Place']['name'] : '' ?>">
             </div>
             <div class="form-place__column">
-            <textarea name="Place[description]" class="js-point-description description"
-                      placeholder="Дополнительная информация"><?= isset($_POST['Place']['description']) ? $_POST['Place']['description'] : '' ?></textarea>
+                <textarea name="Place[work_time]"
+                          placeholder="Время работы и подобная информация"><?= isset($_POST['Place']['work_time']) ? $_POST['Place']['work_time'] : '' ?></textarea>
+
+            <textarea name="Place[description]"
+                      placeholder="Полезная информация"><?= isset($_POST['Place']['description']) ? $_POST['Place']['description'] : '' ?></textarea>
                 <button type="submit" style="vertical-align: top;" name="savePoint" class="save-point btn btn-primary btn-flat">Сохранить</button>
             </div>
         </form>
@@ -90,7 +93,7 @@ use yii\captcha\Captcha;
         border-radius: 5px;
         padding: 0 5px;
     }
-    .form-place .description {
+    .form-place textarea {
         height:45px;
     }
     .form-place .btn-primary {

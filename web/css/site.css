@@ -129,6 +129,10 @@ a.desc:after {
     background-color: rgba(1, 140, 0, 0.84);
 }
 
+.flash-errors.info {
+    background-color: rgba(45, 42, 160, 0.84);
+}
+
 .flash-errors .flash-errors__close {
     display: inline-block;
     float: right;
@@ -147,6 +151,15 @@ input.error {
     background-color: #8bb1ec;
     padding: 5px;
     border-radius: 3px;
+    max-height:300px;
+    overflow: auto;
+}
+.cus-balloon .add-info {
+    font-size: 10px;
+    line-height: 8px;
+    color: #505050;
+    position: relative;
+    bottom: -4px;
 }
 .cus-balloon__header {
     color: #fbfbfb;
@@ -157,8 +170,53 @@ input.error {
     padding-top: 5px;
     color: #3c3c3c;
 }
-.cus-balloon__footer {
+.cus-balloon__body .work_time {
 
+}
+.cus-balloon__body .description {
+    margin-top:8px;
+}
+.cus-balloon__footer {
+    border-top:1px solid #fff;
+    position:relative;
+    color:#3c3c3c;
+    min-height:25px;
+}
+.cus-balloon__footer .butt {
+    display: inline-block;
+    margin:3px 5px 0 5px;
+    line-height:15px;
+    font-size: 12px;
+    text-align: center;
+}
+.cus-balloon__footer .more {
+    float: right;
+    font-size: 20px;
+    margin-top: 5px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+.cus-balloon__footer .more:hover:active {
+    color:#fff;
+}
+.cus-balloon__footer .confirmation {
+    display: inline-block;
+    cursor: pointer;
+    line-height: 16px;
+    padding-top: 5px;
+    color: #309648;
+}
+.cus-balloon__footer .confirmation .yes {
+    color: #309648;
+}
+.cus-balloon__footer .confirmation .no {
+    color: #c35f5f;
+}
+.cus-balloon__footer .glyphicon-share-alt:before {
+    position:absolute;
+    bottom:0;
+    right:0;
 }
 
 /* top menu */

@@ -41,6 +41,7 @@ function LeftMenu() {
             changeClass(li);
             showSubMenu(li);
             addToInput(li);
+            return false;
         });
         menu.find('.nav-menu__close').on('click', function () {
             leftMenu.close();
@@ -68,6 +69,7 @@ function LeftMenu() {
             if (!li.find('ul').length) {
                 placeContainer.find('.js-point-category_id').val(a.data('id'));
                 placeContainer.find('.js-point-category').val(a.text());
+                leftMenu.close();
             }
         }
     };
@@ -281,37 +283,70 @@ function FlashError() {
 
     var addEvents = function () {
         $('body').on('click', '.flash-errors .flash-errors__close', function () {
-            $(this).closest('.flash-errors').remove();
+            removeMessage();
         });
     };
 
-    this.setErrors = function (error) {
+    var getMessage = function(type, message) {
+        return '<div class="flash-errors ' + type + '"><span class="flash-errors__text">' + message + '</span><div class="flash-errors__close">x</div></div>'
+    };
+
+    var removeMessage = function() {
         if ($('.flash-errors__text').length) {
             $('.flash-errors').remove();
         }
+    };
 
-        $('body').append('<div class="flash-errors"><span class="flash-errors__text">' + error + '</span><div class="flash-errors__close">x</div></div>');
+    this.setErrors = function (message) {
+        removeMessage();
+        $('body').append(getMessage('error', message));
+    };
+
+    this.setInfo = function(message) {
+        removeMessage();
+        $('body').append(getMessage('info', message));
     };
 
     init();
 }
 
 function BaseMap() {
-    this.getBalloonContent = function(name, description) {
+    this.getBalloonContent = function(item) {
+        var footer = "<div class='cus-balloon__footer'>";
+        if (item.type == 0) {
+            footer += "<div class='confirmation js-yes-no'><span class='yes'>" + item.yes + "</span> / <span class='no'>" + item.no + "</span></div>";
+        }
+        footer += "<a href='/place/" + item.id + "/' class='glyphicon glyphicon-share-alt more'></a>";
+        footer +=  "</div>";
+
+
         return "" +
         "<div class='cus-balloon'>" +
-        "<div class='cus-balloon__header'>" + name + "</div>" +
-        "<div class='cus-balloon__body'>" + description + "</div>" +
-        "<div class='cus-balloon__footer'>подробнее</div>" +
-        "</div>" +
-        "";
+        "<div class='cus-balloon__header'>" + item.name + "</div>" +
+        "<div class='cus-balloon__body'>" +
+                "<div class='work_time'>" + item.work_time + "</div>" +
+                "<div class='work_time'>" + item.work_time + "</div>" +
+                "<div class='work_time'>" + item.work_time + "</div>" +
+                "<div class='work_time'>" + item.work_time + "</div>" +
+                "<div class='work_time'>" + item.work_time + "</div>" +
+                "<div class='work_time'>" + item.work_time + "</div>" +
+                "<div class='description'>" + item.description + "</div>" +
+            "</div>" +
+                footer +
+
+
+
+            //"<div class='butt plus'><a href='#' class='glyphicon glyphicon-plus'></a></div>" +
+            //"<div class='butt plus'><a href='#' class='glyphicon glyphicon-plus'></a><br>14</div>" +
+            //"<div class='butt minus'><a href='#' class='glyphicon glyphicon-minus'></a><br>12</div>" +
+            "</div>";
     };
 
-    this.getPlacemark = function(lat, lon, name, color, description) {
-        new ymaps.Placemark([lat, lon], {
-            hintContent: name,
+    this.getPlacemark = function(item, color) {
+        return new ymaps.Placemark([item.lat, item.lon], {
+            hintContent: item.name,
             balloonContentHeader: false,
-            balloonContentBody: baseMap.getBalloonContent(name, description)
+            balloonContentBody: baseMap.getBalloonContent(item)
         }, {
             iconColor: color,
             balloonCloseButton: false,
@@ -325,6 +360,7 @@ function MapMain() {
 
     var myMap;
     var currPlace;
+    var balloonOpened = false;
     var minLat = 0;
     var maxLat = 0;
     var minLon = 0;
@@ -337,6 +373,9 @@ function MapMain() {
     };
 
     var addEvents = function () {
+        $('body').on('click', '.js-yes-no', function() {
+            flashError.setInfo('Место еще не подтвержено администратором. Вы можете помочь подтвердить информацию в подробном описании места.')
+        });
         ymaps.ready(function () {
             myMap = new ymaps.Map("ymap", {
                 center: [cookie.get('lat'), cookie.get('lon')],
@@ -344,11 +383,20 @@ function MapMain() {
                 zoom: 11
             });
 
-            createPlacemark();
+            //createPlacemark();
 
             $('nav.nav-menu a').on('click', function () {
                 currPlace = $(this);
                 addToMap();
+                return false;
+            });
+
+            myMap.events.add('balloonopen', function (event) {
+                balloonOpened = true;
+            });
+
+            myMap.events.add('balloonclose', function (event) {
+                balloonOpened = false;
             });
 
             myMap.events.add('boundschange', function (event) {
@@ -380,9 +428,8 @@ function MapMain() {
                             data.forEach(function (item) {
                                 leftMenu.close();
                                 clearMap();
-                                createPlacemark(item)
+                                createPlacemark(item);
                             });
-
                         }
                     }
                 });
@@ -391,7 +438,7 @@ function MapMain() {
 
         var isNeedGetPlaces = function (size) {
             // Если выбрана категория
-            if (currPlace) {
+            if (currPlace && !balloonOpened) {
                 // И если это не родительская категория
                 if (!currPlace.closest('li').find('ul').length) {
                     if (size[0][0] < minLat ||
@@ -423,7 +470,7 @@ function MapMain() {
                 if (item.places && item.places.length) {
                     item.places.forEach(function (item) {
                         // Добавляем в группу метки и линию.
-                        myGroup.add(baseMap.getPlacemark(item.lat, item.lon, item.name, color, item.description));
+                        myGroup.add(baseMap.getPlacemark(item, color));
                     });
 
                     // myGroup.add(new ymaps.Placemark(["55.774709776995", "37.839813842773"], {
@@ -457,6 +504,7 @@ function MapMain() {
                     // }));
 
                     // Добавляем группу на карту.
+
                     myMap.geoObjects.add(myGroup);
                     // if (setCenter) {
                     //     myMap.setBounds(myGroup.getBounds());
