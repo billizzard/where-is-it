@@ -90,7 +90,7 @@ class PlacesController extends BaseController
 
         if ($model->load(Yii::$app->request->post()) && $modelImage->load(Yii::$app->request->post())) {
             if ($model->save()) {
-                $this->uploadMainImage($model, $modelImage);
+                $modelImage->uploadMainImage($model);
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -114,7 +114,8 @@ class PlacesController extends BaseController
 
         if ($model->load(Yii::$app->request->post()) && $modelImage->load(Yii::$app->request->post())) {
             if ($model->save()) {
-                $this->uploadMainImage($model, $modelImage);
+                $modelImage->uploadMainImage($model);
+
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }
@@ -123,18 +124,6 @@ class PlacesController extends BaseController
             'model' => $model,
             'modelImage' => $modelImage,
         ]);
-    }
-
-    private function uploadMainImage(Place $model, Image $modelImage) {
-        $modelImage->url = UploadedFile::getInstance($modelImage, 'image');
-        if ($modelImage->url) {
-            if ($oldImage = $model->mainImage) {
-                $oldImage->delete();
-            }
-            $modelImage->upload($model);
-            $modelImage->place_id = $model->id;
-            $modelImage->save();
-        }
     }
 
     public function actionRemoveImage(){

@@ -3,7 +3,9 @@
 namespace app\controllers;
 
 use app\components\Helper;
+use app\constants\ImageConstants;
 use app\models\Category;
+use app\models\Image;
 use app\models\Place;
 use Yii;
 use yii\filters\AccessControl;
@@ -38,7 +40,7 @@ class PlaceController extends BaseMapController
                 $model['color'] = $category->color;
 
                 $places = Place::findByCategoryId($post['category_id'], $post['size'])
-                    ->select(['id', 'name', 'lat', 'lon', 'yes', 'no', 'type', 'work_time', 'description', 'address', 'updated_at'])
+                    ->select(['place.id', 'name', 'lat', 'lon', 'yes', 'no', 'place.type', 'work_time', 'place.description', 'address', 'updated_at'])
                     ->asArray()->all();
 
                 foreach ($places as $key => $val) {
@@ -50,6 +52,41 @@ class PlaceController extends BaseMapController
             $response[] = $model;
         }
         return $response;
+    }
+
+    /**
+     * Displays contact page.
+     *
+     * @return Response|string
+     */
+    public function actionAdd()
+    {
+        $model = new Place();
+        if (Yii::$app->request->post()) {
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                Helper::setMessage('После проверки, точка появится на карте', Helper::TYPE_MESSAGE_SUCCESS);
+                return $this->refresh();
+            } else {
+                Helper::setMessage($model->getErrors());
+            }
+        }
+
+        return $this->render('contact', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionUploadImage()
+    {
+        $modelImage = new Image(['scenario' => ImageConstants::SCENARIO['TEMP']]);
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+
+        if ($modelImage->load(Yii::$app->request->post())) {
+
+            $modelImage->uploadTempImage();
+            return ['url' => $modelImage->url];
+        }
     }
 
 }

@@ -10,7 +10,7 @@ use yii\grid\GridView;
 $this->title = 'Места';
 $this->params['breadcrumbs'][] = $this->title;
 $categoriesMap = \app\models\Category::getCategoriesMap();
-$statusesMap = \app\models\Place::getStatusesMap();
+$statusesMap = \app\constants\AppConstants::getStatusMap();
 ?>
 <div class="user-index">
 

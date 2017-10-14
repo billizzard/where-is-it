@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Места', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 $categoriesMap = \app\models\Category::getCategoriesMap();
-$statusesMap = \app\models\Place::getStatusesMap();
+$statusesMap = \app\constants\AppConstants::getStatusMap();
 ?>
 <div class="user-view">
 

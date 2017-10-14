@@ -53,7 +53,7 @@ $config = [
             'rules' => [
 
                 'auth' => 'admin/default/auth/',
-                'add' => 'site/add/',
+                'add' => 'place/add/',
                 '404' => 'site/error404',
                 'place/<id:\d+>' => 'place/',
 

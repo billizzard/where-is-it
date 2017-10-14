@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use app\constants\AppConstants;
+use app\constants\ImageConstants;
 use yii\behaviors\TimestampBehavior;
 
 /**
@@ -29,12 +31,6 @@ use yii\behaviors\TimestampBehavior;
 class Place extends \yii\db\ActiveRecord
 {
     public $category;
-
-    const STATUS_NO_MODERATE = 0;
-    const STATUS_MODERATE = 1;
-
-    const TYPE_NO_CONFIRM = 0;
-    const TYPE_CONFIRM = 1;
 
     /**
      * @inheritdoc
@@ -120,11 +116,12 @@ class Place extends \yii\db\ActiveRecord
         $lonMax = $size[1][1];
         return self::findPlace()->andWhere(['category_id' => $category_id])
             ->andWhere('lat >= :latMin AND lat <= :latMax AND lon >= :lonMin AND lon <= :lonMax',
-                ['latMin' => $latMin, 'latMax' => $latMax, 'lonMin' => $lonMin, 'lonMax' => $lonMax]);
+                ['latMin' => $latMin, 'latMax' => $latMax, 'lonMin' => $lonMin, 'lonMax' => $lonMax])
+            ->joinWith('mainImage');
     }
 
     public static function findPlace() {
-        return self::find()->andWhere(['status' => Place::STATUS_MODERATE]);
+        return self::find()->andWhere(['place.status' => AppConstants::STATUS['MODERATE']]);
     }
 
     public static function findPlaceById($id) {
@@ -141,27 +138,9 @@ class Place extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function getStatusesMap()
-    {
-        return [
-            self::STATUS_NO_MODERATE => 'Не проверено',
-            self::STATUS_MODERATE => 'Проверено'
-        ];
-    }
-
-    public static function getTypeMap()
-    {
-        return [
-            self::TYPE_NO_CONFIRM => 'Не подтверждено',
-            self::TYPE_CONFIRM => 'Подтверждено'
-        ];
-    }
-
-
-
     public function getMainImage()
     {
-        return $this->hasOne(Image::className(), ['place_id' => 'id'])->andWhere(['type' => Image::TYPE_MAIN]);
+        return $this->hasOne(Image::className(), ['place_id' => 'id'])->andWhere(['image.type' => ImageConstants::TYPE['MAIN']]);
     }
 
     private function createSaveDir() {
@@ -182,7 +161,7 @@ class Place extends \yii\db\ActiveRecord
         }
     }
 
-    public function deleteDir($dir)
+    private function deleteDir($dir)
     {
         if ($objs = glob($dir."/*")) {
             foreach($objs as $obj) {
@@ -201,6 +180,10 @@ class Place extends \yii\db\ActiveRecord
     }
 
     public function getDir() {
+        if (!$this->dir) {
+            $this->dir = $this->createSaveDir();
+            $this->save();
+        }
         return $this->dir;
     }
 

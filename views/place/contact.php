@@ -16,7 +16,7 @@ use yii\captcha\Captcha;
     <div id="add-place" class="add-place__footer">
 
         <form id="form-place" class="form-place" method="post">
-            <input type="hidden" name="<?= Yii::$app->request->csrfParam; ?>"
+            <input type="hidden" id="csrf" name="<?= Yii::$app->request->csrfParam; ?>"
                    value="<?= Yii::$app->request->csrfToken; ?>"/>
             <input type="hidden" name="Place[lat]" class="js-point-lat required_coord"
                    value="<?= isset($_POST['Place']['lat']) ? $_POST['Place']['lat'] : '' ?>">
@@ -42,7 +42,7 @@ use yii\captcha\Captcha;
 
             <div class="form-place__column">
                 <textarea name="Place[description]" placeholder="Полезная информация"><?= isset($_POST['Place']['description']) ? $_POST['Place']['description'] : '' ?></textarea>
-                <input type="file" name="Image[image]" class="js-image" style="display:none;">
+                <input type="file" name="Image[url]" id="image" accept="image/*" class="js-image" style="display:none;">
                 <div class="fake-image js-fake-image"></div>
                 <button type="submit" style="vertical-align: top;" name="savePoint"  class="save-point btn btn-primary btn-flat">Сохранить</button>
             </div>

@@ -9,6 +9,7 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 
 $categoryMap = \app\models\Category::getCategoriesMap();
+/** @var \app\models\Image $image */
 $image = $model->mainImage;
 /** @var \app\models\User $user */
 $user = Yii::$app->user->getIdentity();
@@ -24,11 +25,11 @@ $user = Yii::$app->user->getIdentity();
 
     <? if ($image) { ?>
         <div class="uploaded_img">
-            <img src="<?=$image->getImageUrl()?>" alt="">
+            <img src="/<?=$image->getMainImages()['original']?>" alt="">
             <a href="#" class="delete" data-id="<?=$image->getId()?>">x</a>
         </div>
     <? } ?>
-    <?= $form->field($modelImage, 'image')->fileInput() ?>
+    <?= $form->field($modelImage, 'url')->fileInput() ?>
 
 
     <div id="ymapAdminPlaceMap" data-lat="<?=$model->lat?>" data-lon="<?=$model->lon?>" style="width:100%; height:320px;"></div>
@@ -44,8 +45,8 @@ $user = Yii::$app->user->getIdentity();
         <?= $form->field($model, 'yes')->textInput() ?>
         <?= $form->field($model, 'no')->textInput() ?>
     <? } ?>
-    <?= $form->field($model, 'type')->dropDownList(\app\models\Place::getTypeMap()) ?>
-    <?= $form->field($model, 'status')->dropDownList(\app\models\Place::getStatusesMap()) ?>
+    <?= $form->field($model, 'type')->dropDownList(\app\constants\PlaceConstants::getTypeMap()) ?>
+    <?= $form->field($model, 'status')->dropDownList(\app\constants\AppConstants::getStatusMap()) ?>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Обновить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

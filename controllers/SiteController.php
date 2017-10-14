@@ -59,29 +59,6 @@ class SiteController extends BaseMapController
     }
 
     /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionAdd()
-    {
-        $model = new Place();
-        if (Yii::$app->request->post()) {
-
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                Helper::setMessage('После проверки, точка появится на карте', Helper::TYPE_MESSAGE_SUCCESS);
-                return $this->refresh();
-            } else {
-                Helper::setMessage($model->getErrors());
-            }
-        }
-
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
      * Displays about page.
      *
      * @return string

@@ -239,13 +239,31 @@ function FormPlace() {
     };
 
     var addEvents = function () {
+        var self = this;
         form.submit(function () {
             clearError();
             checkRequired();
             if (error) {
                 return false;
             }
+        });
+        $('.js-fake-image').on('click', function() {
+            $('.js-image').trigger('click');
+        });
+        $('.js-image').on('change', function() {
+            fileUploader.upload('image', successUpload);
         })
+    };
+
+    var successUpload = function(res) {
+        var url = res.responseText ? JSON.parse(res.responseText).url : '';
+        setPreview(url);
+    };
+
+    var setPreview = function(url) {
+        if (url) {
+            $('.js-fake-image').css('background-image', 'url(/' + url + ')');
+        }
     };
 
     var checkRequired = function () {
@@ -287,11 +305,11 @@ function FlashError() {
         });
     };
 
-    var getMessage = function(type, message) {
+    var getMessage = function (type, message) {
         return '<div class="flash-errors ' + type + '"><span class="flash-errors__text">' + message + '</span><div class="flash-errors__close">x</div></div>'
     };
 
-    var removeMessage = function() {
+    var removeMessage = function () {
         if ($('.flash-errors__text').length) {
             $('.flash-errors').remove();
         }
@@ -302,7 +320,7 @@ function FlashError() {
         $('body').append(getMessage('error', message));
     };
 
-    this.setInfo = function(message) {
+    this.setInfo = function (message) {
         removeMessage();
         $('body').append(getMessage('info', message));
     };
@@ -311,38 +329,53 @@ function FlashError() {
 }
 
 function BaseMap() {
-    this.getBalloonContent = function(item) {
+    this.getBalloonContent = function (item) {
         var footer = "<div class='cus-balloon__footer'>";
         if (item.type == 0) {
             footer += "<div class='confirmation js-yes-no'><span class='yes'>" + item.yes + "</span> / <span class='no'>" + item.no + "</span></div>";
         }
         footer += "<a href='/place/" + item.id + "/' class='glyphicon glyphicon-share-alt more'></a>";
-        footer +=  "</div>";
+        footer += "</div>";
+
+        var image = '';
+        if (item.mainImage && item.mainImage.url) {
+            image = "<div class='cus-balloon__img'><img src='" + this.getThumbUrl(item.mainImage.url) + "'></div>";
+        }
 
 
-        return "" +
-        "<div class='cus-balloon'>" +
-        "<div class='cus-balloon__header'>" + item.name + "</div>" +
-        "<div class='cus-balloon__body'>" +
-                "<div class='work_time'>" + item.work_time + "</div>" +
-                "<div class='work_time'>" + item.work_time + "</div>" +
-                "<div class='work_time'>" + item.work_time + "</div>" +
-                "<div class='work_time'>" + item.work_time + "</div>" +
-                "<div class='work_time'>" + item.work_time + "</div>" +
-                "<div class='work_time'>" + item.work_time + "</div>" +
-                "<div class='description'>" + item.description + "</div>" +
+        var content = "" +
+            "<div class='cus-balloon'>" +
+            "<div class='cus-balloon__header'>" + item.name + "</div>" +
+            image +
+
+            "<div class='cus-balloon__body'>" +
+            "<div class='work_time'>" + item.work_time + "</div>" +
+            "<div class='work_time'>" + item.work_time + "</div>" +
+            "<div class='work_time'>" + item.work_time + "</div>" +
+            "<div class='work_time'>" + item.work_time + "</div>" +
+            "<div class='work_time'>" + item.work_time + "</div>" +
+            "<div class='work_time'>" + item.work_time + "</div>" +
+            "<div class='description'>" + item.description + "</div>" +
             "</div>" +
-                footer +
-
-
+            footer +
 
             //"<div class='butt plus'><a href='#' class='glyphicon glyphicon-plus'></a></div>" +
             //"<div class='butt plus'><a href='#' class='glyphicon glyphicon-plus'></a><br>14</div>" +
             //"<div class='butt minus'><a href='#' class='glyphicon glyphicon-minus'></a><br>12</div>" +
             "</div>";
+
+        return content;
     };
 
-    this.getPlacemark = function(item, color) {
+    this.getThumbUrl = function (url) {
+        var pos = url.lastIndexOf('/');
+        if (pos !== -1) {
+            url = url.addSubStr(pos + 1, 'thumb_');
+        }
+        return url;
+    };
+
+    this.getPlacemark = function (item, color) {
         return new ymaps.Placemark([item.lat, item.lon], {
             hintContent: item.name,
             balloonContentHeader: false,
@@ -373,7 +406,7 @@ function MapMain() {
     };
 
     var addEvents = function () {
-        $('body').on('click', '.js-yes-no', function() {
+        $('body').on('click', '.js-yes-no', function () {
             flashError.setInfo('Место еще не подтвержено администратором. Вы можете помочь подтвердить информацию в подробном описании места.')
         });
         ymaps.ready(function () {
