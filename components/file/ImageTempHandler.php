@@ -25,7 +25,7 @@ class ImageTempHandler extends FileHandler
         $folders = self::getFoldersList(ImageConstants::FOLDERS['TEMP']);
 
         foreach ($folders as $folder) {
-            $old = (int)self::getFolderNameFromDir($folder);
+            $old = (int)self::getNameFromDir($folder);
             if ($old !== $current && $old !== $current - 1) {
 
                 if (!($current === 0 && $old === 23)) {
@@ -59,9 +59,7 @@ class ImageTempHandler extends FileHandler
 
     protected static function getSizes()
     {
-        return [
-            ImageConstants::IMAGE_SIZE['PREVIEW_MAIN']
-        ];
+        return [];
     }
 
     public static function createThumbs($url)

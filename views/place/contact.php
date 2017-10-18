@@ -12,12 +12,13 @@ use yii\captcha\Captcha;
 ?>
 <div class="add-place">
     <div class="add-place__header"></div>
-    <!--<div class="add-place__map" id="ymapAdd"></div>-->
+    <div class="add-place__map" id="ymapAdd"></div>
     <div id="add-place" class="add-place__footer">
 
         <form id="form-place" class="form-place" method="post">
             <input type="hidden" id="csrf" name="<?= Yii::$app->request->csrfParam; ?>"
                    value="<?= Yii::$app->request->csrfToken; ?>"/>
+            <input type="hidden" id="image-hid" name="image" value=""/>
             <input type="hidden" name="Place[lat]" class="js-point-lat required_coord"
                    value="<?= isset($_POST['Place']['lat']) ? $_POST['Place']['lat'] : '' ?>">
             <input type="hidden" name="Place[lon]" class="js-point-lon required_coord"
@@ -28,7 +29,7 @@ use yii\captcha\Captcha;
                    value="<?= isset($_POST['Place']['category_id']) ? $_POST['Place']['category_id'] : '' ?>">
 
             <div class="form-place__column">
-                <input type="text" name="Place[category]" class="js-point-category required"
+                <input type="text" name="Place[category]" class="js-point-category required" disabled
                        value="<?= isset($_POST['Place']['category']) ? $_POST['Place']['category'] : '' ?>"
                        placeholder="*Выберите категорию в меню"><br>
                 <input style="margin-top:5px;" type="text" name="Place[name]" class="js-point-name required"
@@ -43,7 +44,10 @@ use yii\captcha\Captcha;
             <div class="form-place__column">
                 <textarea name="Place[description]" placeholder="Полезная информация"><?= isset($_POST['Place']['description']) ? $_POST['Place']['description'] : '' ?></textarea>
                 <input type="file" name="Image[url]" id="image" accept="image/*" class="js-image" style="display:none;">
-                <div class="fake-image js-fake-image"></div>
+                <div class="fake-image js-fake-image">
+                    <span class="glyphicon glyphicon-camera camera-icon"></span>
+                    <div class="remove-icon" style="display:none">удалить</div>
+                </div>
                 <button type="submit" style="vertical-align: top;" name="savePoint"  class="save-point btn btn-primary btn-flat">Сохранить</button>
             </div>
 
@@ -104,13 +108,47 @@ use yii\captcha\Captcha;
         padding: 10px 0 0 10px;
     }
 
-    .form-place .form-place__column .fake-image {
+    .fake-image {
         display: inline-block;
         border: 1px solid #7d7d7d;
         border-radius: 5px;
         width: 57px;
         height: 57px;
         cursor: pointer;
+        position:relative;
+        color:#9d9d9d;
+        background-size:cover;
+    }
+
+    .fake-image:hover {
+        color:#fff;
+    }
+
+    .fake-image:active {
+        background-color: #101010;
+    }
+
+    .fake-image .camera-icon {
+        color:inherit;
+        position: absolute;
+        font-size: 30px;
+        top: 11px;
+        left: 12px;
+    }
+
+    .fake-image .remove-icon {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        font-size: 12px;
+        text-align: center;
+        background-color: rgba(157, 157, 157, 0.7);
+        color: #f7f7f7;
+        cursor: pointer;
+    }
+
+    .fake-image .remove-icon:hover {
+        background-color: rgba(56, 56, 56, 0.7);
     }
 
     .form-place .form-place__column input[type=text] {

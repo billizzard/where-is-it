@@ -4,61 +4,8 @@ namespace app\components\file;
 
 use Imagine\Image\Box;
 
-class FileHandler extends AFileHandler
+class FileHandler extends FileHelper
 {
-    /**
-     * Возвращает массив папок, содержащихся в директории
-     * @param $folder
-     * @return array
-     */
-    protected static function getFoldersList($folder)
-    {
-        return glob( $folder . '*', GLOB_ONLYDIR );
-    }
-
-    /**
-     * Возвращает название последней папки в пути
-     * @param $dir
-     * @return bool|string
-     */
-    protected static function getFolderNameFromDir($dir)
-    {
-        $pos = strripos($dir, '/');
-        if ($pos !== false) {
-            $dir = substr($dir, $pos + 1);
-        }
-        return $dir;
-    }
-
-    /**
-     * Удаляет директорию и все ее содержимое
-     * @param $dir
-     */
-    protected static function removeDir($dir)
-    {
-        if ($files = glob($dir."/*")) {
-            foreach($files as $file) {
-                is_dir($file) ? self::removeDir($file) : unlink($file);
-            }
-        }
-        rmdir($dir);
-    }
-
-    /**
-     * Добавляет к файлу префикс
-     * @param $url
-     * @param $prefix
-     * @return string
-     */
-    protected static function addPrefix($url, $prefix) {
-        $newUrl = '';
-        $pos = strripos($url, '/');
-        if ($pos !== false) {
-            $newUrl = substr($url, 0, $pos + 1) . $prefix . substr($url, $pos + 1);
-        }
-        return $newUrl;
-    }
-
     /**
      * Создает уменьшенные копии изображений
      * @param $url
@@ -111,4 +58,6 @@ class FileHandler extends AFileHandler
     {
        return [];
     }
+
+
 }

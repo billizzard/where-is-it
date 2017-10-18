@@ -155,16 +155,7 @@ function MapAdd() {
         myPlacemark.properties.set('iconCaption', 'поиск...');
         ymaps.geocode(coords).then(function (res) {
             var firstGeoObject = res.geoObjects.get(0);
-            //console.log('firstGeo');
             var coordinates = firstGeoObject.geometry.getCoordinates();
-            //console.log(firstGeoObject);
-            console.log(coordinates);
-            // var address = [
-            //     // Название населенного пункта или вышестоящее административно-территориальное образование.
-            //     firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas(),
-            //     // Получаем путь до топонима, если метод вернул null, запрашиваем наименование здания.
-            //     firstGeoObject.getThoroughfare() || firstGeoObject.getPremise()
-            // ].filter(Boolean).join(', ');
 
             var address = [
                 // Название населенного пункта или вышестоящее административно-территориальное образование.
@@ -172,11 +163,7 @@ function MapAdd() {
                 // Получаем путь до топонима, если метод вернул null, запрашиваем наименование здания.
                 firstGeoObject.getThoroughfare() || firstGeoObject.getPremise()
             ];
-            console.log(address[0]);
-            console.log(address[1]);
             var add = firstGeoObject.getAddressLine();
-            console.log(add);
-
 
             insertAddress(add);
             insertCoords(coords);
@@ -239,7 +226,6 @@ function FormPlace() {
     };
 
     var addEvents = function () {
-        var self = this;
         form.submit(function () {
             clearError();
             checkRequired();
@@ -247,12 +233,19 @@ function FormPlace() {
                 return false;
             }
         });
+
         $('.js-fake-image').on('click', function() {
             $('.js-image').trigger('click');
         });
+
         $('.js-image').on('change', function() {
             fileUploader.upload('image', successUpload);
-        })
+        });
+
+        $('.remove-icon').on('click', function() {
+            removePreview();
+            return false;
+        });
     };
 
     var successUpload = function(res) {
@@ -263,7 +256,17 @@ function FormPlace() {
     var setPreview = function(url) {
         if (url) {
             $('.js-fake-image').css('background-image', 'url(/' + url + ')');
+            $('#image-hid').val(url);
+            $('.camera-icon').css('display', 'none');
+            $('.remove-icon').css('display', 'block');
         }
+    };
+
+    var removePreview = function() {
+        $('.js-fake-image').css('background-image', '');
+        $('#image-hid').val('');
+        $('.camera-icon').css('display', 'block');
+        $('.remove-icon').css('display', 'none');
     };
 
     var checkRequired = function () {

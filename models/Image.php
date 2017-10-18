@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\components\ApiException;
 use app\components\file\FileHandler;
+use app\components\file\FileHelper;
 use app\components\file\FileTempHandler;
 use app\components\file\ImageMainHandler;
 use app\components\file\ImageTempHandler;
@@ -114,9 +115,7 @@ class Image extends \yii\db\ActiveRecord
                 ImageMainHandler::createThumbs($url);
                 $this->url = $url;
                 $this->type = ImageConstants::TYPE['MAIN'];
-                if (!$this->save()) {
-                }
-                return true;
+                return $this->save();
             } else {
                 throw new SiteException($this->getErrors(), 400);
             }
@@ -143,8 +142,22 @@ class Image extends \yii\db\ActiveRecord
         }
     }
 
-    public function getUrl() { return $this->url; }
+    public static function createMainImageFromTemp(Place $place, $tempImageUrl)
+    {
+        if ($url = FileHelper::moveFileToDir($tempImageUrl, $place->getDir())) {
+            $image = new Image();
+            $image->setUrl($url);
+            $image->setPlaceId($place->id);
+            $image->type = ImageConstants::TYPE['MAIN'];
+            if ($image->save()) {
+                ImageMainHandler::createThumbs($image->getUrl());
+            }
+        }
+    }
 
     public function getId() { return $this->id; }
+    public function getUrl() { return $this->url; }
+    public function setUrl($val) { $this->url = $val; }
+    public function setPlaceId($val) { $this->place_id = $val; }
 
 }

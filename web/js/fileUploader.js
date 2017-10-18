@@ -7,7 +7,6 @@ function FileUploader() {
     };
 
     this.upload = function(inputId, callback) {
-        console.log(callback);
         var file = $('#' + inputId).prop('files')[0];
         var formData = new FormData();
         formData.append("Image[url]", '');

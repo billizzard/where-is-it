@@ -12,9 +12,7 @@ class AccessRule extends \yii\filters\AccessRule {
         }
         foreach ($this->roles as $role) {
             if ($role === '?') {
-                if ($user->getIsGuest()) {
-                    return true;
-                }
+                return true;
             } elseif ($role === '@') {
                 if (!$user->getIsGuest()) {
                     return true;

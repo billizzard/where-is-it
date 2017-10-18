@@ -7,6 +7,7 @@ class AdminAssets extends AssetBundle
 
     public $js = [
         'js/js.js',
+        'js/datetimepicker.js',
         'js/adminPlaceMap.js',
         'js/admin.js'
         // more plugin Js here

@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\components\file\FileHelper;
+use app\components\file\ImageMainHandler;
 use app\components\Helper;
 use app\constants\ImageConstants;
 use app\models\Category;
@@ -62,10 +64,13 @@ class PlaceController extends BaseMapController
     public function actionAdd()
     {
         $model = new Place();
-        if (Yii::$app->request->post()) {
 
+        if (Yii::$app->request->post()) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 Helper::setMessage('После проверки, точка появится на карте', Helper::TYPE_MESSAGE_SUCCESS);
+                if ($imageUrl = Yii::$app->request->post('image')) {
+                    Image::createMainImageFromTemp($model, $imageUrl);
+                }
                 return $this->refresh();
             } else {
                 Helper::setMessage($model->getErrors());
