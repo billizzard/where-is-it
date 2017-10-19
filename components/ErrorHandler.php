@@ -17,7 +17,7 @@ class ErrorHandler extends \yii\web\ErrorHandler
     {
 
         //if (YII_ENV !== 'prod') {
-        if (false) {
+        if (true) {
             parent::renderException($exception);
         } else {
             if ($exception->getCode() == 403) {

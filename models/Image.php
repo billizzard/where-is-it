@@ -41,7 +41,7 @@ class Image extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['place_id', 'url'], 'required', 'on' => Image::SCENARIO_DEFAULT],
+            [['place_id'], 'required', 'on' => Image::SCENARIO_DEFAULT],
             [['url'], 'required', 'on' => ImageConstants::SCENARIO['TEMP']],
             [['place_id', 'status', 'type', 'created_at'], 'number'],
             //[['url'], 'string', 'max' => 100],

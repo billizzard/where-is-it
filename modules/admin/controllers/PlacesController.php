@@ -29,48 +29,42 @@ class PlacesController extends BaseController
 {
     public function behaviors()
     {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                // We will override the default rule config with the new AccessRule class
-                'ruleConfig' => [
-                    'class' => AccessRule::className(),
-                ],
-                //'only' => ['delete'],
-                'rules' => [
-                    [
-                        'actions' => ['delete'],
-                        'allow' => true,
-                        'roles' => [User::ROLE_ADMIN],
-                    ],
-                    [
-                        'actions' => ['index'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['create'],
-                        'allow' => true,
-                        'roles' => [User::ROLE_ADMIN],
-                    ],
-                    [
-                        'actions' => ['view'],
-                        'allow' => true,
-                        'roles' => [User::ROLE_ADMIN],
-                    ],
-                    [
-                        'actions' => ['update'],
-                        'allow' => true,
-                        'roles' => [User::ROLE_ADMIN],
-                    ],
-                    [
-                        'actions' => ['remove-image'],
-                        'allow' => true,
-                        'roles' => [User::ROLE_ADMIN],
-                    ]
-                ],
+        $rules = parent::behaviors();
+        $rules['access']['rules'] = [
+            [
+                'actions' => ['delete'],
+                'allow' => true,
+                'roles' => [User::ROLE_ADMIN],
             ],
+            [
+                'actions' => ['index'],
+                'allow' => true,
+                'roles' => ['?'],
+            ],
+            [
+                'actions' => ['create'],
+                'allow' => true,
+                'roles' => [User::ROLE_ADMIN],
+            ],
+            [
+                'actions' => ['view'],
+                'allow' => true,
+                'roles' => ['?'],
+            ],
+            [
+                'actions' => ['update'],
+                'allow' => true,
+                'roles' => ['?'],
+            ],
+            [
+                'actions' => ['remove-image'],
+                'allow' => true,
+                'roles' => [User::ROLE_ADMIN],
+            ]
         ];
+
+        return $rules;
+
     }
 
     public function actions()

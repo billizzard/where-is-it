@@ -41,7 +41,7 @@ $user = Yii::$app->user->getIdentity();
     <div class="js-point-address" style="margin-top:-15px; margin-bottom:15px;"></div>
     <?= $form->field($model, 'work_time')->textarea(['maxlength' => true]) ?>
     <?= $form->field($model, 'description')->textarea(['maxlength' => true]) ?>
-    <? if ($user->isAdmin()) {?>
+    <? if ($user && $user->isAdmin()) {?>
         <?= $form->field($model, 'yes')->textInput() ?>
         <?= $form->field($model, 'no')->textInput() ?>
     <? } ?>

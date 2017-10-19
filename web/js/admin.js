@@ -32,4 +32,24 @@ function DeleteUpload() {
     init();
 }
 
+function Schedule() {
+
+    var init = function() {
+        addEvents();
+    };
+
+    var addEvents = function() {
+        $('.js-output').on('click', function() {
+            changeVisibility($(this));
+        });
+    };
+
+    var changeVisibility = function(el) {
+        el.closest('tr').find('select').val('-1');
+    };
+
+    init();
+}
+
 deleteUpload = new DeleteUpload();
+schedule = new Schedule();
