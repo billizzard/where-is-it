@@ -4,6 +4,7 @@ namespace app\modules\admin\controllers;
 
 use app\models\Category;
 use app\models\City;
+use app\models\Image;
 use app\models\Schedule;
 use app\modules\admin\components\AccessRule;
 use app\modules\admin\components\DeleteAction;
@@ -21,7 +22,7 @@ use yii\filters\VerbFilter;
 /**
  * UsersController implements the CRUD actions for User model.
  */
-class SchedulesController extends BaseController
+class GalleryController extends BaseController
 {
 
     public function behaviors()
@@ -44,20 +45,18 @@ class SchedulesController extends BaseController
      */
     public function actionIndex($place_id)
     {
-        
-        $model = Schedule::findByPlaceId($place_id)->one();
-
-        if (!$model) {
-            $model = new Schedule();
-        }
+        $models = Image::findGallery($place_id)->all();
 
         if (Yii::$app->request->post()) {
+            echo "<pre>";
+            var_dump(Yii::$app->request->post());
+            die();
             $model->fromPost(Yii::$app->request->post());
             $model->save();
         }
 
         return $this->render('index', [
-            'model' => $model,
+            'models' => $models,
         ]);
     }
 

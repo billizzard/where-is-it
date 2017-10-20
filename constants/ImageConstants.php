@@ -7,6 +7,7 @@ class ImageConstants
 {
     const TYPE = [
         'MAIN' => 0,
+        'GALLERY' => 1,
     ];
 
     const IMAGE_SIZE = [
@@ -26,6 +27,7 @@ class ImageConstants
     {
         return [
             self::TYPE['MAIN'] => 'Главное изображение',
+            self::TYPE['GALLERY'] => 'Изображение галлереи',
         ];
     }
 

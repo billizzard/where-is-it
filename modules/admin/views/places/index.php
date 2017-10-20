@@ -63,8 +63,8 @@ $statusesMap = \app\constants\AppConstants::getStatusMap();
                 'format' => 'raw',
                 'filter' => "серый - не заполено <br> черный - заполнено",
                 'value' => function ($model) {
-                    return '<div class="glyphicon glyphicon-time"></div> 
-<div class="glyphicon glyphicon-time"></div>
+                    return '<a href="/admin/schedule/?place_id=' . $model->id . '" class="glyphicon glyphicon-time"></a> 
+<div class="glyphicon glyphicon-camera"></div>
 <div class="glyphicon glyphicon-time"></div>';
                 }
             ],

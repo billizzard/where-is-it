@@ -9,6 +9,7 @@ use app\components\file\FileTempHandler;
 use app\components\file\ImageMainHandler;
 use app\components\file\ImageTempHandler;
 use app\components\SiteException;
+use app\constants\AppConstants;
 use app\constants\ImageConstants;
 use yii\behaviors\TimestampBehavior;
 use yii\web\UploadedFile;
@@ -27,6 +28,7 @@ use yii\web\UploadedFile;
 
 class Image extends \yii\db\ActiveRecord
 {
+    public $files;
     /**
      * @inheritdoc
      */
@@ -42,11 +44,10 @@ class Image extends \yii\db\ActiveRecord
     {
         return [
             [['place_id'], 'required', 'on' => Image::SCENARIO_DEFAULT],
-            [['url'], 'required', 'on' => ImageConstants::SCENARIO['TEMP']],
             [['place_id', 'status', 'type', 'created_at'], 'number'],
-            //[['url'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 255],
             [['url'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Максимум 2MB'],
+            [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Максимум 2MB', 'maxFiles' => 4, 'on' => ImageConstants::SCENARIO['TEMP']],
 
         ];
     }
@@ -89,6 +90,12 @@ class Image extends \yii\db\ActiveRecord
         return self::find()->andWhere('place_id = :place_id',[':place_id' => $place_id]);
     }
 
+    public static function findGallery($place_id)
+    {
+        return self::find()->andWhere(['type' => ImageConstants::TYPE['GALLERY'], 'status' => AppConstants::STATUS['MODERATE']])
+        ->andWhere('place_id = :place_id', [':place_id' => $place_id]);
+    }
+
     public function getMainImages()
     {
         return ImageMainHandler::getAllImages($this->getUrl());
@@ -122,25 +129,52 @@ class Image extends \yii\db\ActiveRecord
         }
     }
 
-    public function uploadTempImage()
+    public function uploadTempImages()
     {
-        $this->url = UploadedFile::getInstance($this, 'url');
+        $urls = [];
+        $this->files = UploadedFile::getInstances($this, 'url');
 
-        $dir = ImageTempHandler::getTempDir();
-        $name = uniqid() . '.' . $this->url->extension;
+        if ($this->validate()) {
+            foreach ($this->files as $file) {
+                $dir = ImageTempHandler::getTempDir();
+                $name = uniqid() . '.' . $file->extension;
 
-        $url = $dir . '/' . $name;
+                $url = $dir . '/' . $name;
 
-        if ($this->url) {
-            if ($this->validate()) {
-                $this->url->saveAs($url);
-                ImageTempHandler::createThumbs($url);
-                $this->url = $url;
-            } else {
-                throw new ApiException($this->getErrors(), 400);
+                if ($file) {
+                    $file->saveAs($url);
+                    ImageTempHandler::createThumbs($url);
+                    $urls[] = $url;
+                }
             }
+        } else {
+            throw new ApiException($this->getErrors(), 400);
         }
+
+        return $urls;
+
+
     }
+
+//    public function uploadTempImage()
+//    {
+//        $this->url = UploadedFile::getInstances($this, 'url');
+//
+//        $dir = ImageTempHandler::getTempDir();
+//        $name = uniqid() . '.' . $this->url->extension;
+//
+//        $url = $dir . '/' . $name;
+//
+//        if ($this->url) {
+//            if ($this->validate()) {
+//                $this->url->saveAs($url);
+//                ImageTempHandler::createThumbs($url);
+//                $this->url = $url;
+//            } else {
+//                throw new ApiException($this->getErrors(), 400);
+//            }
+//        }
+//    }
 
     public static function createMainImageFromTemp(Place $place, $tempImageUrl)
     {

@@ -12,6 +12,11 @@ $config = [
     'bootstrap' => ['log'],
     'components' => [
 
+        'assetManager' => [
+            'class' => 'yii\web\AssetManager',
+            'forceCopy' => true,
+        ],
+
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'a8_6aTDa0b9-yDBp7TTOsj8g3iRHA9j3',

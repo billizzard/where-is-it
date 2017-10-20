@@ -89,8 +89,8 @@ class PlaceController extends BaseMapController
 
         if ($modelImage->load(Yii::$app->request->post())) {
 
-            $modelImage->uploadTempImage();
-            return ['url' => $modelImage->url];
+            $url = $modelImage->uploadTempImages();
+            return $url;
         }
     }
 
