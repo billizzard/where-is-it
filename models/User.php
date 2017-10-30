@@ -16,7 +16,7 @@ namespace app\models;
  * @property integer updated_at
  */
 
-class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
+class User extends BaseModel implements \yii\web\IdentityInterface
 {
     const ROLE_GUEST = 0;
     const ROLE_ADMIN = 1;

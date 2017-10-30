@@ -19,9 +19,15 @@ $format = $model->getFormatSchedule();
 
 <div class="user-form">
 
+    <? if ($noCheckModel) { ?>
+        <p>
+            Для этого места есть не проверенные модератором графики работы, добавлять/изменять график работы временно нельзя.
+        </p>
+    <? } ?>
+
     <?php $form = ActiveForm::begin(); ?>
 
-    <table class="schedule__table">
+    <table class="schedule__table js-schedule">
         <tr>
             <th colspan="3">График</th>
             <th>Круг-но</th>
@@ -93,10 +99,13 @@ $format = $model->getFormatSchedule();
     <? } ?>
     </table>
 
+    <? if (!$noCheckModel) { ?>
 
     <div class="form-group" style="margin-top:15px;">
         <?= Html::submitButton('Сохранить', ['class' =>'btn btn-success']) ?>
     </div>
+    <? } ?>
+    <input type="hidden" name="place_id" value="<?=$_GET['place_id']?>">
 
     <?php ActiveForm::end(); ?>
 

@@ -21,7 +21,7 @@ function FileUploader() {
             data: formData,
             type: 'post',
             beforeSend: function() {
-                console.log('beforeSend');
+                //console.log('beforeSend');
             },
             complete: function(res) {
                 if (res && res.status === 200) {

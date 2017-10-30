@@ -6,38 +6,17 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\admin\models\search\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-
-$this->title = 'Места';
-$this->params['breadcrumbs'][] = $this->title;
 $categoriesMap = \app\models\Category::getCategoriesMap();
 $statusesMap = \app\constants\AppConstants::getStatusMap();
-
+/** @var \app\models\User $user */
+$user = Yii::$app->user->getIdentity();
 ?>
-<style>
-    .grid-view .table > tbody > tr > td.add-info {
-        padding:0;
-    }
-    .grid-view .add-info .glyphicon {
-        display: inline-block;
-        background-color: #ffffff;
-        padding: 7px;
-        color:#bfbfbf;
-        color: #636363;
-        font-size: 18px;
-        border-radius: 3px;
-        border: 1px solid #e5efff;
-        cursor: pointer;
-    }
 
-    .grid-view .add-info .glyphicon:hover{
-        background-color:#cecece;
-    }
-
-    .grid-view .add-info .glyphicon:active{
-        background-color:#969696;
-    }
-
-</style>
+<? if ($user && $user->hasAccess(\app\models\User::RULE_ADMIN_PANEL)) { ?>
+    <?
+    $this->title = 'Места';
+    $this->params['breadcrumbs'][] = $this->title;
+    ?>
 <div class="user-index">
 
     <p>
@@ -48,7 +27,10 @@ $statusesMap = \app\constants\AppConstants::getStatusMap();
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            'id',
+            [
+                'attribute' => 'id',
+                'filter' => false,
+            ],
             'name',
             [
                 'attribute' => 'category_id',
@@ -63,8 +45,8 @@ $statusesMap = \app\constants\AppConstants::getStatusMap();
                 'format' => 'raw',
                 'filter' => "серый - не заполено <br> черный - заполнено",
                 'value' => function ($model) {
-                    return '<a href="/admin/schedule/?place_id=' . $model->id . '" class="glyphicon glyphicon-time"></a> 
-<div class="glyphicon glyphicon-camera"></div>
+                    return '<a href="/admin/schedules/?place_id=' . $model->id . '" class="glyphicon glyphicon-time"></a> 
+<a href="/admin/gallery/?place_id=' . $model->id . '" class="glyphicon glyphicon-camera"></a>
 <div class="glyphicon glyphicon-time"></div>';
                 }
             ],
@@ -82,3 +64,62 @@ $statusesMap = \app\constants\AppConstants::getStatusMap();
         ],
     ]); ?>
 </div>
+<? } else { ?>
+
+    <?
+    $this->title = 'Место';
+    ?>
+    <div class="user-index">
+
+        <p>
+            Тут вы можете заполнить информацию о месте более подробно.
+        </p>
+
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
+            'filterModel' => null,
+            'summary' => false,
+            'columns' => [
+                'name',
+                [
+                    'attribute' => 'url',
+                    'label' => 'Изображение',
+                    'format' => 'raw',
+                    'value' => function($model) {
+
+                        if ($image = $model->mainImage) {
+                            $image = $image->getMainImages();
+                            if ($image['map_']) {
+                                return '<img src="/' . $image['map_'] . '">';
+                            }
+                        }
+                    }
+                ],
+                [
+                    'attribute' => 'category_id',
+                    'value' => function($model) use ($categoriesMap) {
+                        return isset($categoriesMap[$model->category_id]) ? $categoriesMap[$model->category_id] : false;
+                    }
+                ],
+                [
+                    'label' => 'Добавление информации',
+                    'contentOptions' => ['class' => 'add-info'],
+                    'format' => 'raw',
+                    'value' => function ($model) {
+                        return '<a href="/admin/schedules/?place_id=' . $model->id . '" class="glyphicon glyphicon-time"></a> - заполните время работы <br> 
+<a href="/admin/gallery/?place_id=' . $model->id . '" class="glyphicon glyphicon-camera"></a> - заполните галлерею  <br>
+<a href="/admin/places/update/?id=' . $model->id . '" class="glyphicon glyphicon-pencil"></a> - редактровать объект  <br>
+<div class="glyphicon glyphicon-time"></div>';
+                    }
+                ],
+                [
+                    'attribute' => 'status',
+                    'value' => function($model) use ($statusesMap) {
+                        return isset($statusesMap[$model->status]) ? $statusesMap[$model->status] : false;
+                    }
+                ],
+            ],
+        ]); ?>
+    </div>
+
+<? } ?>

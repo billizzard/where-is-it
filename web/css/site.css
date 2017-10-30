@@ -124,6 +124,10 @@ a.desc:after {
     color: #fff;
     z-index: 820;
 }
+.flash-errors .flash-errors__text a {
+    text-decoration: underline;
+    color:#fff;
+}
 
 .flash-errors.success {
     background-color: rgba(1, 140, 0, 0.84);

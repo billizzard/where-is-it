@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\controllers;
 
+use app\constants\AppConstants;
 use app\models\Category;
 use app\models\City;
 use app\models\Image;
@@ -81,11 +82,19 @@ class PlacesController extends BaseController
      * Lists all User models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($place_id = false)
     {
+        $params = Yii::$app->request->queryParams;
+
+        if ($place_id = (int)$place_id) {
+            $params['PlaceSearch']['id'] = $place_id;
+            $_SESSION['place_id'] = $place_id;
+        } else {
+            unset($_SESSION['place_id']);
+        }
 
         $searchModel = new PlaceSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search($params);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -140,19 +149,33 @@ class PlacesController extends BaseController
     public function actionUpdate($id)
     {
         $model = Place::findOne($id);
+        $noCheckModel = Place::findByStatus(AppConstants::STATUS['NO_MODERATE'])->one();
         $modelImage = new Image();
 
         if ($model->load(Yii::$app->request->post()) && $modelImage->load(Yii::$app->request->post())) {
-            if ($model->save()) {
-                $modelImage->uploadMainImage($model);
-
-                return $this->redirect(['view', 'id' => $model->id]);
+            /** @var User $user */
+            $user = \Yii::$app->user->getIdentity();
+            if (!$user || !$user->hasAccess(User::RULE_OWNER, ['model' => $this])) {
+                if (!$noCheckModel) {
+                    $clone = new Place();
+                    $clone->attributes = $model->attributes;
+                    $clone->parent_id = $model->id;
+                    $clone->save();
+                    $modelImage->uploadMainImage($clone);
+                }
+            } else {
+                if ($model->save()) {
+                    $modelImage->uploadMainImage($model);
+                }
             }
+            return $this->redirect(['view', 'id' => $model->id]);
+
         }
 
         return $this->render('update', [
             'model' => $model,
             'modelImage' => $modelImage,
+            'noCheckModel' => $noCheckModel,
         ]);
     }
 

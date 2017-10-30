@@ -14,7 +14,8 @@ $this->params['breadcrumbs'][] = 'Обновить';
 
     <?= $this->render('_form', [
         'model' => $model,
-        'modelImage'=> $modelImage
+        'modelImage'=> $modelImage,
+        'noCheckModel'=> $noCheckModel,
     ]) ?>
 
 </div>

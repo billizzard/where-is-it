@@ -1,3 +1,4 @@
+<? $user = Yii::$app->user->getIdentity(); ?>
 <aside class="main-sidebar">
 
     <section class="sidebar">
@@ -28,10 +29,16 @@
 
         <ul class="sidebar-menu">
             <!--<li class="header"><span><span>Menu Yii2</span></span></li>-->
+            <? if ($user && $user->hasAccess(\app\models\User::RULE_ADMIN_PANEL)) { ?>
             <li><a href="/admin/users"><i>1.</i>  <span>Users</span></a></li>
+            <? } ?>
+            <? if ($user && $user->hasAccess(\app\models\User::RULE_ADMIN_PANEL)) { ?>
             <li><a href="/admin/categories"><i>2.</i>  <span>Categories</span></a></li>
+            <? } ?>
+            <? if ($user && $user->hasAccess(\app\models\User::RULE_ADMIN_PANEL)) { ?>
             <li><a href="/admin/cities"><i>3.</i>  <span>Cities</span></a></li>
-            <li><a href="/admin/places"><i>4.</i>  <span>Места</span></a></li>
+            <? } ?>
+            <li><a href="/admin/places/<?=isset($_SESSION['place_id']) ? '?place_id=' . $_SESSION['place_id'] : ''?>"><i>4.</i>  <span>Места</span></a></li>
             <!--<li><a href="/debug"><i class="fa fa-dashboard"></i>  <span>Categories</span></a></li>
             <li class="active"><a href="#"><i class="fa fa-share"></i>  <span>Same tools</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                 <ul class="treeview-menu menu-open" style="display: block;">

@@ -249,8 +249,11 @@ function FormPlace() {
     };
 
     var successUpload = function(res) {
-        var url = res.responseText ? JSON.parse(res.responseText).url : '';
-        setPreview(url);
+        var url = res.responseText ? JSON.parse(res.responseText) : '';
+        if (url.length) {
+            setPreview(url[0]);
+        }
+
     };
 
     var setPreview = function(url) {

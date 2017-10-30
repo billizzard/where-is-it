@@ -6,6 +6,7 @@ use app\components\ApiException;
 use app\components\file\FileHandler;
 use app\components\file\FileHelper;
 use app\components\file\FileTempHandler;
+use app\components\file\ImageGalleryHandler;
 use app\components\file\ImageMainHandler;
 use app\components\file\ImageTempHandler;
 use app\components\SiteException;
@@ -26,7 +27,7 @@ use yii\web\UploadedFile;
  * @property integer created_at
  */
 
-class Image extends \yii\db\ActiveRecord
+class Image extends BaseModel
 {
     public $files;
     /**
@@ -61,7 +62,7 @@ class Image extends \yii\db\ActiveRecord
             'place_id' => 'Место',
             'status' => 'Статус',
             'type' => 'Тип',
-            'url' => 'Путь',
+            'url' => 'Изображение',
             'description' => 'Описание',
             'created_at' => 'Дата создания',
         ];
@@ -176,16 +177,23 @@ class Image extends \yii\db\ActiveRecord
 //        }
 //    }
 
-    public static function createMainImageFromTemp(Place $place, $tempImageUrl)
+    public static function createMainImageFromTemp(Place $place, $tempImageUrl, $type = ImageConstants::TYPE['MAIN'])
     {
         if ($url = FileHelper::moveFileToDir($tempImageUrl, $place->getDir())) {
             $image = new Image();
             $image->setUrl($url);
             $image->setPlaceId($place->id);
-            $image->type = ImageConstants::TYPE['MAIN'];
+            $image->type = $type;
             if ($image->save()) {
-                ImageMainHandler::createThumbs($image->getUrl());
+                $image->createThumbs();
             }
+        }
+    }
+
+    private function createThumbs() {
+        switch ($this->type) {
+            case ImageConstants::TYPE['MAIN']: ImageMainHandler::createThumbs($this->url); break;
+            case ImageConstants::TYPE['GALLERY']: ImageGalleryHandler::createThumbs($this->url); break;
         }
     }
 

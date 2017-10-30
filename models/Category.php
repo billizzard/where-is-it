@@ -12,7 +12,7 @@ namespace app\models;
  * @property string sort
  */
 
-class Category extends \yii\db\ActiveRecord
+class Category extends BaseModel
 {
 
     /**

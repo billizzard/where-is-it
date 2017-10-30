@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\controllers;
 
+use app\constants\AppConstants;
 use app\models\Category;
 use app\models\City;
 use app\models\Schedule;
@@ -44,20 +45,26 @@ class SchedulesController extends BaseController
      */
     public function actionIndex($place_id)
     {
+        $model = Schedule::findByPlaceAndStatus($place_id, AppConstants::STATUS['MODERATE'])->one();
+        $noCheckModel = Schedule::findByPlaceAndStatus($place_id, AppConstants::STATUS['NO_MODERATE'])->one();
         
-        $model = Schedule::findByPlaceId($place_id)->one();
-
         if (!$model) {
             $model = new Schedule();
         }
 
-        if (Yii::$app->request->post()) {
+        if (Yii::$app->request->post() && !$noCheckModel) {
+            if ($id = $model->id) {
+                $model = new Schedule();
+                $model->parent_id = $id;
+            }
             $model->fromPost(Yii::$app->request->post());
             $model->save();
+            $noCheckModel = $model;
         }
 
         return $this->render('index', [
             'model' => $model,
+            'noCheckModel' => $noCheckModel
         ]);
     }
 

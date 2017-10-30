@@ -68,8 +68,13 @@ class FileHelper
      * @return bool|string
      */
     public static function moveFileToDir($fromUrl, $toDir) {
+        if (substr($fromUrl, 0, 1) === '/') {
+            $fromUrl = substr($fromUrl, 1);
+        }
         if ($fromUrl && file_exists($fromUrl)) {
+
             $newUrl = $toDir . '/' . self::getNameFromDir($fromUrl);
+
             if (file_exists($newUrl)) {
                 $newUrl = self::addPrefix($newUrl,'9');
             }

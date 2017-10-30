@@ -25,6 +25,7 @@ function ImageUploader() {
 
         $('.iu').on('click', '.delete', function() {
             if (confirm('Удалить?')) {
+                setConfig($(this));
                 deleteImage($(this));
             }
         });
@@ -79,7 +80,7 @@ function ImageUploader() {
 
     var deleteByUrl = function(a) {
 
-        var data = {id: a.data('id')};
+        var data = a.data('params');
         $.ajax({
             type: "POST",
             url: config.deleteUrl,
@@ -88,6 +89,12 @@ function ImageUploader() {
             success: function (data, textStatus, xhr) {
                 if (data){
                     removePreview(a);
+                }
+            },
+            complete: function (res) {
+                if (res && res.status !== 200) {
+                    var response = res.responseText ? JSON.parse(res.responseText).message : 'Не удалось загрузить изображение';
+                    showError('Недостаточно прав');
                 }
             }
         });
@@ -124,16 +131,20 @@ function ImageUploader() {
         config.uploadUrl = inputFile.data('uploadurl');
         config.errorCallback = inputFile.data('errorcallback');
         config.deleteUrl = inputFile.data('deleteurl');
+        config.deleteButton = inputFile.data('deletebutton');
+        config.uploadButton = inputFile.data('uploadbutton');
     };
 
     var setPreview = function(files) {
         if (files.length) {
             for (var i = 0; i < files.length; i++) {
                 var url = '/' + files[i];
-                var content = '<div class="iu_uploaded_img">' +
-                    '<img src="' + url + '">'+
-                    '<span href="#" class="delete" data-id=">">x</span>' +
-                    '</div>';
+                var content = '<div class="iu_uploaded_img js-new-image">' +
+                    '<img src="' + url + '">';
+                if (config.deleteButton) {
+                    content += '<span href="#" class="delete" data-id=">">x</span>'
+                }
+                content += '</div>';
                 iu.find('.iu_gallery').append(content);
             }
         }
@@ -142,7 +153,7 @@ function ImageUploader() {
 
     var updateInputUrlValue = function() {
         var urlArr = [];
-        iu.find('.iu_uploaded_img img').each(function() {
+        iu.find('.js-new-image img').each(function() {
             urlArr.push($(this).attr('src'));
         });
         iu.find('.js-image-url').val(urlArr.join(','));

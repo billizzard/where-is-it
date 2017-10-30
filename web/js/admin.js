@@ -42,6 +42,10 @@ function Schedule() {
         $('.js-output').on('click', function() {
             changeVisibility($(this));
         });
+
+        $('.js-schedule select').on('change', function() {
+            $(this).closest('tr').find('.js-output').prop('checked', false);
+        })
     };
 
     var changeVisibility = function(el) {

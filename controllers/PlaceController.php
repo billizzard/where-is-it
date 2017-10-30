@@ -67,7 +67,7 @@ class PlaceController extends BaseMapController
 
         if (Yii::$app->request->post()) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                Helper::setMessage('После проверки, точка появится на карте', Helper::TYPE_MESSAGE_SUCCESS);
+                Helper::setMessage('После проверки, точка появится на карте (<a href="/admin/places/?place_id=' . $model->id . '" target="_blank">заполнить детально</a>).', Helper::TYPE_MESSAGE_SUCCESS);
                 if ($imageUrl = Yii::$app->request->post('image')) {
                     Image::createMainImageFromTemp($model, $imageUrl);
                 }

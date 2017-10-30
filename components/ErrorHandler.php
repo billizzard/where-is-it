@@ -15,7 +15,6 @@ class ErrorHandler extends \yii\web\ErrorHandler
 
     protected function renderException($exception)
     {
-
         //if (YII_ENV !== 'prod') {
         if (true) {
             parent::renderException($exception);
@@ -29,6 +28,8 @@ class ErrorHandler extends \yii\web\ErrorHandler
             } else if ($exception->getCode() == 404) {
                 header('Location: /404');
                 die();
+            } else {
+                $this->getAnswer($exception);
             }
         }
 
@@ -37,15 +38,17 @@ class ErrorHandler extends \yii\web\ErrorHandler
     private function getAnswer($exception)
     {
 
-        if ($exception->getType() == 'api') {
+        if (\Yii::$app->request->isAjax) {
             $response = \Yii::$app->response;
             $response->format = Response::FORMAT_JSON;
             $response->data = ['message' => $exception->getMessage()];
-            $response->statusCode = $exception->getCode();
+            $response->statusCode = $exception->getCode() ? $exception->getCode() : 400;
             $response->send();
         } else {
-            Helper::setMessage($exception->getMessage());
-            \Yii::$app->response->redirect(\Yii::$app->request->referrer)->send();
+            if ($exception->getCode()) {
+                Helper::setMessage($exception->getMessage());
+                \Yii::$app->response->redirect(\Yii::$app->request->referrer)->send();
+            }
 
         }
     }

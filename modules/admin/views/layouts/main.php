@@ -11,6 +11,11 @@ use yii\helpers\Html;
 
 
     $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
+    $user = Yii::$app->user->getIdentity();
+    $class = '';
+if (!$user || $user->hasAccess(\app\models\User::RULE_ADMIN_PANEL)) {
+    $class = 'guest-wrapper';
+}
     ?>
     <?php $this->beginPage() ?>
     <!DOCTYPE html>
@@ -39,17 +44,24 @@ use yii\helpers\Html;
     -->
     <body class="hold-transition skin-blue sidebar-mini">
     <?php $this->beginBody() ?>
-    <div class="wrapper">
+    <div class="wrapper ">
 
-        <?= $this->render(
-            'header.php',
-            ['directoryAsset' => $directoryAsset]
-        ) ?>
+        <?
+        //if ($user && $user->hasAccess(\app\models\User::RULE_ADMIN_PANEL)) {
+            echo $this->render(
+                'header.php',
+                ['directoryAsset' => $directoryAsset]
+            );
+        //}
+        ?>
 
-        <?= $this->render(
-            'left.php',
-            ['directoryAsset' => $directoryAsset]
-        )
+        <?
+        //if ($user && $user->hasAccess(\app\models\User::RULE_ADMIN_PANEL)) {
+            echo $this->render(
+                'left.php',
+                ['directoryAsset' => $directoryAsset]
+            );
+        //}
         ?>
 
         <?= $this->render(
@@ -61,6 +73,7 @@ use yii\helpers\Html;
 
     <?php $this->endBody() ?>
     <?= \app\components\Helper::getMessage() ?>
+
     </body>
     </html>
     <?php $this->endPage() ?>

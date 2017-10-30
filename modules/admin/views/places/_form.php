@@ -17,6 +17,12 @@ $user = Yii::$app->user->getIdentity();
 
 <div class="user-form">
 
+    <? if ($noCheckModel) {?>
+        <p>
+            У места есть непроверенные модератором данные. Данные места временно нельзя изменять/сохранять.
+        </p>
+    <? } else {  ?>
+
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
@@ -41,16 +47,26 @@ $user = Yii::$app->user->getIdentity();
     <div class="js-point-address" style="margin-top:-15px; margin-bottom:15px;"></div>
     <?= $form->field($model, 'work_time')->textarea(['maxlength' => true]) ?>
     <?= $form->field($model, 'description')->textarea(['maxlength' => true]) ?>
+
     <? if ($user && $user->isAdmin()) {?>
         <?= $form->field($model, 'yes')->textInput() ?>
         <?= $form->field($model, 'no')->textInput() ?>
     <? } ?>
-    <?= $form->field($model, 'type')->dropDownList(\app\constants\PlaceConstants::getTypeMap()) ?>
+
+    <? if ($user && $user->isAdmin()) {?>
+        <?= $form->field($model, 'type')->dropDownList(\app\constants\PlaceConstants::getTypeMap()) ?>
+    <? } ?>
+
+    <? if ($user && $user->hasAccess(\app\models\User::RULE_OWNER)) {?>
     <?= $form->field($model, 'status')->dropDownList(\app\constants\AppConstants::getStatusMap()) ?>
+    <? } ?>
+
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Обновить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
+
     <?php ActiveForm::end(); ?>
+    <? } ?>
 
 </div>

@@ -8,6 +8,7 @@ class ImageConstants
     const TYPE = [
         'MAIN' => 0,
         'GALLERY' => 1,
+        'GALLERY_NEW_VARIANT' => 2,
     ];
 
     const IMAGE_SIZE = [

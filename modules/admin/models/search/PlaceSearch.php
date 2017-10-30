@@ -19,7 +19,7 @@ class PlaceSearch extends Place
     public function rules()
     {
         return [
-            [['lat', 'lon', 'category_id', 'status'], 'number'],
+            [['lat', 'lon', 'category_id', 'status', 'id'], 'number'],
             [['name', 'address'], 'string', 'max' => 255],
             [['description'], 'string'],
         ];
@@ -44,6 +44,7 @@ class PlaceSearch extends Place
         ]);
 
         $this->load($params);
+
 
         if (!$this->validate()) {
             return $dataProvider;

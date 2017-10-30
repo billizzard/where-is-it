@@ -26,11 +26,12 @@ use yii\behaviors\TimestampBehavior;
  * @property string work_time
  * @property string dir
  * @property string created_ip
- * @property string created_at
- * @property string updated_at
+ * @property integer created_at
+ * @property integer updated_at
+ * @property integer parent_id
  */
 
-class Place extends \yii\db\ActiveRecord
+class Place extends BaseModel
 {
     public $category;
 
@@ -49,7 +50,7 @@ class Place extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'category_id', 'lat', 'lon'], 'required'],
-            [['lat', 'lon', 'yes', 'no', 'type', 'category_id', 'status', 'user_id'], 'number'],
+            [['lat', 'lon', 'yes', 'no', 'type', 'category_id', 'status', 'user_id', 'parent_id'], 'number'],
             [['name', 'address'], 'string', 'max' => 255],
             [['dir'], 'string', 'max' => 100],
             [['description', 'work_time'], 'string', 'max' => 500],
@@ -78,6 +79,7 @@ class Place extends \yii\db\ActiveRecord
             'work_time' => 'Время работы',
             'created_ip' => 'ip создателя',
             'status' => 'Статус',
+            'parent_id' => 'Родитель',
         ];
     }
 
@@ -143,6 +145,16 @@ class Place extends \yii\db\ActiveRecord
         return $this->hasOne(Image::className(), ['place_id' => 'id'])->andWhere(['image.type' => ImageConstants::TYPE['MAIN']]);
     }
 
+    public function getGallery()
+    {
+        return $this->hasMany(Image::className(), ['place_id' => 'id'])->andWhere(['image.type' => ImageConstants::TYPE['GALLERY']]);
+    }
+
+    public function getGalleryNewVariant()
+    {
+        return $this->hasMany(Image::className(), ['place_id' => 'id'])->andWhere(['image.type' => ImageConstants::TYPE['GALLERY_NEW_VARIANT']]);
+    }
+
     public function getId() {
         return $this->id;
     }
@@ -157,6 +169,29 @@ class Place extends \yii\db\ActiveRecord
             $this->save();
         }
         return $this->dir;
+    }
+
+    public function isCanAddGallery()
+    {
+        /** @var User $user */
+        if ($user = \Yii::$app->user->getIdentity()) {
+            return $user->hasAccess(User::RULE_OWNER, ['model' => $this]);
+        } else {
+            if (!$this->gallery || !$this->galleryNewVariant) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function findChildren($parent_id)
+    {
+        return self::find()->andWhere(['parent_id' => (int)$parent_id]);
+    }
+
+    public static function findByStatus($status)
+    {
+        return self::find()->andWhere('status = :status', ['status' => $status]);
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\constants\AppConstants;
 use Yii;
 
 /**
@@ -25,10 +26,11 @@ use Yii;
  * @property integer $7_to
  * @property string $ip
  * @property integer $parent_id
+ * @property integer $status
  *
  * @property Place $place
  */
-class Schedule extends \yii\db\ActiveRecord
+class Schedule extends BaseModel
 {
     /**
      * @inheritdoc
@@ -44,7 +46,7 @@ class Schedule extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['place_id', '1_from', '1_to', '2_from', '2_to', '3_from', '3_to', '4_from', '4_to', '5_from', '5_to', '6_from', '6_to', '7_from', '7_to', 'parent_id'], 'integer'],
+            [['place_id', '1_from', '1_to', '2_from', '2_to', '3_from', '3_to', '4_from', '4_to', '5_from', '5_to', '6_from', '6_to', '7_from', '7_to', 'parent_id', 'status'], 'integer'],
             [['ip'], 'string', 'max' => 50],
             [['place_id'], 'exist', 'skipOnError' => true, 'targetClass' => Place::className(), 'targetAttribute' => ['place_id' => 'id']],
         ];
@@ -74,6 +76,7 @@ class Schedule extends \yii\db\ActiveRecord
             '7_to' => '7 To',
             'ip' => 'Ip',
             'parent_id' => 'Parent ID',
+            'status' => 'Статус',
         ];
     }
 
@@ -92,6 +95,10 @@ class Schedule extends \yii\db\ActiveRecord
     public static function findByPlaceId($place_id)
     {
         return self::find()->andWhere('place_id = :place_id', [':place_id' => $place_id]);
+    }
+
+    public static function findByPlaceAndStatus($place_id, $status) {
+        return self::findByPlaceId($place_id)->andWhere('status = :status', [':status' => $status]);
     }
 
     public function getFormatSchedule()
@@ -154,6 +161,8 @@ class Schedule extends \yii\db\ActiveRecord
             $this->{$i . '_from'} = $fromH;
             $this->{$i . '_to'} = $toH;
         }
+
+        $this->place_id = $post['place_id'];
 
     }
     

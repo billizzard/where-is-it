@@ -2,9 +2,12 @@
 
 namespace app\modules\admin\controllers;
 
+use app\components\SiteException;
+use app\constants\ImageConstants;
 use app\models\Category;
 use app\models\City;
 use app\models\Image;
+use app\models\Place;
 use app\models\Schedule;
 use app\modules\admin\components\AccessRule;
 use app\modules\admin\components\DeleteAction;
@@ -45,18 +48,35 @@ class GalleryController extends BaseController
      */
     public function actionIndex($place_id)
     {
-        $models = Image::findGallery($place_id)->all();
+        $model = Place::findOneModel($place_id);
+        $galleryImages = Image::findGallery($place_id)->all();
+        $hasOld = $model->gallery ? true : false;
+        $hasNew = $model->galleryNewVariant ? true : false;
 
-        if (Yii::$app->request->post()) {
-            echo "<pre>";
-            var_dump(Yii::$app->request->post());
-            die();
-            $model->fromPost(Yii::$app->request->post());
-            $model->save();
+        if ($post = Yii::$app->request->post()) {
+            if ($post['images']) {
+                if ($model->isCanAddGallery()) {
+                    if (!$model->gallery) {
+                        $type = ImageConstants::TYPE['GALLERY'];
+                    } else if (!$model->galleryNewVariant) {
+                        $type = ImageConstants::TYPE['GALLERY_NEW_VARIANT'];
+                    } else {
+                        throw new SiteException('Нельзя добавить, модератор еще не проверил предыдущую галерею');
+                    }
+
+                    $urls = explode(',', $post['images']);
+                    foreach ($urls as $url) {
+                        Image::createMainImageFromTemp($model, $url, $type);
+                    }
+                }
+                $this->refresh();
+            }
         }
 
         return $this->render('index', [
-            'models' => $models,
+            'models' => $galleryImages,
+            'hasOld' => $hasOld,
+            'hasNew' => $hasNew,
         ]);
     }
 

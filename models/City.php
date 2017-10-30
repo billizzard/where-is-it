@@ -13,7 +13,7 @@ use yii\db\ActiveRecord;
  * @property string name
  */
 
-class City extends \yii\db\ActiveRecord
+class City extends BaseModel
 {
 
     /**

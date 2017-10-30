@@ -1,0 +1,183 @@
+yii\web\NotFoundHttpException Object
+(
+    [statusCode] => 404
+    [message:protected] => Страница не найдена.
+    [string:Exception:private] => 
+    [code:protected] => 0
+    [file:protected] => /var/www/yii2/where-is-it.local/vendor/yiisoft/yii2/web/Application.php
+    [line:protected] => 114
+    [trace:Exception:private] => Array
+        (
+            [0] => Array
+                (
+                    [file] => /var/www/yii2/where-is-it.local/vendor/yiisoft/yii2/base/Application.php
+                    [line] => 380
+                    [function] => handleRequest
+                    [class] => yii\web\Application
+                    [type] => ->
+                    [args] => Array
+                        (
+                            [0] => yii\web\Request Object
+                                (
+                                    [enableCsrfValidation] => 1
+                                    [csrfParam] => _csrf
+                                    [csrfCookie] => Array
+                                        (
+                                            [httpOnly] => 1
+                                        )
+
+                                    [enableCsrfCookie] => 1
+                                    [enableCookieValidation] => 1
+                                    [cookieValidationKey] => a8_6aTDa0b9-yDBp7TTOsj8g3iRHA9j3
+                                    [methodParam] => _method
+                                    [parsers] => Array
+                                        (
+                                        )
+
+                                    [_cookies:yii\web\Request:private] => 
+                                    [_headers:yii\web\Request:private] => 
+                                    [_rawBody:yii\web\Request:private] => 
+                                    [_bodyParams:yii\web\Request:private] => 
+                                    [_queryParams:yii\web\Request:private] => 
+                                    [_hostInfo:yii\web\Request:private] => 
+                                    [_hostName:yii\web\Request:private] => 
+                                    [_baseUrl:yii\web\Request:private] => 
+                                    [_scriptUrl:yii\web\Request:private] => /index.php
+                                    [_scriptFile:yii\web\Request:private] => 
+                                    [_pathInfo:yii\web\Request:private] => assets/7d333959/css/bootstrap.css.map/
+                                    [_url:yii\web\Request:private] => /assets/7d333959/css/bootstrap.css.map/
+                                    [_port:yii\web\Request:private] => 
+                                    [_securePort:yii\web\Request:private] => 
+                                    [_contentTypes:yii\web\Request:private] => 
+                                    [_languages:yii\web\Request:private] => 
+                                    [_csrfToken:yii\web\Request:private] => 
+                                    [_isConsoleRequest:yii\base\Request:private] => 
+                                    [_events:yii\base\Component:private] => Array
+                                        (
+                                        )
+
+                                    [_behaviors:yii\base\Component:private] => 
+                                    [_scriptFile:yii\base\Request:private] => 
+                                )
+
+                        )
+
+                )
+
+            [1] => Array
+                (
+                    [file] => /var/www/yii2/where-is-it.local/web/index.php
+                    [line] => 13
+                    [function] => run
+                    [class] => yii\base\Application
+                    [type] => ->
+                    [args] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [previous:Exception:private] => yii\base\InvalidRouteException Object
+        (
+            [message:protected] => Unable to resolve the request "assets/7d333959/css/bootstrap.css.map".
+            [string:Exception:private] => 
+            [code:protected] => 0
+            [file:protected] => /var/www/yii2/where-is-it.local/vendor/yiisoft/yii2/base/Module.php
+            [line:protected] => 532
+            [trace:Exception:private] => Array
+                (
+                    [0] => Array
+                        (
+                            [file] => /var/www/yii2/where-is-it.local/vendor/yiisoft/yii2/web/Application.php
+                            [line] => 102
+                            [function] => runAction
+                            [class] => yii\base\Module
+                            [type] => ->
+                            [args] => Array
+                                (
+                                    [0] => assets/7d333959/css/bootstrap.css.map
+                                    [1] => Array
+                                        (
+                                        )
+
+                                )
+
+                        )
+
+                    [1] => Array
+                        (
+                            [file] => /var/www/yii2/where-is-it.local/vendor/yiisoft/yii2/base/Application.php
+                            [line] => 380
+                            [function] => handleRequest
+                            [class] => yii\web\Application
+                            [type] => ->
+                            [args] => Array
+                                (
+                                    [0] => yii\web\Request Object
+                                        (
+                                            [enableCsrfValidation] => 1
+                                            [csrfParam] => _csrf
+                                            [csrfCookie] => Array
+                                                (
+                                                    [httpOnly] => 1
+                                                )
+
+                                            [enableCsrfCookie] => 1
+                                            [enableCookieValidation] => 1
+                                            [cookieValidationKey] => a8_6aTDa0b9-yDBp7TTOsj8g3iRHA9j3
+                                            [methodParam] => _method
+                                            [parsers] => Array
+                                                (
+                                                )
+
+                                            [_cookies:yii\web\Request:private] => 
+                                            [_headers:yii\web\Request:private] => 
+                                            [_rawBody:yii\web\Request:private] => 
+                                            [_bodyParams:yii\web\Request:private] => 
+                                            [_queryParams:yii\web\Request:private] => 
+                                            [_hostInfo:yii\web\Request:private] => 
+                                            [_hostName:yii\web\Request:private] => 
+                                            [_baseUrl:yii\web\Request:private] => 
+                                            [_scriptUrl:yii\web\Request:private] => /index.php
+                                            [_scriptFile:yii\web\Request:private] => 
+                                            [_pathInfo:yii\web\Request:private] => assets/7d333959/css/bootstrap.css.map/
+                                            [_url:yii\web\Request:private] => /assets/7d333959/css/bootstrap.css.map/
+                                            [_port:yii\web\Request:private] => 
+                                            [_securePort:yii\web\Request:private] => 
+                                            [_contentTypes:yii\web\Request:private] => 
+                                            [_languages:yii\web\Request:private] => 
+                                            [_csrfToken:yii\web\Request:private] => 
+                                            [_isConsoleRequest:yii\base\Request:private] => 
+                                            [_events:yii\base\Component:private] => Array
+                                                (
+                                                )
+
+                                            [_behaviors:yii\base\Component:private] => 
+                                            [_scriptFile:yii\base\Request:private] => 
+                                        )
+
+                                )
+
+                        )
+
+                    [2] => Array
+                        (
+                            [file] => /var/www/yii2/where-is-it.local/web/index.php
+                            [line] => 13
+                            [function] => run
+                            [class] => yii\base\Application
+                            [type] => ->
+                            [args] => Array
+                                (
+                                )
+
+                        )
+
+                )
+
+            [previous:Exception:private] => 
+        )
+
+)

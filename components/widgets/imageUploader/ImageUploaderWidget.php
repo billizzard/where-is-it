@@ -9,9 +9,12 @@ class ImageUploaderWidget extends Widget
         'inputFileName' => 'files',
         'inputUrlName' => 'images',
         'uploadUrl' => '',
-        'maxFiles' => 2,
+        'maxFiles' => 1,
         'errorCallback' => '',
-        'deleteUrl' => ''
+        'deleteUrl' => '',
+        'deleteButton' => true,
+        'uploadButton' => true,
+        'oldImages' => []
     ];
 
     public $config = [];
