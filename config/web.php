@@ -57,9 +57,14 @@ $config = [
             'suffix' => '/',
             'rules' => [
 
-                'auth' => 'admin/default/auth/',
+                'login' => 'admin/default/login/',
+                'logout' => 'admin/default/logout/',
+                'registration' => 'admin/default/registration/',
                 'add' => 'place/add/',
-                '404' => 'site/error404',
+                '404' => 'site/error404/',
+                'feedback' => 'site/feedback/',
+                'review' => 'place/review/',
+                'place/<id:\d+>/<page>/' => 'place/<page>/',
                 'place/<id:\d+>' => 'place/',
 
             ],

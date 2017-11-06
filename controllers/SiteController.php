@@ -4,10 +4,16 @@ namespace app\controllers;
 
 use app\components\Geo;
 use app\components\Helper;
+use app\constants\AppConstants;
+use app\constants\MessageConstants;
+use app\models\Message;
 use app\models\Place;
+use app\models\RegistrationForm;
+use app\models\Review;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
@@ -26,37 +32,6 @@ class SiteController extends BaseMapController
         return $this->render('index');
     }
 
-    /**
-     * Login action.
-     *
-     * @return Response|string
-     */
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-        return $this->render('login', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
 
     /**
      * Displays about page.
@@ -71,6 +46,42 @@ class SiteController extends BaseMapController
     public function actionError404()
     {
         return $this->render('error_404');
+    }
+
+    public function actionFeedback() {
+        $get = Yii::$app->request->get();
+        if ($get['type'] == MessageConstants::TYPE['COMPLAIN']) {
+            $model = new Message();
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                Helper::setMessage('Сообщение успешно отправлено.', Helper::TYPE_MESSAGE_SUCCESS);
+                return $this->redirect('/feedback/');
+            }
+        } else {
+            throw new NotFoundHttpException();
+        }
+
+        $type = $get['type'];
+
+        $place = null;
+        if (isset($get['place_id'])) {
+            $place = Place::findPlaceById($get['place_id'])->one();
+            if ($place) {
+                $model->place_id = $place->id;
+            }
+        }
+
+        return $this->render('message', [
+            'model' => $model,
+            'place' => $place,
+            'type' => $type
+        ]);
+    }
+
+    private function saveMessage(Message $model) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Helper::setMessage('Сообщение успешно отправлено.', Helper::TYPE_MESSAGE_SUCCESS);
+            return $this->redirect('/feedback/');
+        }
     }
 
 }

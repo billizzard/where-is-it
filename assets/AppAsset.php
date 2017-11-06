@@ -22,14 +22,20 @@ class AppAsset extends AssetBundle
         'css/site.css',
         'css/left-menu.css',
         'css/popup.css',
+        'css/place.css',
+        'css/jquery.fancybox.min.css',
     ];
     public $js = [
-        'js/jquery-3.2.1.min.js',
+        /*'js/jquery-3.2.1.min.js',*/
         'js/bootstrap.min.js',
         'js/add_functions.js',
         'js/fileUploader.js',
         'js/js.js',
+        'js/yesNo.js',
+        'js/placeMap.js',
+        'js/jquery.fancybox.min.js',
     ];
     public $depends = [
+        'yii\web\YiiAsset',
     ];
 }

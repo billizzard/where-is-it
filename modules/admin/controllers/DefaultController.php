@@ -4,6 +4,7 @@ namespace app\modules\admin\controllers;
 
 use app\components\Helper;
 use app\models\LoginForm;
+use app\models\RegistrationForm;
 use app\models\User;
 use app\modules\admin\components\AccessRule;
 use app\modules\admin\models\search\UserSearch;
@@ -29,7 +30,21 @@ class DefaultController extends BaseController
                 //'only' => ['create', 'update', 'delete'],
                 'rules' => [
                     [
-                        'actions' => ['auth'],
+                        'actions' => ['login'],
+                        'allow' => true,
+                        'roles' => [
+                            '?', '@'
+                        ],
+                    ],
+                    [
+                        'actions' => ['logout'],
+                        'allow' => true,
+                        'roles' => [
+                            '?', '@'
+                        ],
+                    ],
+                    [
+                        'actions' => ['registration'],
                         'allow' => true,
                         'roles' => [
                             '?', '@'
@@ -72,7 +87,7 @@ class DefaultController extends BaseController
     }
 
 
-    public function actionAuth()
+    public function actionLogin()
     {
         $this->layout = 'main-login';
 
@@ -99,5 +114,27 @@ class DefaultController extends BaseController
         }
         
         return $this->render('auth', ['model' => $model]);
+    }
+
+    public function actionLogout()
+    {
+        \Yii::$app->user->logout();
+
+        return $this->goHome();
+    }
+
+    public function actionRegistration() {
+        $this->layout = 'main-login';
+        $model = new RegistrationForm();
+        if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
+            if ($user = $model->registration()) {
+                if (\Yii::$app->user->login($user)) {
+                    return $this->goBack();
+                }
+            }
+        }
+        return $this->render('registration', [
+            'model' => $model,
+        ]);
     }
 }

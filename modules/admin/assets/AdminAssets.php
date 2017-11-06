@@ -14,7 +14,8 @@ class AdminAssets extends AssetBundle
     ];
     public $css = [
         '/css/site.css',
-        '/css/admin/admin.css'
+        '/css/admin/admin.css',
+        '/css/datepicker.css'
 
         // more plugin CSS here
     ];

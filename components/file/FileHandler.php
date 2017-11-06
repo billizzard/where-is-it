@@ -41,10 +41,13 @@ class FileHandler extends FileHelper
      */
     public static function getAllImages($url)
     {
-        $result = ['original' => $url];
-        if ($sizes = static::getSizes()) {
-            foreach ($sizes as $size) {
-                $result[$size[0]] = self::addPrefix($url, $size[0]);
+        $result = [];
+        if ($url) {
+            $result = ['original' => $url];
+            if ($sizes = static::getSizes()) {
+                foreach ($sizes as $size) {
+                    $result[$size[0]] = self::addPrefix($url, $size[0]);
+                }
             }
         }
         return $result;

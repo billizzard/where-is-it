@@ -106,10 +106,12 @@ $user = Yii::$app->user->getIdentity();
                     'contentOptions' => ['class' => 'add-info'],
                     'format' => 'raw',
                     'value' => function ($model) {
-                        return '<a href="/admin/schedules/?place_id=' . $model->id . '" class="glyphicon glyphicon-time"></a> - заполните время работы <br> 
-<a href="/admin/gallery/?place_id=' . $model->id . '" class="glyphicon glyphicon-camera"></a> - заполните галлерею  <br>
-<a href="/admin/places/update/?id=' . $model->id . '" class="glyphicon glyphicon-pencil"></a> - редактровать объект  <br>
-<div class="glyphicon glyphicon-time"></div>';
+                        return '<a href="/admin/schedules/?place_id=' . $model->id . '" class="glyphicon icon glyphicon-time"></a> - заполните время работы <br> 
+<a href="/admin/gallery/?place_id=' . $model->id . '" class="glyphicon icon glyphicon-camera"></a> - заполните галлерею  <br>
+<a href="/admin/places/update/?id=' . $model->id . '" class="glyphicon icon glyphicon-pencil"></a> - редактровать объект  <br>
+<a href="/admin/discounts/?place_id=' . $model->id . '" class="glyphicon icon glyphicon-c_percent">%</a> - акции и скидки <br> 
+<a href="/admin/contacts/?place_id=' . $model->id . '" class="glyphicon icon glyphicon-phone-alt"></a> - контакты <br>  
+';
                     }
                 ],
                 [

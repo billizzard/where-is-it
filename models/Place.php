@@ -29,6 +29,8 @@ use yii\behaviors\TimestampBehavior;
  * @property integer created_at
  * @property integer updated_at
  * @property integer parent_id
+ * @property integer stars
+ * @property integer stars_count
  */
 
 class Place extends BaseModel
@@ -50,12 +52,13 @@ class Place extends BaseModel
     {
         return [
             [['name', 'category_id', 'lat', 'lon'], 'required'],
-            [['lat', 'lon', 'yes', 'no', 'type', 'category_id', 'status', 'user_id', 'parent_id'], 'number'],
+            [['lat', 'lon'], 'number'],
+            [['yes', 'no', 'type', 'category_id', 'status', 'user_id', 'parent_id', 'stars_count'], 'integer'],
             [['name', 'address'], 'string', 'max' => 255],
             [['dir'], 'string', 'max' => 100],
+            [['stars'], 'number', 'min' => 1, 'max' => 5],
             [['description', 'work_time'], 'string', 'max' => 500],
             [['category'], 'string'],
-
         ];
     }
 
@@ -75,6 +78,8 @@ class Place extends BaseModel
             'no' => 'Кол-во не подтверждений',
             'type' => 'Тип',
             'address' => 'Адрес',
+            'stars' => 'Средняя оценка',
+            'stars_count' => 'Количество оценок',
             'description' => 'Описание',
             'work_time' => 'Время работы',
             'created_ip' => 'ip создателя',
@@ -119,7 +124,8 @@ class Place extends BaseModel
         return self::findPlace()->andWhere(['category_id' => $category_id])
             ->andWhere('lat >= :latMin AND lat <= :latMax AND lon >= :lonMin AND lon <= :lonMax',
                 ['latMin' => $latMin, 'latMax' => $latMax, 'lonMin' => $lonMin, 'lonMax' => $lonMax])
-            ->joinWith('mainImage');
+            //->joinWith('mainImage');
+            ->leftJoin('image', 'image.place_id = place.id AND image.type = 0');
     }
 
     public static function findPlace() {
@@ -171,15 +177,18 @@ class Place extends BaseModel
         return $this->dir;
     }
 
+    public function getDescription() {
+        return $this->description;
+    }
+
     public function isCanAddGallery()
     {
+        if (!$this->gallery || !$this->galleryNewVariant) {
+            return true;
+        }
         /** @var User $user */
         if ($user = \Yii::$app->user->getIdentity()) {
             return $user->hasAccess(User::RULE_OWNER, ['model' => $this]);
-        } else {
-            if (!$this->gallery || !$this->galleryNewVariant) {
-                return true;
-            }
         }
         return false;
     }
@@ -193,5 +202,28 @@ class Place extends BaseModel
     {
         return self::find()->andWhere('status = :status', ['status' => $status]);
     }
+
+    /**
+     * Возвращает еще не проверенную, изменненую модель текущего места
+     * @return array|null|\yii\db\ActiveRecord
+     */
+    public function getNoCheckModel()
+    {
+        $model = self::findByStatus(AppConstants::STATUS['NO_MODERATE'])->andWhere(['parent_id' => $this->id])->one();
+        return $model ? $model : null;
+    }
+    
+    public function setStars() {
+        $res = Review::getSumStarByPlace($this->id);
+        if ($res) {
+            $this->stars = round($res['sum'] / $res['count'], 1);
+            $this->stars_count = $res['count'];
+        }
+    }
+    
+    public function getPlaceMenu() {
+
+    }
+
 
 }

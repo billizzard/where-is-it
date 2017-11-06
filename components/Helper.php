@@ -28,7 +28,6 @@ class Helper
     }
 
     public static function getMessage() {
-
         if (!empty($_SESSION['messages'])) {
             $message = $_SESSION['messages'][0];
             $class = $message['type'] == self::TYPE_MESSAGE_SUCCESS ? 'success' : '';
@@ -72,5 +71,9 @@ class Helper
             '50' => '50',
             '55' => '55',
         ];
+    }
+
+    public static function getCurrentUrl() {
+        return (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     }
 }

@@ -56,6 +56,8 @@
 .grid-view .table > tbody > tr > td.add-info {
   padding:0;
 }
+
+/*
 .grid-view .add-info .glyphicon {
   display: inline-block;
   background-color: #ffffff;
@@ -73,4 +75,4 @@
 
 .grid-view .add-info .glyphicon:active{
   background-color:#969696;
-}
+}*/

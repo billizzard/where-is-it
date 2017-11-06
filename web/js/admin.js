@@ -17,6 +17,8 @@ function DeleteUpload() {
                     success: function (data, textStatus, xhr) {
                         if (data){
                             removeImage(a);
+                        } else {
+                            flashError.setErrors('Не удалось удалить');
                         }
                     }
                 });
@@ -54,6 +56,10 @@ function Schedule() {
 
     init();
 }
+
+$('#discount-start_date, #discount-end_date').datetimepicker({
+    format:'Y-m-d H:i'
+});
 
 deleteUpload = new DeleteUpload();
 schedule = new Schedule();

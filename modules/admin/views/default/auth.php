@@ -6,7 +6,7 @@ use yii\bootstrap\ActiveForm;
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model \app\models\LoginForm */
 
-$this->title = 'Sign In';
+$this->title = 'Вход';
 
 $fieldOptions1 = [
     'options' => ['class' => 'form-group has-feedback'],
@@ -41,14 +41,15 @@ $fieldOptions2 = [
 
         <div class="row">
             <div class="col-xs-8">
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
+                <?= $form->field($model, 'rememberMe')->checkbox()->label('Запомнить') ?>
             </div>
             <!-- /.col -->
             <div class="col-xs-4">
-                <?= Html::submitButton('Sign in', ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button']) ?>
+                <?= Html::submitButton('Вход', ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button']) ?>
             </div>
             <!-- /.col -->
         </div>
+        <div class="form-group" style="margin-bottom:0"><a href="/registration/">Зарегистрироваться</a></div>
 
 
         <?php ActiveForm::end(); ?>

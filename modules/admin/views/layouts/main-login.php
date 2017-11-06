@@ -22,6 +22,17 @@ dmstr\web\AdminLteAsset::register($this);
 
 <?php $this->beginBody() ?>
 
+<nav id="w0" class="navbar-inverse navbar-fixed-top navbar" role="navigation">
+    <div class="container">
+        <div>
+            <ul id="w1" class="navbar-nav navbar-left nav" >
+                <li style="float:left"><a href="/" class="glyphicon glyphicon-home" style="font-size:22px;"></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
     <?= $content ?>
 
 <?php $this->endBody() ?>

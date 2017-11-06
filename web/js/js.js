@@ -344,8 +344,8 @@ function BaseMap() {
         footer += "</div>";
 
         var image = '';
-        if (item.mainImage && item.mainImage.url) {
-            image = "<div class='cus-balloon__img'><img src='" + this.getThumbUrl(item.mainImage.url) + "'></div>";
+        if (item.url && item.url['map_']) {
+            image = "<div class='cus-balloon__img'><img src='/" + item.url['map_'] + "'></div>";
         }
 
 
@@ -373,13 +373,13 @@ function BaseMap() {
         return content;
     };
 
-    this.getThumbUrl = function (url) {
-        var pos = url.lastIndexOf('/');
-        if (pos !== -1) {
-            url = url.addSubStr(pos + 1, 'thumb_');
-        }
-        return url;
-    };
+    // this.getThumbUrl = function (url) {
+    //     var pos = url.lastIndexOf('/');
+    //     if (pos !== -1) {
+    //         url = url.addSubStr(pos + 1, 'thumb_');
+    //     }
+    //     return url;
+    // };
 
     this.getPlacemark = function (item, color) {
         return new ymaps.Placemark([item.lat, item.lon], {
@@ -621,6 +621,47 @@ function Cookie() {
     }
 }
 
+function Stars() {
+
+    var data = {};
+
+    var init = function() {
+        data['placeId'] = $('#place_id').val();
+        data[$('#csrf').attr('name')] = $('#csrf').val();
+        addEvents();
+    };
+
+    var addEvents = function() {
+        $('.js-star').on('mouseenter', function() {
+            if (!$(this).hasClass('glyphicon-star')) {
+                $(this).prevAll().removeClass('glyphicon-star-empty').addClass('glyphicon-star');
+                $(this).removeClass('glyphicon-star-empty').addClass('glyphicon-star');
+            }
+        });
+
+        $('.js-star').on('mouseleave', function() {
+            if (!$(this).hasClass('glyphicon-star-empty')) {
+                $(this).prevAll().removeClass('glyphicon-star').addClass('glyphicon-star-empty');
+                $(this).removeClass('glyphicon-star').addClass('glyphicon-star-empty');
+            }
+        });
+
+        $('.js-r-star').on('click', function() {
+
+            $(this).prevAll().removeClass('glyphicon-star-empty').addClass('glyphicon-star');
+            $(this).nextAll().removeClass('glyphicon-star').addClass('glyphicon-star-empty');
+            $(this).removeClass('glyphicon-star-empty').addClass('glyphicon-star');
+
+            var count = $('.js-r-star.glyphicon-star').length;
+            $('#star').val(count);
+            return false;
+        });
+
+    };
+
+    init();
+}
+
 
 var cookie = new Cookie();
 //var geoPopup = new GeoPopup();
@@ -632,6 +673,7 @@ var formPlace = new FormPlace();
 var flashError = new FlashError();
 var mapMain = new MapMain();
 var topMenu = new TopMenu();
+var stars = new Stars();
 
 
 // ymaps.ready(function () {

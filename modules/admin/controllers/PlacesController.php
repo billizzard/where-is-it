@@ -6,6 +6,7 @@ use app\constants\AppConstants;
 use app\models\Category;
 use app\models\City;
 use app\models\Image;
+use app\models\Message;
 use app\models\Place;
 use app\modules\admin\components\AccessRule;
 use app\modules\admin\components\DeleteAction;
@@ -60,7 +61,7 @@ class PlacesController extends BaseController
             [
                 'actions' => ['remove-image'],
                 'allow' => true,
-                'roles' => [User::ROLE_ADMIN],
+                'roles' => ['@'],
             ]
         ];
 
@@ -140,16 +141,11 @@ class PlacesController extends BaseController
         }
     }
 
-    /**
-     * Updates an existing User model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
     public function actionUpdate($id)
     {
         $model = Place::findOne($id);
-        $noCheckModel = Place::findByStatus(AppConstants::STATUS['NO_MODERATE'])->one();
+        if (!$model) throw new NotFoundHttpException();
+        $noCheckModel = $model->getNoCheckModel();
         $modelImage = new Image();
 
         if ($model->load(Yii::$app->request->post()) && $modelImage->load(Yii::$app->request->post())) {
@@ -177,6 +173,7 @@ class PlacesController extends BaseController
             'modelImage' => $modelImage,
             'noCheckModel' => $noCheckModel,
         ]);
+
     }
 
     public function actionRemoveImage(){
@@ -187,7 +184,7 @@ class PlacesController extends BaseController
             if ((int)$id) {
                 $image = Image::findOne((int)$id);
                 if ($image) {
-                    if ($user->hasAccess(User::RULE_OWNER, ['model' => $image->place])) {
+                    if ($user->hasAccess(User::RULE_OWNER, ['model' => $image])) {
                         $image->delete();
                         return true;
                     }

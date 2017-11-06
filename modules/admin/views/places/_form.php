@@ -14,7 +14,9 @@ $image = $model->mainImage;
 /** @var \app\models\User $user */
 $user = Yii::$app->user->getIdentity();
 ?>
+<style>
 
+</style>
 <div class="user-form">
 
     <? if ($noCheckModel) {?>
@@ -57,8 +59,8 @@ $user = Yii::$app->user->getIdentity();
         <?= $form->field($model, 'type')->dropDownList(\app\constants\PlaceConstants::getTypeMap()) ?>
     <? } ?>
 
-    <? if ($user && $user->hasAccess(\app\models\User::RULE_OWNER)) {?>
-    <?= $form->field($model, 'status')->dropDownList(\app\constants\AppConstants::getStatusMap()) ?>
+    <? if ($user && $user->hasAccess(\app\models\User::RULE_OWNER, ['model' => $model])) {?>
+        <?= $form->field($model, 'status')->dropDownList(\app\constants\AppConstants::getStatusMap()) ?>
     <? } ?>
 
     <div class="form-group">

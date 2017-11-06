@@ -6,6 +6,7 @@ use app\components\ApiException;
 use app\components\file\FileHandler;
 use app\components\file\FileHelper;
 use app\components\file\FileTempHandler;
+use app\components\file\ImageDiscountMain;
 use app\components\file\ImageGalleryHandler;
 use app\components\file\ImageMainHandler;
 use app\components\file\ImageTempHandler;
@@ -102,9 +103,25 @@ class Image extends BaseModel
         return ImageMainHandler::getAllImages($this->getUrl());
     }
 
+    public function getImageSizes() {
+        switch ($this->type) {
+            case ImageConstants::TYPE['GALLERY']:
+                return ImageGalleryHandler::getAllImages($this->url);
+                break;
+        }
+    }
+
     public function getPlace()
     {
+        if ($this->type == ImageConstants::TYPE['MAIN_DISCOUNT']) {
+            return $this->discount->place;
+        }
         return $this->hasOne(Place::className(), ['id' => 'place_id']);
+    }
+
+    public function getDiscount()
+    {
+        return $this->hasOne(Discount::className(), ['id' => 'place_id']);
     }
 
     public function uploadMainImage(Place $model) {
@@ -123,6 +140,27 @@ class Image extends BaseModel
                 ImageMainHandler::createThumbs($url);
                 $this->url = $url;
                 $this->type = ImageConstants::TYPE['MAIN'];
+                return $this->save();
+            } else {
+                throw new SiteException($this->getErrors(), 400);
+            }
+        }
+    }
+
+    public function uploadDiscountImage(Discount $model) {
+        $this->url = UploadedFile::getInstance($this, 'url');
+        if ($this->url) {
+            if ($oldImage = $model->mainImage) {
+                $oldImage->delete();
+            }
+            $this->place_id = $model->id;
+            $name = uniqid() . '.' . $this->url->extension;
+            $url = $model->place->getDir() . '/' . $name;
+            if ($this->validate()) {
+                $this->url->saveAs($url);
+                ImageDiscountMain::createThumbs($url);
+                $this->url = $url;
+                $this->type = ImageConstants::TYPE['MAIN_DISCOUNT'];
                 return $this->save();
             } else {
                 throw new SiteException($this->getErrors(), 400);
@@ -193,6 +231,7 @@ class Image extends BaseModel
     private function createThumbs() {
         switch ($this->type) {
             case ImageConstants::TYPE['MAIN']: ImageMainHandler::createThumbs($this->url); break;
+            case ImageConstants::TYPE['GALLERY_NEW_VARIANT']:
             case ImageConstants::TYPE['GALLERY']: ImageGalleryHandler::createThumbs($this->url); break;
         }
     }

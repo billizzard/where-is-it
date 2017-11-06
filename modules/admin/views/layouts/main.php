@@ -75,6 +75,10 @@ if (!$user || $user->hasAccess(\app\models\User::RULE_ADMIN_PANEL)) {
     <?= \app\components\Helper::getMessage() ?>
 
     </body>
-    </html>
+
+    <!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/jquery.datetimepicker.min.css">
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.full.min.js"></script>
+   --> </html>
     <?php $this->endPage() ?>
 <?php //} ?>

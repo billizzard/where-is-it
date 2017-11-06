@@ -2,6 +2,10 @@
 
 namespace app\models;
 
+use app\components\Helper;
+use app\components\SiteException;
+use app\constants\ImageConstants;
+
 /**
  * This is the model class for table "{{%user}}".
  *
@@ -11,6 +15,7 @@ namespace app\models;
  * @property string password
  * @property string access_token
  * @property string auth_key
+ * @property string login
  * @property integer role
  * @property integer created_at
  * @property integer updated_at
@@ -44,6 +49,8 @@ class User extends BaseModel implements \yii\web\IdentityInterface
             [['email', 'password'], 'required'],
             [['updated_at', 'created_at', 'role'], 'integer'],
             [['password', 'access_token', 'auth_key'], 'string', 'max' => 200],
+            [['login'], 'string', 'max' => 50],
+            [['login', 'email'], 'unique'],
             [['name'], 'string', 'max' => 100],
             [['email'], 'email']
 
@@ -59,6 +66,7 @@ class User extends BaseModel implements \yii\web\IdentityInterface
             'password' => 'Пароль',
             'email' => 'Электронная почта',
             'name' => 'Имя',
+            'login' => 'Логин',
             'created_at' => 'Дата регистрации',
             'updated_at' => 'Дата изменния',
         ];
@@ -158,12 +166,36 @@ class User extends BaseModel implements \yii\web\IdentityInterface
             case self::RULE_ADMIN_PANEL: return $this->isAdmin(); break;
             case self::RULE_OWNER:
                 if ($this->isAdmin()) return true;
-                if ($data['model'] && $data['model']->user_id) {
-                    return $this->getId() === $data['model']->user_id;
+                if ($data['model']) {
+                    if (get_class($data['model']) == 'app\models\Image') {
+                        $place = $data['model']->place;
+                        if ($place && $place->user_id) {
+                            return $this->getId() === $place->user_id;
+                        }
+                    }
                 }
                 return false;
                 break;
         }
         return false;
+    }
+
+    public function setPassword($password) {
+        $this->password = \Yii::$app->security->generatePasswordHash($password);
+    }
+
+    public function generateAuthKey() {
+        $this->auth_key = \Yii::$app->security->generateRandomString();
+    }
+
+    public function isCanPostReviewOnPlace($place_id) {
+        $review = Review::findByPlaceAndUserId($place_id, $this->id)->orderBy(['created_at' => SORT_DESC])->one();
+        if ($review) {
+            if ($review->created_at > (time() - 60*60*24)) {
+                Helper::setMessage('Разрешено не более одного отзыва в сутки на место.');
+                return false;
+            }
+        }
+        return true;
     }
 }

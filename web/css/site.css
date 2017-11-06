@@ -232,6 +232,35 @@ input.error {
     right:0;
 }
 
+/* Иконки */
+.glyphicon.icon {
+    display: inline-block;
+    background-color: #ffffff;
+    padding: 7px;
+    color: #636363;
+    font-size: 18px;
+    border-radius: 3px;
+    border: 1px solid #e5efff;
+    cursor: pointer;
+    text-decoration: none;
+}
+.glyphicon-c_percent {
+    width: 34px;
+    height: 34px;
+    text-align: center;
+    line-height: 14px;
+    font-weight: bold;
+}
+.glyphicon.icon:hover {
+    background-color:#cecece;
+}
+.glyphicon.icon:active{
+    background-color:#969696;
+}
+.glyphicon.icon.s1 {
+    font-size: 12px;
+}
+
 /* top menu */
 .menu-butt {
     display: block;
@@ -284,4 +313,58 @@ input.error {
 }
 .nav>li>a {
     padding:12px 10px;
+}
+
+/*  Feedback Review */
+.page-wrapper {
+    padding: 10px;
+    padding-top: 45px;
+}
+
+.feedback-wrapper {
+    padding: 10px;
+    min-width: 300px;
+    width:100%;
+    margin: 20px auto;
+    border: 5px solid #fff;
+    background-color: #efefef;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.feedback-wrapper h4 {
+    text-align: center;
+}
+
+.feedback-wrapper .subtitle {
+    font-size: 12px;
+    text-align: center;
+    margin-top: -10px;
+}
+
+/* Stars */
+.star-group {
+    display:inline-block;
+    border: 1px solid rgb(229, 239, 255);
+    border-radius: 3px;
+    padding: 7px;
+    line-height: 1px;
+    color: #636363;
+
+}
+.star-group .star {
+    color: #636363;
+    text-decoration: none;
+}
+
+.r-star-group {
+    display:inline-block;
+    padding: 7px;
+    line-height: 1px;
+    color: #636363;
+    vertical-align: middle;
+    font-size:20px;
+}
+.r-star-group .star {
+    color: #636363;
+    text-decoration: none;
 }

@@ -8,8 +8,8 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
-
 AppAsset::register($this);
+$user = Yii::$app->user->getIdentity();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -126,6 +126,11 @@ AppAsset::register($this);
                     <li style="float:left"><a href="/" class="glyphicon glyphicon-home" style="font-size:22px;"></a></li>
                     <li style="float:left"><a class="menu-butt nav-toggle1"><span></span></a></li>
                     <li style="float:left"><a href="/add/" style="font-size:38px;">+</a></li>
+                    <? if ($user) { ?>
+                        <li style="float:left"><a href="/logout/" class="glyphicon glyphicon-log-out" style="font-size:22px;"></a></li>
+                    <? } else {?>
+                        <li style="float:left"><a href="/login/" class="glyphicon glyphicon-log-in" style="font-size:22px;"></a></li>
+                    <? } ?>
                     <li style="float:left"><a href="#" onclick="return false;" data-modal="accept-city" class="modal-trigger glyphicon glyphicon-map-marker" style="font-size:22px;"></a></li>
                     <!--<li style="float:left"><a href="/site/login">Login</a></li>-->
                 </ul>
@@ -148,6 +153,8 @@ AppAsset::register($this);
 </footer>-->
 
 <?php $this->endBody() ?>
+
+<!--<div style="border:1px solid black; position: fixed; top:50px; right: 0; width:50px height:50px;"><?/*= \app\components\Helper::getMessage() */?>sdfsdfsdfsdfsdfsdfsdf</div>-->
 <?= \app\components\Helper::getMessage() ?>
 <!--<div class="flash-errors">222222222<div class="close-flash">x</div></div>-->
 </body>
