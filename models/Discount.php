@@ -17,6 +17,7 @@ use Yii;
  * @property integer $status
  * @property string $start_date
  * @property string $end_date
+ * @property boolean is_deleted
  * @property integer $created_at
  */
 class Discount extends \yii\db\ActiveRecord
@@ -37,6 +38,7 @@ class Discount extends \yii\db\ActiveRecord
         return [
             [['image_id', 'place_id', 'type', 'status', 'created_at'], 'integer'],
             [['start_date', 'end_date'], 'safe'],
+            [['is_deleted'], 'boolean'],
             [['title'], 'string', 'max' => 150],
             [['message'], 'string', 'max' => 1000],
         ];
@@ -58,6 +60,7 @@ class Discount extends \yii\db\ActiveRecord
             'start_date' => 'Дата начала',
             'end_date' => 'Дата окончания',
             'created_at' => 'Дата создания',
+            'is_deleted' => 'Удалено ли',
         ];
     }
 

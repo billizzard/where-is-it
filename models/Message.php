@@ -14,6 +14,7 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $type
  * @property integer $place_id
  * @property integer $created_at
+ * @property boolean is_deleted
  */
 class Message extends \yii\db\ActiveRecord
 {
@@ -36,6 +37,7 @@ class Message extends \yii\db\ActiveRecord
             [['type', 'created_at', 'place_id'], 'integer'],
             [['email'], 'string', 'max' => 100],
             [['email'], 'email'],
+            [['is_deleted'], 'boolean'],
         ];
     }
 
@@ -51,6 +53,7 @@ class Message extends \yii\db\ActiveRecord
             'type' => 'Тип',
             'place_id' => 'Место',
             'created_at' => 'Дата создания',
+            'is_deleted' => 'Удалено ли',
         ];
     }
 

@@ -45,13 +45,15 @@ function Schedule() {
             changeVisibility($(this));
         });
 
-        $('.js-schedule select').on('change', function() {
-            $(this).closest('tr').find('.js-output').prop('checked', false);
+        $('.js-schedule input').on('change', function() {
+            if ($(this).val() !== '00:00') {
+                $(this).closest('tr').find('.js-output').prop('checked', false);
+            }
         })
     };
 
     var changeVisibility = function(el) {
-        el.closest('tr').find('select').val('-1');
+        el.closest('tr').find('input').val('00:00');
     };
 
     init();

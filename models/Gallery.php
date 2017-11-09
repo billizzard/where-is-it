@@ -5,25 +5,25 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "contact".
+ * This is the model class for table "gallery".
  *
  * @property integer $id
- * @property string $phone
- * @property string $email
- * @property integer $parent_id
- * @property integer $created_at
+ * @property string $title
  * @property integer $place_id
+ * @property string $ip
+ * @property integer $parent_id
  * @property integer $status
+ * @property integer $created_at
  * @property boolean is_deleted
  */
-class Contact extends \yii\db\ActiveRecord
+class Gallery extends BaseSubPlacesModel
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'contact';
+        return 'gallery';
     }
 
     /**
@@ -32,9 +32,9 @@ class Contact extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['phone', 'email'], 'string'],
+            [['title', 'ip'], 'string'],
             [['is_deleted'], 'boolean'],
-            [['parent_id', 'created_at', 'place_id', 'status'], 'integer'],
+            [['place_id', 'parent_id', 'status', 'created_at'], 'integer'],
         ];
     }
 
@@ -45,12 +45,12 @@ class Contact extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'phone' => 'Телефоны',
-            'email' => 'Email',
-            'parent_id' => 'Родитель',
-            'created_at' => 'Дата создания',
+            'title' => 'Заголовок',
             'place_id' => 'Место',
+            'ip' => 'Ip',
+            'parent_id' => 'Родитель',
             'status' => 'Статус',
+            'created_at' => 'Дата создания',
             'is_deleted' => 'Удалено ли',
         ];
     }

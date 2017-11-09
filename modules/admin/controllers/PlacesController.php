@@ -153,9 +153,7 @@ class PlacesController extends BaseController
             $user = \Yii::$app->user->getIdentity();
             if (!$user || !$user->hasAccess(User::RULE_OWNER, ['model' => $this])) {
                 if (!$noCheckModel) {
-                    $clone = new Place();
-                    $clone->attributes = $model->attributes;
-                    $clone->parent_id = $model->id;
+                    $clone = $model->getClone();
                     $clone->save();
                     $modelImage->uploadMainImage($clone);
                 }

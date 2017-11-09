@@ -26,6 +26,7 @@ use yii\web\UploadedFile;
  * @property integer status
  * @property integer type
  * @property integer created_at
+ * @property boolean is_deleted
  */
 
 class Image extends BaseModel
@@ -48,6 +49,7 @@ class Image extends BaseModel
             [['place_id'], 'required', 'on' => Image::SCENARIO_DEFAULT],
             [['place_id', 'status', 'type', 'created_at'], 'number'],
             [['description'], 'string', 'max' => 255],
+            [['is_deleted'], 'boolean'],
             [['url'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Максимум 2MB'],
             [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Максимум 2MB', 'maxFiles' => 4, 'on' => ImageConstants::SCENARIO['TEMP']],
 
@@ -66,6 +68,7 @@ class Image extends BaseModel
             'url' => 'Изображение',
             'description' => 'Описание',
             'created_at' => 'Дата создания',
+            'is_deleted' => 'Удалено ли',
         ];
     }
 

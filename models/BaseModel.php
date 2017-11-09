@@ -20,4 +20,48 @@ class BaseModel extends \yii\db\ActiveRecord
         throw new SiteException('Объект не найден', 404);
     }
 
+    public function getClone() {
+        $class = $this::className();
+        /** @var BaseModel $clone */
+        $clone = new $class();
+        $clone->attributes = $this->attributes;
+        if ($clone->hasAttribute('parent_id')) {
+            $clone->parent_id = $this->id;
+        }
+        return $clone;
+    }
+
+    /**
+     * Можно ли тедактировать данную модель
+     * @return bool
+     */
+    public function isUpdatable() {
+        /** @var User $user */
+        $user = \Yii::$app->user->getIdentity();
+        if ($user->hasAccess(User::RULE_OWNER, ['model' => $this])) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isSoftDeletable() {
+        /** @var User $user */
+        $user = \Yii::$app->user->getIdentity();
+        if ($user->hasAccess(User::RULE_OWNER, ['model' => $this])) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isDeletable() {
+        /** @var User $user */
+        $user = \Yii::$app->user->getIdentity();
+        if ($user->hasAccess(User::RULE_DELETE_MODEL_FULL)) {
+            return true;
+        }
+        return false;
+    }
+
+
+
 }

@@ -26,6 +26,18 @@ use yii\filters\VerbFilter;
 class SchedulesController extends BaseController
 {
 
+//    public function actions()
+//    {
+//        return [
+//            'delete' => [
+//                'class' => DeleteAction::className(),
+//                'model_class' => Address::className()
+//            ],
+//
+//        ];
+//    }
+
+
     public function behaviors()
     {
         $rules = parent::behaviors();
@@ -62,10 +74,10 @@ class SchedulesController extends BaseController
 
         $dataProvider = $searchModel->search($params);
 
-
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'isCanAdd' => Schedule::isCanAdd($place_id)
         ]);
     }
 
@@ -89,23 +101,19 @@ class SchedulesController extends BaseController
         ]);
     }
 
-    public function actionUpdate($place_id)
+    public function actionUpdate($id)
     {
-        $model = Schedule::findByPlaceAndStatus($place_id, AppConstants::STATUS['MODERATE'])->one();
+        $model = Schedule::findOneModel($id);
 
         if (Yii::$app->request->post()) {
-            if ($id = $model->id) {
-                $model = new Schedule();
-                $model->parent_id = $id;
-            }
-            $model->fromPost(Yii::$app->request->post());
-            $model->save();
-            $noCheckModel = $model;
+            $clone = $model->getClone();
+            $clone->fromPost(Yii::$app->request->post());
+            $clone->save();
+            return $this->redirect(['index', 'place_id' => $clone->place_id]);
         }
 
-        return $this->render('index', [
+        return $this->render('update', [
             'model' => $model,
-            'noCheckModel' => $noCheckModel
         ]);
     }
 

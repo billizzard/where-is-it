@@ -36,18 +36,19 @@
 }
 .schedule__time {
   display: inline-block;
-  width:65px;
+  vertical-align: middle;
+  width:100px;
 }
 .schedule__day {
-  display: inline-block;
+ /* display: inline-block;*/
   width:27px;
 }
 .schedule__table .form-control {
   border-radius: 5px;
-  margin: 2px;
 }
 .schedule__table .time-container {
-  min-width:170px;
+  min-width:110px;
+  padding:5px;
 }
 
 /* Страница Места */

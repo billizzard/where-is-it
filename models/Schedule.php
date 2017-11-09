@@ -27,10 +27,10 @@ use Yii;
  * @property string $ip
  * @property integer $parent_id
  * @property integer $status
- *
+ * @property boolean is_deleted
  * @property Place $place
  */
-class Schedule extends BaseModel
+class Schedule extends BaseSubPlacesModel
 {
     /**
      * @inheritdoc
@@ -48,6 +48,7 @@ class Schedule extends BaseModel
         return [
             [['place_id', '1_from', '1_to', '2_from', '2_to', '3_from', '3_to', '4_from', '4_to', '5_from', '5_to', '6_from', '6_to', '7_from', '7_to', 'parent_id', 'status'], 'integer'],
             [['ip'], 'string', 'max' => 50],
+            [['is_deleted'], 'boolean'],
             [['place_id'], 'exist', 'skipOnError' => true, 'targetClass' => Place::className(), 'targetAttribute' => ['place_id' => 'id']],
         ];
     }
@@ -77,6 +78,7 @@ class Schedule extends BaseModel
             'ip' => 'Ip',
             'parent_id' => 'Parent ID',
             'status' => 'Статус',
+            'is_deleted' => 'Удалено ли',
         ];
     }
 
@@ -109,21 +111,17 @@ class Schedule extends BaseModel
             $valFrom = $this->{$i . '_from'};
             $valTo = $this->{$i . '_to'};
             if ($valFrom && $valTo) {
-                $valF = $valFrom % 10000;
-                $valT = $valTo % 10000;
-                $hFrom = intval($valF/100);
-                $mFrom = $valF % 100;
-                $hTo = intval($valT/100);
-                $mTo = $valT % 100;
+                $valF = substr($valFrom, 1);
+                $valT = substr($valTo, 1);
+                $hFrom = substr_replace($valF, ":", 2, 0);
+                $hTo = substr_replace($valT, ":", 2, 0);
             } else {
-                $hFrom = $mFrom = $hTo = $mTo = null;
+                $hFrom = $hTo = null;
             }
 
             $result[$i] = [
                 'hFrom' => $hFrom,
-                'mFrom' => $mFrom,
                 'hTo' => $hTo,
-                'mTo' => $mTo
             ];
 
         }
@@ -139,10 +137,13 @@ class Schedule extends BaseModel
                 $fromH = $i . '0000';
                 $toH = ($i + 1) . '0000';
             } else {
-                $fromH = $post[$i . '_from_h'] == -1 ? null : $post[$i . '_from_h'];
-                $toH = $post[$i . '_to_h'] == -1 ? null : $post[$i . '_to_h'];
-                $fromM = $post[$i . '_from_m'] == -1 ? '00' : $post[$i . '_from_m'];
-                $toM = $post[$i . '_to_m'] == -1 ? '00' : $post[$i . '_to_m'];
+                $from = explode(':', $post[$i . '_from_h']);
+                $to = explode(':', $post[$i . '_to_h']);
+                $fromH = isset($from[0]) ? $from[0] : null;
+                $fromM = isset($from[1]) ? $from[1] : null;
+                $toH = isset($to[0]) ? $to[0] : null;
+                $toM = isset($to[1]) ? $to[1] : null;
+
                 if ($fromH != null && $toH != null) {
 
                     if ((int)$fromH >= (int)$toH) {

@@ -15,6 +15,7 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $user_id
  * @property integer $created_at
  * @property integer $status
+ * @property boolean is_deleted
  */
 class Review extends \yii\db\ActiveRecord
 {
@@ -34,6 +35,7 @@ class Review extends \yii\db\ActiveRecord
         return [
             [['place_id', 'created_at', 'user_id', 'status'], 'integer'],
             [['message'], 'string', 'max' => 1000],
+            [['is_deleted'], 'boolean'],
             [['star', 'place_id', 'user_id'], 'required'],
             ['star', 'integer', 'min' => 1, 'max' => 5],
         ];
@@ -52,6 +54,7 @@ class Review extends \yii\db\ActiveRecord
             'star' => 'Звезды',
             'status' => 'Статус',
             'created_at' => 'Дата создания',
+            'is_deleted' => 'Удалено ли',
         ];
     }
 

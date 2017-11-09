@@ -31,6 +31,7 @@ use yii\behaviors\TimestampBehavior;
  * @property integer parent_id
  * @property integer stars
  * @property integer stars_count
+ * @property boolean is_deleted
  */
 
 class Place extends BaseModel
@@ -59,6 +60,7 @@ class Place extends BaseModel
             [['stars'], 'number', 'min' => 1, 'max' => 5],
             [['description', 'work_time'], 'string', 'max' => 500],
             [['category'], 'string'],
+            [['is_deleted'], 'boolean'],
         ];
     }
 
@@ -85,6 +87,7 @@ class Place extends BaseModel
             'created_ip' => 'ip создателя',
             'status' => 'Статус',
             'parent_id' => 'Родитель',
+            'is_deleted' => 'Удалено ли',
         ];
     }
 
@@ -163,6 +166,10 @@ class Place extends BaseModel
 
     public function getId() {
         return $this->id;
+    }
+
+    public function getUserId() {
+        return $this->user_id;
     }
 
     public function getFullDir() {

@@ -2,19 +2,19 @@
 
 use yii\db\Migration;
 
-class m171101_140051_create_star extends Migration
+class m171109_182154_create_gallery extends Migration
 {
-    private $table = 'review';
+    private $table = 'gallery';
 
     public function safeUp()
     {
         $this->createTable($this->table, [
             'id' => $this->primaryKey(),
+            'title' => $this->text(),
             'place_id' => $this->integer(),
-            'user_id' => $this->integer(),
-            'message' => $this->string(1000),
-            'star' => $this->smallInteger(),
-            'status' => $this->smallInteger()->defaultValue(0),
+            'ip' => $this->text(),
+            'parent_id' => $this->integer(),
+            'status' => $this->integer(),
             'created_at' => $this->integer()->unsigned(),
         ]);
     }

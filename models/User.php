@@ -19,6 +19,7 @@ use app\constants\ImageConstants;
  * @property integer role
  * @property integer created_at
  * @property integer updated_at
+ * @property boolean is_deleted
  */
 
 class User extends BaseModel implements \yii\web\IdentityInterface
@@ -29,6 +30,7 @@ class User extends BaseModel implements \yii\web\IdentityInterface
     const RULE_ADMIN_PANEL = 1;
     const RULE_DELETE_USER = 2;
     const RULE_OWNER = 3;
+    const RULE_DELETE_MODEL_FULL = 4;
 
     public $loginUrl = ['/auth/'];
 
@@ -52,7 +54,8 @@ class User extends BaseModel implements \yii\web\IdentityInterface
             [['login'], 'string', 'max' => 50],
             [['login', 'email'], 'unique'],
             [['name'], 'string', 'max' => 100],
-            [['email'], 'email']
+            [['email'], 'email'],
+            [['is_deleted'], 'boolean'],
 
         ];
     }
@@ -69,6 +72,7 @@ class User extends BaseModel implements \yii\web\IdentityInterface
             'login' => 'Логин',
             'created_at' => 'Дата регистрации',
             'updated_at' => 'Дата изменния',
+            'is_deleted' => 'Удалено ли',
         ];
     }
 
@@ -164,13 +168,16 @@ class User extends BaseModel implements \yii\web\IdentityInterface
         switch($rule) {
             case self::RULE_DELETE_USER: return $this->isAdmin(); break;
             case self::RULE_ADMIN_PANEL: return $this->isAdmin(); break;
+            case self::RULE_DELETE_MODEL_FULL: return $this->isAdmin(); break;
             case self::RULE_OWNER:
                 if ($this->isAdmin()) return true;
                 if ($data['model']) {
-                    if (get_class($data['model']) == 'app\models\Image') {
+                    if ($data['model']->hasAttribute('user_id')) {
+                        return $this->getId() === $data['model']->getUserId();
+                    } else if ($data['model']->hasAttribute('place_id')) {
                         $place = $data['model']->place;
-                        if ($place && $place->user_id) {
-                            return $this->getId() === $place->user_id;
+                        if ($place && $place->getUserId()) {
+                            return $this->getId() === $place->getUserId();
                         }
                     }
                 }
