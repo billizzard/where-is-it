@@ -315,6 +315,18 @@ input.error {
     padding:12px 10px;
 }
 
+#w1 li {
+    float:left;
+}
+
+#w1 li .glyphicon {
+    font-size:22px;
+}
+
+#w1 li .add {
+    font-size:38px;
+}
+
 /*  Feedback Review */
 .page-wrapper {
     padding: 10px;

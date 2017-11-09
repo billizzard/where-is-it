@@ -10,12 +10,13 @@ class ImageConstants
         'GALLERY' => 1,
         'GALLERY_NEW_VARIANT' => 2,
         'MAIN_DISCOUNT' => 3,
+        'TEMP' => 4,
     ];
 
     const IMAGE_SIZE = [
         'MAP'=> ['map_',240, 180],
         'DISCOUNT'=> ['discount_',240, 180],
-        'PREVIEW_MAIN' => ['preview_main_', 60, 45]
+        'PREVIEW_MAIN' => ['add_', 60, 45]
     ];
 
     const SCENARIO = [

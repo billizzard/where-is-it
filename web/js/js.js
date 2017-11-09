@@ -258,7 +258,7 @@ function FormPlace() {
 
     var setPreview = function(url) {
         if (url) {
-            $('.js-fake-image').css('background-image', 'url(/' + url + ')');
+            $('.js-fake-image').css('background-image', 'url(/' + url.addFilePrefix('add_') + ')');
             $('#image-hid').val(url);
             $('.camera-icon').css('display', 'none');
             $('.remove-icon').css('display', 'block');

@@ -46,6 +46,9 @@
   border-radius: 5px;
   margin: 2px;
 }
+.schedule__table .time-container {
+  min-width:170px;
+}
 
 /* Страница Места */
 .guest-wrapper .content-wrapper {
@@ -76,3 +79,7 @@
 .grid-view .add-info .glyphicon:active{
   background-color:#969696;
 }*/
+
+.content .grid-view {
+  overflow: auto;
+}

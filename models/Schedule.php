@@ -162,8 +162,6 @@ class Schedule extends BaseModel
             $this->{$i . '_to'} = $toH;
         }
 
-        $this->place_id = $post['place_id'];
-
     }
     
 }

@@ -108,6 +108,10 @@ class Image extends BaseModel
             case ImageConstants::TYPE['GALLERY']:
                 return ImageGalleryHandler::getAllImages($this->url);
                 break;
+
+            case ImageConstants::TYPE['TEMP']:
+                return ImageTempHandler::getAllImages($this->url);
+                break;
         }
     }
 
@@ -182,6 +186,7 @@ class Image extends BaseModel
 
                 if ($file) {
                     $file->saveAs($url);
+                    $this->type = ImageConstants::TYPE['TEMP'];
                     ImageTempHandler::createThumbs($url);
                     $urls[] = $url;
                 }

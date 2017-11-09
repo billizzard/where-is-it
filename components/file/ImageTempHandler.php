@@ -59,7 +59,7 @@ class ImageTempHandler extends FileHandler
 
     protected static function getSizes()
     {
-        return [];
+        return array_values(ImageConstants::IMAGE_SIZE);
     }
 
     public static function createThumbs($url)

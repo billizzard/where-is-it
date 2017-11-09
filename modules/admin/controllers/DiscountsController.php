@@ -59,7 +59,9 @@ class DiscountsController extends BaseController
     public function actionIndex($place_id)
     {
         $searchModel = new DiscountSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $params = Yii::$app->request->queryParams;
+        $params['DiscountSearch']['place_id'] = $place_id;
+        $dataProvider = $searchModel->search($params);
 
         return $this->render('index', [
             'searchModel' => $searchModel,

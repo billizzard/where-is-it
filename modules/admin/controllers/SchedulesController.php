@@ -10,6 +10,7 @@ use app\modules\admin\components\AccessRule;
 use app\modules\admin\components\DeleteAction;
 use app\modules\admin\models\search\CategorySearch;
 use app\modules\admin\models\search\CitySearch;
+use app\modules\admin\models\search\ScheduleSearch;
 use Yii;
 use app\models\User;
 use app\modules\admin\models\search\UserSearch;
@@ -34,6 +35,16 @@ class SchedulesController extends BaseController
                 'allow' => true,
                 'roles' => ['?'],
             ],
+            [
+                'actions' => ['create'],
+                'allow' => true,
+                'roles' => ['?'],
+            ],
+            [
+                'actions' => ['update'],
+                'allow' => true,
+                'roles' => ['?'],
+            ],
         ];
 
         return $rules;
@@ -45,14 +56,44 @@ class SchedulesController extends BaseController
      */
     public function actionIndex($place_id)
     {
-        $model = Schedule::findByPlaceAndStatus($place_id, AppConstants::STATUS['MODERATE'])->one();
-        $noCheckModel = Schedule::findByPlaceAndStatus($place_id, AppConstants::STATUS['NO_MODERATE'])->one();
-        
-        if (!$model) {
-            $model = new Schedule();
+        $searchModel = new ScheduleSearch();
+        $params = Yii::$app->request->queryParams;
+        $params['ScheduleSearch']['place_id'] = $place_id;
+
+        $dataProvider = $searchModel->search($params);
+
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Lists all User models.
+     * @return mixed
+     */
+    public function actionCreate($place_id)
+    {
+        $model = new Schedule();
+        $model->place_id = $place_id;
+
+        if (Yii::$app->request->post()) {
+            $model->fromPost(Yii::$app->request->post());
+            $model->save();
+            return $this->redirect(['index', 'place_id' => $model->place_id]);
         }
 
-        if (Yii::$app->request->post() && !$noCheckModel) {
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionUpdate($place_id)
+    {
+        $model = Schedule::findByPlaceAndStatus($place_id, AppConstants::STATUS['MODERATE'])->one();
+
+        if (Yii::$app->request->post()) {
             if ($id = $model->id) {
                 $model = new Schedule();
                 $model->parent_id = $id;
@@ -67,5 +108,7 @@ class SchedulesController extends BaseController
             'noCheckModel' => $noCheckModel
         ]);
     }
+
+
 
 }

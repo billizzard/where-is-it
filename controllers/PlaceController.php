@@ -100,7 +100,7 @@ class PlaceController extends BaseMapController
             }
         }
 
-        return $this->render('contact', [
+        return $this->render('add', [
             'model' => $model,
         ]);
     }
@@ -111,7 +111,6 @@ class PlaceController extends BaseMapController
         \Yii::$app->response->format = Response::FORMAT_JSON;
 
         if ($modelImage->load(Yii::$app->request->post())) {
-
             $url = $modelImage->uploadTempImages();
             return $url;
         }

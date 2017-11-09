@@ -69,7 +69,7 @@ $user = Yii::$app->user->getIdentity();
     <?
     $this->title = 'Место';
     ?>
-    <div class="user-index">
+    <div class="place-index">
 
         <p>
             Тут вы можете заполнить информацию о месте более подробно.
@@ -96,22 +96,22 @@ $user = Yii::$app->user->getIdentity();
                     }
                 ],
                 [
-                    'attribute' => 'category_id',
-                    'value' => function($model) use ($categoriesMap) {
-                        return isset($categoriesMap[$model->category_id]) ? $categoriesMap[$model->category_id] : false;
-                    }
-                ],
-                [
                     'label' => 'Добавление информации',
                     'contentOptions' => ['class' => 'add-info'],
                     'format' => 'raw',
                     'value' => function ($model) {
-                        return '<a href="/admin/schedules/?place_id=' . $model->id . '" class="glyphicon icon glyphicon-time"></a> - заполните время работы <br> 
-<a href="/admin/gallery/?place_id=' . $model->id . '" class="glyphicon icon glyphicon-camera"></a> - заполните галлерею  <br>
+                        return '<a href="/admin/schedules/?place_id=' . $model->id . '" class="glyphicon icon glyphicon-time"></a> - время работы <br> 
+<a href="/admin/gallery/?place_id=' . $model->id . '" class="glyphicon icon glyphicon-camera"></a> - галлерея  <br>
 <a href="/admin/places/update/?id=' . $model->id . '" class="glyphicon icon glyphicon-pencil"></a> - редактровать объект  <br>
 <a href="/admin/discounts/?place_id=' . $model->id . '" class="glyphicon icon glyphicon-c_percent">%</a> - акции и скидки <br> 
 <a href="/admin/contacts/?place_id=' . $model->id . '" class="glyphicon icon glyphicon-phone-alt"></a> - контакты <br>  
 ';
+                    }
+                ],
+                [
+                    'attribute' => 'category_id',
+                    'value' => function($model) use ($categoriesMap) {
+                        return isset($categoriesMap[$model->category_id]) ? $categoriesMap[$model->category_id] : false;
                     }
                 ],
                 [

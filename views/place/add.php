@@ -37,9 +37,9 @@ use yii\captcha\Captcha;
                        value="<?= isset($_POST['Place']['name']) ? $_POST['Place']['name'] : '' ?>">
             </div>
 
-            <div class="form-place__column">
-                <textarea name="Place[work_time]" placeholder="Время работы и подобная информация"><?= isset($_POST['Place']['work_time']) ? $_POST['Place']['work_time'] : '' ?></textarea>
-            </div>
+<!--            <div class="form-place__column">
+                <textarea name="Place[work_time]" placeholder="Время работы и подобная информация"><?/*= isset($_POST['Place']['work_time']) ? $_POST['Place']['work_time'] : '' */?></textarea>
+            </div>-->
 
             <div class="form-place__column">
                 <textarea name="Place[description]" placeholder="Полезная информация"><?= isset($_POST['Place']['description']) ? $_POST['Place']['description'] : '' ?></textarea>
@@ -73,7 +73,7 @@ use yii\captcha\Captcha;
     .add-place__map {
         width: 100%;
         flex-grow: 1;
-        min-height: 200px;
+        min-height: 250px;
     }
 
     .add-place__footer {
@@ -152,7 +152,7 @@ use yii\captcha\Captcha;
     }
 
     .form-place .form-place__column input[type=text] {
-        width: 250px;
+        width: 300px;
         height: 26px;
     }
 
