@@ -8,7 +8,16 @@ function ImageUploader() {
     var hasError = false;
 
     var init = function() {
+        fillOldImages();
         addEvents();
+    };
+
+    var fillOldImages = function() {
+        $('.js-image-old-url').each(function() {
+            setConfig($(this));
+            updateInputUrlValue();
+        })
+
     };
 
     var addEvents = function() {
@@ -153,10 +162,15 @@ function ImageUploader() {
 
     var updateInputUrlValue = function() {
         var urlArr = [];
+        var urlOldArr = [];
         iu.find('.js-new-image img').each(function() {
             urlArr.push($(this).attr('src'));
         });
+        iu.find('.js-image img').each(function() {
+            urlOldArr.push($(this).attr('src'));
+        });
         iu.find('.js-image-url').val(urlArr.join(','));
+        iu.find('.js-image-old-url').val(urlOldArr.join(','));
     };
 
     var showSuccess = function(message) {

@@ -1,7 +1,10 @@
 <?php
 namespace app\modules\admin\components;
+use app\models\User;
+
 class AccessRule extends \yii\filters\AccessRule {
 
+    public $className;
     /**
      * @inheritdoc
      */
@@ -17,9 +20,17 @@ class AccessRule extends \yii\filters\AccessRule {
                 if (!$user->getIsGuest()) {
                     return true;
                 }
-                // Check if the user is logged in, and the roles match
             } elseif (!$user->getIsGuest() && $role === $user->identity->role) {
-                return true;
+                if ($role === User::ROLE_OWNER) {
+                    if ($this->className) {
+                        $model = $this->className::findOne((int)$_GET['id']);
+                        if ($user->getIdentity()->hasAccess(User::RULE_OWNER, ['model' => $model])) {
+                            return true;
+                        }
+                    }
+                } else {
+                    return true;
+                }
             }
         }
 

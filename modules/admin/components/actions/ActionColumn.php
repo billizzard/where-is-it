@@ -112,8 +112,8 @@ class ActionColumn extends \yii\grid\ActionColumn
     }
 
     private function initSoftDeleteButton() {
-        if (!isset($this->buttons['soft_delete_all'])) {
-            $this->buttons['soft_delete_all'] = function ($url, BaseModel $model) {
+        if (!isset($this->buttons['soft-delete_all'])) {
+            $this->buttons['soft-delete_all'] = function ($url, BaseModel $model) {
                 if ($this->getIsSoftDeletableAll($model)) {
                     return Html::a('<span class="glyphicon icon glyphicon-trash"></span>', str_replace('_all/', '/', $url), [
                         'title' => 'Удалить',

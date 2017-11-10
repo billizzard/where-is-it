@@ -2,27 +2,14 @@
 
 namespace app\modules\admin\controllers;
 
-use app\constants\AppConstants;
-use app\models\Category;
-use app\models\City;
 use app\models\Image;
-use app\models\Message;
 use app\models\Place;
-use app\modules\admin\components\AccessRule;
-use app\modules\admin\components\DeleteAction;
-use app\modules\admin\models\search\CategorySearch;
-use app\modules\admin\models\search\CitySearch;
+use app\modules\admin\components\actions\DeleteAction;
 use app\modules\admin\models\search\PlaceSearch;
 use Yii;
 use app\models\User;
-use app\modules\admin\models\search\UserSearch;
-use yii\filters\AccessControl;
-use yii\web\Controller;
-use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\web\Response;
-use yii\web\UploadedFile;
 
 /**
  * UsersController implements the CRUD actions for User model.

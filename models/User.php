@@ -26,6 +26,7 @@ class User extends BaseModel implements \yii\web\IdentityInterface
 {
     const ROLE_GUEST = 0;
     const ROLE_ADMIN = 1;
+    const ROLE_OWNER = 2;
 
     const RULE_ADMIN_PANEL = 1;
     const RULE_DELETE_USER = 2;

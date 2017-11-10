@@ -1,81 +1,49 @@
 <?php
 
-use app\components\widgets\imageUploader\ImageUploaderWidget;
-use \yii\widgets\ActiveForm;
+use yii\helpers\Html;
+use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Place */
-/* @var $modelImage app\models\Image */
-/* @var $form yii\widgets\ActiveForm */
-$verifyImages = [];
-if ($models) {
-    foreach ($models as $model) {
-        $verifyImages[] = [
-            $model->url,
-            [
-                'id' => $model->id
-            ]
-        ];
-    }
-}
+/* @var $searchModel app\modules\admin\models\search\UserSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $isCanAdd boolean */
+$statusesMap = \app\constants\AppConstants::getStatusMap();
+/** @var \app\models\User $user */
+$user = Yii::$app->user->getIdentity();
 
-$this->title = 'Текущая галерея';
+$this->title = 'Галлереи';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<? if ($verifyImages) { ?>
-    <?php $form = ActiveForm::begin(); ?>
-    <?= ImageUploaderWidget::widget([
-        'config' => [
-            'oldImages' => $verifyImages,
-            'uploadUrl' => '/place/upload-image/',
-            'deleteUrl' => '/admin/places/remove-image/',
-            'inputFileName' => "Image[url][]",
-            'errorCallback' => 'galleryErrors',
-            'maxFiles' => 5,
-            'uploadButton' => false
-        ]
-    ]) ?>
+<div class="user-index">
 
-    <?php ActiveForm::end(); ?>
-<? } ?>
-
-<? if ($hasOld && !$verifyImages) { ?>
-    Временно нельзя добавлять новые фотографии, так как модератор еще не проверил старые.
-<? } else { ?>
-
-    <? if (!$hasNew) { ?>
-        <? if ($verifyImages) { ?>
-            <section class="content-header" style="margin: 20px 0; border-top:1px solid #ccc;">
-                <h1>Вы можете предложить свой вариант галлереи:</h1>
-            </section>
-        <? } ?>
-        <?php $form = ActiveForm::begin(); ?>
-        <?= ImageUploaderWidget::widget([
-            'config' => [
-                'uploadUrl' => '/place/upload-image/',
-                'inputFileName' => "Image[url][]",
-                'errorCallback' => 'galleryErrors',
-                'maxFiles' => 5,
-            ]
-        ]) ?>
-        <div class="form-group">
-            <?= \yii\helpers\Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
-        </div>
-
-        <?php ActiveForm::end(); ?>
-    <? } else { ?>
-        <p style="margin-top:10px;">
-            Временно нельзя добавить новые фотографии к этому месту. Так как еще есть не проверенные модератором
-            фотографии для этого места.
-        </p>
+    <? if ($isCanAdd) { ?>
+    <p>
+        <?= Html::a('Создать галлерею', ['create', 'place_id' => $_GET['place_id']], ['class' => 'btn btn-success']) ?>
+    </p>
     <? } ?>
-<? } ?>
+    <p>
+        Здесь вы можете создать/изменить галлерею фотографий для этого места.
+        <? if (!$isCanAdd) { ?>
+        Временно нельзя создавать/изменять галлереи, так как уже есть 5 не проверенных модератором новых галлерей
+        <? } ?>
+    </p>
 
-<script>
-    function galleryErrors(success, message) {
-        flashError.setErrors(message);
-    }
-</script>
-
-
-
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => [
+            'id',
+            'title',
+            [
+                'attribute' => 'status',
+                'value' => function($model) use ($statusesMap) {
+                    return isset($statusesMap[$model->status]) ? $statusesMap[$model->status] : false;
+                }
+            ],
+            [
+                'class' => 'app\modules\admin\components\actions\ActionColumn',
+                'template' => '{update_all} {soft-delete_all}',
+                'contentOptions' => ['class' => 'add-info']
+            ]
+        ],
+    ]); ?>
+</div>

@@ -82,27 +82,6 @@ class Schedule extends BaseSubPlacesModel
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPlace()
-    {
-        return $this->hasOne(Place::className(), ['id' => 'place_id']);
-    }
-
-    /**
-     * @param $place_id
-     * @return $this
-     */
-    public static function findByPlaceId($place_id)
-    {
-        return self::find()->andWhere('place_id = :place_id', [':place_id' => $place_id]);
-    }
-
-    public static function findByPlaceAndStatus($place_id, $status) {
-        return self::findByPlaceId($place_id)->andWhere('status = :status', [':status' => $status]);
-    }
-
     public function getFormatSchedule()
     {
         $result = [];

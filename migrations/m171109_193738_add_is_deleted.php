@@ -11,6 +11,7 @@ class m171109_193738_add_is_deleted extends Migration
         $this->addColumn('user', $this->column, $this->boolean()->defaultValue(false));
         $this->addColumn('place', $this->column, $this->boolean()->defaultValue(false));
         $this->addColumn('contact', $this->column, $this->boolean()->defaultValue(false));
+        $this->addColumn('category', $this->column, $this->boolean()->defaultValue(false));
         $this->addColumn('discount', $this->column, $this->boolean()->defaultValue(false));
         $this->addColumn('gallery', $this->column, $this->boolean()->defaultValue(false));
         $this->addColumn('image', $this->column, $this->boolean()->defaultValue(false));
@@ -24,6 +25,7 @@ class m171109_193738_add_is_deleted extends Migration
         $this->dropColumn('user', $this->column);
         $this->dropColumn('place', $this->column);
         $this->dropColumn('contact', $this->column);
+        $this->dropColumn('category', $this->column);
         $this->dropColumn('discount', $this->column);
         $this->dropColumn('gallery', $this->column);
         $this->dropColumn('image', $this->column);

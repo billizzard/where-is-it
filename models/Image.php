@@ -236,10 +236,22 @@ class Image extends BaseModel
         }
     }
 
+    public static function createImageFromTemp($model, $tempImageUrl, $toImageUrl, $type = ImageConstants::TYPE['MAIN'])
+    {
+        if ($url = FileHelper::moveFileToDir($tempImageUrl, $toImageUrl, true)) {
+            $image = new Image();
+            $image->setUrl($url);
+            $image->setPlaceId($model->id);
+            $image->type = $type;
+            if ($image->save()) {
+                $image->createThumbs();
+            }
+        }
+    }
+
     private function createThumbs() {
         switch ($this->type) {
             case ImageConstants::TYPE['MAIN']: ImageMainHandler::createThumbs($this->url); break;
-            case ImageConstants::TYPE['GALLERY_NEW_VARIANT']:
             case ImageConstants::TYPE['GALLERY']: ImageGalleryHandler::createThumbs($this->url); break;
         }
     }

@@ -10,6 +10,7 @@ namespace app\models;
  * @property string parent_id
  * @property string color
  * @property string sort
+ * @property boolean is_deleted
  */
 
 class Category extends BaseModel
@@ -30,6 +31,7 @@ class Category extends BaseModel
     {
         return [
             [['name'], 'required'],
+            [['is_deleted'], 'boolean'],
             [['parent_id', 'sort'], 'integer'],
             [['name'], 'string', 'max' => 100],
             [['color'], 'string', 'max' => 6],
@@ -47,6 +49,7 @@ class Category extends BaseModel
             'parent_id' => 'Родитель',
             'sort' => 'Сортировка',
             'color' => 'Цвет',
+            'is_deleted' => 'Удалено ли',
         ];
     }
 

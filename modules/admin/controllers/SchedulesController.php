@@ -2,23 +2,12 @@
 
 namespace app\modules\admin\controllers;
 
-use app\constants\AppConstants;
-use app\models\Category;
-use app\models\City;
 use app\models\Schedule;
-use app\modules\admin\components\AccessRule;
-use app\modules\admin\components\DeleteAction;
-use app\modules\admin\models\search\CategorySearch;
-use app\modules\admin\models\search\CitySearch;
+use app\models\User;
+use app\modules\admin\components\actions\DeleteAction;
+use app\modules\admin\components\actions\SoftDeleteAction;
 use app\modules\admin\models\search\ScheduleSearch;
 use Yii;
-use app\models\User;
-use app\modules\admin\models\search\UserSearch;
-use yii\filters\AccessControl;
-use yii\web\Controller;
-use yii\web\ForbiddenHttpException;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * UsersController implements the CRUD actions for User model.
@@ -26,16 +15,19 @@ use yii\filters\VerbFilter;
 class SchedulesController extends BaseController
 {
 
-//    public function actions()
-//    {
-//        return [
-//            'delete' => [
-//                'class' => DeleteAction::className(),
-//                'model_class' => Address::className()
-//            ],
-//
-//        ];
-//    }
+    public function actions()
+    {
+        return [
+            'delete' => [
+                'class' => DeleteAction::className(),
+                'model_class' => Schedule::className()
+            ],
+            'soft-delete' => [
+                'class' => SoftDeleteAction::className(),
+                'model_class' => Schedule::className()
+            ],
+        ];
+    }
 
 
     public function behaviors()
@@ -57,6 +49,13 @@ class SchedulesController extends BaseController
                 'allow' => true,
                 'roles' => ['?'],
             ],
+            [
+                'actions' => ['soft-delete'],
+                'allow' => true,
+                'roles' => [User::ROLE_OWNER],
+                'className' => Schedule::className()
+            ],
+
         ];
 
         return $rules;
@@ -77,7 +76,7 @@ class SchedulesController extends BaseController
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'isCanAdd' => Schedule::isCanAdd($place_id)
+            'isCanAdd' => Schedule::isCanAddMore($place_id)
         ]);
     }
 

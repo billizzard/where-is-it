@@ -156,12 +156,7 @@ class Place extends BaseModel
 
     public function getGallery()
     {
-        return $this->hasMany(Image::className(), ['place_id' => 'id'])->andWhere(['image.type' => ImageConstants::TYPE['GALLERY']]);
-    }
-
-    public function getGalleryNewVariant()
-    {
-        return $this->hasMany(Image::className(), ['place_id' => 'id'])->andWhere(['image.type' => ImageConstants::TYPE['GALLERY_NEW_VARIANT']]);
+        return $this->hasMany(Gallery::className(), ['place_id' => 'id']);
     }
 
     public function getId() {

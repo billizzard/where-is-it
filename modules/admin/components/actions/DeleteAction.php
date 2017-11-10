@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\admin\components;
+namespace app\modules\admin\components\actions;
 
 use app\models\User;
 use \Yii;

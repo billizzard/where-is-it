@@ -2,7 +2,9 @@
 
 namespace app\models;
 
+use app\constants\ImageConstants;
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "gallery".
@@ -10,7 +12,7 @@ use Yii;
  * @property integer $id
  * @property string $title
  * @property integer $place_id
- * @property string $ip
+ * @property integer $ip
  * @property integer $parent_id
  * @property integer $status
  * @property integer $created_at
@@ -32,9 +34,9 @@ class Gallery extends BaseSubPlacesModel
     public function rules()
     {
         return [
-            [['title', 'ip'], 'string'],
+            [['title'], 'string', 'max' => 255],
             [['is_deleted'], 'boolean'],
-            [['place_id', 'parent_id', 'status', 'created_at'], 'integer'],
+            [['place_id', 'parent_id', 'status', 'created_at', 'ip'], 'integer'],
         ];
     }
 
@@ -53,5 +55,20 @@ class Gallery extends BaseSubPlacesModel
             'created_at' => 'Дата создания',
             'is_deleted' => 'Удалено ли',
         ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'updatedAtAttribute' => false
+            ]
+        ];
+    }
+
+    public function getImages()
+    {
+        return $this->hasMany(Image::className(), ['place_id' => 'id'])->andWhere(['type' => ImageConstants::TYPE['GALLERY']]);
     }
 }

@@ -13,6 +13,6 @@ use yii\behaviors\TimestampBehavior;
 
 interface ISubPlaces
 {
-    public static function isCanAdd($place_id);
+    public static function isCanAddMore($place_id);
 
 }
