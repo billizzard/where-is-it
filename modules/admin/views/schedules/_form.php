@@ -63,6 +63,8 @@ $format = $model->getFormatSchedule();
     <? } ?>
     </table>
 
+    <?=$form->field($model, 'add_info')->textarea()?>
+
     <div class="form-group" style="margin-top:15px;">
         <?= Html::submitButton('Сохранить', ['class' =>'btn btn-success']) ?>
     </div>

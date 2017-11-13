@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\controllers;
 
+use app\components\SiteException;
 use app\models\Schedule;
 use app\models\User;
 use app\modules\admin\components\actions\DeleteAction;
@@ -14,48 +15,19 @@ use Yii;
  */
 class SchedulesController extends BaseController
 {
-
-    public function actions()
+    protected function getClassName()
     {
-        return [
-            'delete' => [
-                'class' => DeleteAction::className(),
-                'model_class' => Schedule::className()
-            ],
-            'soft-delete' => [
-                'class' => SoftDeleteAction::className(),
-                'model_class' => Schedule::className()
-            ],
-        ];
+        return Schedule::className();
     }
-
 
     public function behaviors()
     {
         $rules = parent::behaviors();
-        $rules['access']['rules'] = [
-            [
-                'actions' => ['index'],
-                'allow' => true,
-                'roles' => ['?'],
-            ],
-            [
-                'actions' => ['create'],
-                'allow' => true,
-                'roles' => ['?'],
-            ],
-            [
-                'actions' => ['update'],
-                'allow' => true,
-                'roles' => ['?'],
-            ],
-            [
+        $rules['access']['rules'][] = [
                 'actions' => ['soft-delete'],
                 'allow' => true,
                 'roles' => [User::ROLE_OWNER],
                 'className' => Schedule::className()
-            ],
-
         ];
 
         return $rules;
@@ -80,16 +52,13 @@ class SchedulesController extends BaseController
         ]);
     }
 
-    /**
-     * Lists all User models.
-     * @return mixed
-     */
     public function actionCreate($place_id)
     {
+        $this->isCanAddMore($place_id);
         $model = new Schedule();
         $model->place_id = $place_id;
 
-        if (Yii::$app->request->post()) {
+        if ($model->load(Yii::$app->request->post())) {
             $model->fromPost(Yii::$app->request->post());
             $model->save();
             return $this->redirect(['index', 'place_id' => $model->place_id]);
@@ -103,9 +72,10 @@ class SchedulesController extends BaseController
     public function actionUpdate($id)
     {
         $model = Schedule::findOneModel($id);
+        $this->isCanAddMore($model->place_id);
 
-        if (Yii::$app->request->post()) {
-            $clone = $model->getClone();
+        if ($model->load(Yii::$app->request->post())) {
+            $clone = $model->getDuplicate();
             $clone->fromPost(Yii::$app->request->post());
             $clone->save();
             return $this->redirect(['index', 'place_id' => $clone->place_id]);
@@ -115,7 +85,5 @@ class SchedulesController extends BaseController
             'model' => $model,
         ]);
     }
-
-
 
 }

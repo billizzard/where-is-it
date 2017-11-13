@@ -662,6 +662,10 @@ function Stars() {
     init();
 }
 
+function widgetUploadErrors(success, message) {
+    flashError.setErrors(message);
+}
+
 
 var cookie = new Cookie();
 //var geoPopup = new GeoPopup();

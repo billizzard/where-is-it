@@ -10,6 +10,10 @@ use yii\widgets\ActiveForm;
 
 /** @var \app\models\Image $image */
 $image = $model->mainImage;
+$verifyImage = [];
+if ($image) {
+    $verifyImage[] = [$image->url];
+}
 /** @var \app\models\User $user */
 $user = Yii::$app->user->getIdentity();
 ?>
@@ -20,13 +24,14 @@ $user = Yii::$app->user->getIdentity();
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <? if (isset($image)) { ?>
-        <div class="uploaded_img">
-            <img src="/<?=$image->getMainImages()['original']?>" alt="">
-            <a href="#" class="delete" data-id="<?=$image->getId()?>">x</a>
-        </div>
-    <? } ?>
-    <?= $form->field($modelImage, 'url')->fileInput() ?>
+    <?= \app\components\widgets\imageUploader\ImageUploaderWidget::widget([
+        'config' => [
+            'oldImages' => $verifyImage,
+            'uploadUrl' => '/admin/discounts/upload-image/',
+            'inputFileName' => "Image[url][]",
+            'errorCallback' => 'widgetUploadErrors',
+        ]
+    ]) ?>
 
     <?= $form->field($model, 'message')->textarea() ?>
     <?= $form->field($model, 'start_date')->textInput() ?>

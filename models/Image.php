@@ -29,7 +29,7 @@ use yii\web\UploadedFile;
  * @property boolean is_deleted
  */
 
-class Image extends BaseModel
+class Image extends BaseSubPlacesModel
 {
     public $files;
     /**
@@ -51,7 +51,10 @@ class Image extends BaseModel
             [['description'], 'string', 'max' => 255],
             [['is_deleted'], 'boolean'],
             [['url'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Максимум 2MB'],
-            [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Максимум 2MB', 'maxFiles' => 4, 'on' => ImageConstants::SCENARIO['TEMP']],
+            [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Максимум 2MB', 'maxFiles' => 2, 'on' => ImageConstants::SCENARIO['TEMP']],
+            [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Максимум 2MB', 'maxFiles' => 2, 'on' => ImageConstants::SCENARIO['GALLERY']],
+            [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Максимум 2MB', 'maxFiles' => 1, 'on' => ImageConstants::SCENARIO['MAIN_DISCOUNT']],
+            [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Максимум 2MB', 'maxFiles' => 1, 'on' => ImageConstants::SCENARIO['MAIN_PLACE']],
 
         ];
     }
@@ -87,12 +90,6 @@ class Image extends BaseModel
                 'updatedAtAttribute' => false
             ]
         ];
-    }
-
-
-    public static function findByPlaceId($place_id)
-    {
-        return self::find()->andWhere('place_id = :place_id',[':place_id' => $place_id]);
     }
 
     public static function findGallery($place_id)
@@ -146,7 +143,7 @@ class Image extends BaseModel
                 $this->url->saveAs($url);
                 ImageMainHandler::createThumbs($url);
                 $this->url = $url;
-                $this->type = ImageConstants::TYPE['MAIN'];
+                $this->type = ImageConstants::TYPE['MAIN_PLACE'];
                 return $this->save();
             } else {
                 throw new SiteException($this->getErrors(), 400);
@@ -154,76 +151,59 @@ class Image extends BaseModel
         }
     }
 
-    public function uploadDiscountImage(Discount $model) {
-        $this->url = UploadedFile::getInstance($this, 'url');
-        if ($this->url) {
-            if ($oldImage = $model->mainImage) {
-                $oldImage->delete();
-            }
-            $this->place_id = $model->id;
-            $name = uniqid() . '.' . $this->url->extension;
-            $url = $model->place->getDir() . '/' . $name;
-            if ($this->validate()) {
-                $this->url->saveAs($url);
-                ImageDiscountMain::createThumbs($url);
-                $this->url = $url;
-                $this->type = ImageConstants::TYPE['MAIN_DISCOUNT'];
-                return $this->save();
-            } else {
-                throw new SiteException($this->getErrors(), 400);
+    private function createTempFile($file) {
+
+        $dir = ImageTempHandler::getTempDir();
+        $name = uniqid() . '.' . $file->extension;
+        $this->url = $dir . '/' . $name;
+
+        if ($file) {
+            $file->saveAs($this->url);
+            $this->type = ImageConstants::TYPE['TEMP'];
+            return $this->createThumbsByScenario();
+        }
+
+        return [];
+    }
+    
+    private function getCountFiles() {
+        $scenario = $this->getScenario();
+        foreach ($this->rules() as $rule) {
+            if ($rule[1] == 'file' && isset($rule['on']) && $rule['on'] == $scenario) {
+                return $rule['maxFiles'] ?? 0;
             }
         }
+        return 0;
     }
 
     public function uploadTempImages()
     {
         $urls = [];
+        $countFiles = $this->getCountFiles();
         $this->files = UploadedFile::getInstances($this, 'url');
+        if ($countFiles && $countFiles < 2) {
+            $this->files = $this->files[0];
+        }
 
         if ($this->validate()) {
-            foreach ($this->files as $file) {
-                $dir = ImageTempHandler::getTempDir();
-                $name = uniqid() . '.' . $file->extension;
-
-                $url = $dir . '/' . $name;
-
-                if ($file) {
-                    $file->saveAs($url);
-                    $this->type = ImageConstants::TYPE['TEMP'];
-                    ImageTempHandler::createThumbs($url);
-                    $urls[] = $url;
+            if (is_array($this->files)) {
+                foreach ($this->files as $file) {
+                    $urls[] = $this->createTempFile($file);
                 }
+            } else {
+                $urls[] = $this->createTempFile($this->files);
             }
         } else {
+            echo "<pre>";
+            var_dump($this->getErrors());
+            die();
             throw new ApiException($this->getErrors(), 400);
         }
 
         return $urls;
-
-
     }
 
-//    public function uploadTempImage()
-//    {
-//        $this->url = UploadedFile::getInstances($this, 'url');
-//
-//        $dir = ImageTempHandler::getTempDir();
-//        $name = uniqid() . '.' . $this->url->extension;
-//
-//        $url = $dir . '/' . $name;
-//
-//        if ($this->url) {
-//            if ($this->validate()) {
-//                $this->url->saveAs($url);
-//                ImageTempHandler::createThumbs($url);
-//                $this->url = $url;
-//            } else {
-//                throw new ApiException($this->getErrors(), 400);
-//            }
-//        }
-//    }
-
-    public static function createMainImageFromTemp(Place $place, $tempImageUrl, $type = ImageConstants::TYPE['MAIN'])
+    public static function createMainImageFromTemp(Place $place, $tempImageUrl, $type = ImageConstants::TYPE['MAIN_PLACE'])
     {
         if ($url = FileHelper::moveFileToDir($tempImageUrl, $place->getDir())) {
             $image = new Image();
@@ -236,7 +216,7 @@ class Image extends BaseModel
         }
     }
 
-    public static function createImageFromTemp($model, $tempImageUrl, $toImageUrl, $type = ImageConstants::TYPE['MAIN'])
+    public static function createImageFromTemp($model, $tempImageUrl, $toImageUrl, $type = ImageConstants::TYPE['MAIN_PLACE'])
     {
         if ($url = FileHelper::moveFileToDir($tempImageUrl, $toImageUrl, true)) {
             $image = new Image();
@@ -245,15 +225,30 @@ class Image extends BaseModel
             $image->type = $type;
             if ($image->save()) {
                 $image->createThumbs();
+            } else {
+                echo "<pre>";
+                var_dump($image->getErrors());
+                die();
             }
         }
     }
 
     private function createThumbs() {
         switch ($this->type) {
-            case ImageConstants::TYPE['MAIN']: ImageMainHandler::createThumbs($this->url); break;
+            case ImageConstants::TYPE['MAIN_PLACE']: ImageMainHandler::createThumbs($this->url); break;
             case ImageConstants::TYPE['GALLERY']: ImageGalleryHandler::createThumbs($this->url); break;
+            case ImageConstants::TYPE['MAIN_DISCOUNT']: ImageDiscountMain::createThumbs($this->url); break;
         }
+    }
+
+    private function createThumbsByScenario() {
+        switch ($this->getScenario()) {
+            case ImageConstants::SCENARIO['GALLERY']: $url = ImageGalleryHandler::createThumbs($this->url); break;
+            case ImageConstants::SCENARIO['MAIN_DISCOUNT']: $url = ImageDiscountMain::createThumbs($this->url); break;
+            case ImageConstants::SCENARIO['MAIN_PLACE']: $url = ImageMainHandler::createThumbs($this->url); break;
+            default: $url =  ImageTempHandler::createThumbs($this->url);
+        }
+        return $url;
     }
 
     public function getId() { return $this->id; }

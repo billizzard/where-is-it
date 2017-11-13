@@ -6,6 +6,7 @@ use app\components\file\FileHelper;
 use app\components\file\ImagePlaceHandler;
 use app\constants\AppConstants;
 use app\constants\ImageConstants;
+use app\models\traits\UrlImageUploader;
 use yii\behaviors\TimestampBehavior;
 
 /**
@@ -23,7 +24,6 @@ use yii\behaviors\TimestampBehavior;
  * @property double lat
  * @property double lon
  * @property string address
- * @property string work_time
  * @property string dir
  * @property string created_ip
  * @property integer created_at
@@ -36,6 +36,8 @@ use yii\behaviors\TimestampBehavior;
 
 class Place extends BaseModel
 {
+    use UrlImageUploader;
+
     public $category;
 
     /**
@@ -57,8 +59,8 @@ class Place extends BaseModel
             [['yes', 'no', 'type', 'category_id', 'status', 'user_id', 'parent_id', 'stars_count'], 'integer'],
             [['name', 'address'], 'string', 'max' => 255],
             [['dir'], 'string', 'max' => 100],
-            [['stars'], 'number', 'min' => 1, 'max' => 5],
-            [['description', 'work_time'], 'string', 'max' => 500],
+            [['stars'], 'number', 'min' => 0, 'max' => 5],
+            [['description'], 'string', 'max' => 500],
             [['category'], 'string'],
             [['is_deleted'], 'boolean'],
         ];
@@ -83,7 +85,6 @@ class Place extends BaseModel
             'stars' => 'Средняя оценка',
             'stars_count' => 'Количество оценок',
             'description' => 'Описание',
-            'work_time' => 'Время работы',
             'created_ip' => 'ip создателя',
             'status' => 'Статус',
             'parent_id' => 'Родитель',
@@ -151,7 +152,7 @@ class Place extends BaseModel
 
     public function getMainImage()
     {
-        return $this->hasOne(Image::className(), ['place_id' => 'id'])->andWhere(['image.type' => ImageConstants::TYPE['MAIN']]);
+        return $this->hasOne(Image::className(), ['place_id' => 'id'])->andWhere(['image.type' => ImageConstants::TYPE['MAIN_PLACE']]);
     }
 
     public function getGallery()
@@ -204,16 +205,6 @@ class Place extends BaseModel
     {
         return self::find()->andWhere('status = :status', ['status' => $status]);
     }
-
-    /**
-     * Возвращает еще не проверенную, изменненую модель текущего места
-     * @return array|null|\yii\db\ActiveRecord
-     */
-    public function getNoCheckModel()
-    {
-        $model = self::findByStatus(AppConstants::STATUS['NO_MODERATE'])->andWhere(['parent_id' => $this->id])->one();
-        return $model ? $model : null;
-    }
     
     public function setStars() {
         $res = Review::getSumStarByPlace($this->id);
@@ -221,10 +212,6 @@ class Place extends BaseModel
             $this->stars = round($res['sum'] / $res['count'], 1);
             $this->stars_count = $res['count'];
         }
-    }
-    
-    public function getPlaceMenu() {
-
     }
 
 

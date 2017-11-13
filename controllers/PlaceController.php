@@ -14,6 +14,7 @@ use app\models\Image;
 use app\models\Place;
 use app\models\Review;
 use app\models\Star;
+use app\models\traits\ImageUploaderController;
 use app\models\User;
 use app\models\Vote;
 use Yii;
@@ -27,6 +28,13 @@ use app\models\PlaceForm;
 
 class PlaceController extends BaseMapController
 {
+    use ImageUploaderController;
+
+    public function getScenario()
+    {
+        return ImageConstants::SCENARIO['TEMP'];
+    }
+
     public function actionIndex($id)
     {
         $this->layout = 'placeLayout';
@@ -92,7 +100,8 @@ class PlaceController extends BaseMapController
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 Helper::setMessage('После проверки, точка появится на карте (<a href="/admin/places/?place_id=' . $model->id . '" target="_blank">заполнить детально</a>).', Helper::TYPE_MESSAGE_SUCCESS);
                 if ($imageUrl = Yii::$app->request->post('image')) {
-                    Image::createMainImageFromTemp($model, $imageUrl);
+                    $model->uploadNewImageByUrl($imageUrl, ImageConstants::TYPE['MAIN_PLACE']);
+                    //Image::createMainImageFromTemp($model, $imageUrl);
                 }
                 return $this->refresh();
             } else {
@@ -103,17 +112,6 @@ class PlaceController extends BaseMapController
         return $this->render('add', [
             'model' => $model,
         ]);
-    }
-
-    public function actionUploadImage()
-    {
-        $modelImage = new Image(['scenario' => ImageConstants::SCENARIO['TEMP']]);
-        \Yii::$app->response->format = Response::FORMAT_JSON;
-
-        if ($modelImage->load(Yii::$app->request->post())) {
-            $url = $modelImage->uploadTempImages();
-            return $url;
-        }
     }
 
     public function actionVote()

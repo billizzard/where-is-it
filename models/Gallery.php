@@ -3,7 +3,7 @@
 namespace app\models;
 
 use app\constants\ImageConstants;
-use Yii;
+use app\models\traits\UrlImageUploader;
 use yii\behaviors\TimestampBehavior;
 
 /**
@@ -20,6 +20,8 @@ use yii\behaviors\TimestampBehavior;
  */
 class Gallery extends BaseSubPlacesModel
 {
+    use UrlImageUploader;
+
     /**
      * @inheritdoc
      */

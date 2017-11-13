@@ -2,8 +2,10 @@
 
 namespace app\modules\admin\controllers;
 
+use app\constants\ImageConstants;
 use app\models\Image;
 use app\models\Place;
+use app\models\traits\ImageUploaderController;
 use app\modules\admin\components\actions\DeleteAction;
 use app\modules\admin\models\search\PlaceSearch;
 use Yii;
@@ -16,6 +18,13 @@ use yii\web\Response;
  */
 class PlacesController extends BaseController
 {
+    use ImageUploaderController;
+
+    public function getScenario()
+    {
+        return ImageConstants::SCENARIO['MAIN_PLACE'];
+    }
+
     public function behaviors()
     {
         $rules = parent::behaviors();
@@ -36,12 +45,12 @@ class PlacesController extends BaseController
                 'roles' => [User::ROLE_ADMIN],
             ],
             [
-                'actions' => ['view'],
+                'actions' => ['update'],
                 'allow' => true,
                 'roles' => ['?'],
             ],
             [
-                'actions' => ['update'],
+                'actions' => ['upload-image'],
                 'allow' => true,
                 'roles' => ['?'],
             ],
@@ -91,21 +100,6 @@ class PlacesController extends BaseController
     }
 
     /**
-     * Displays a single User model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        $model = Place::findOne($id);
-        if (!$model) return Yii::$app->response->redirect('/admin/places/index');
-
-        return $this->render('view', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
      * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -113,50 +107,40 @@ class PlacesController extends BaseController
     public function actionCreate()
     {
         $model = new Place();
-        $modelImage = new Image();
 
-        if ($model->load(Yii::$app->request->post()) && $modelImage->load(Yii::$app->request->post())) {
-            if ($model->save()) {
-                $modelImage->uploadMainImage($model);
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->uploadNewImageByUrl(Yii::$app->request->post('images'), ImageConstants::TYPE['MAIN_PLACE']);
+            return $this->redirect(['index', 'place_id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'modelImage' => $modelImage,
             ]);
         }
     }
 
     public function actionUpdate($id)
     {
-        $model = Place::findOne($id);
-        if (!$model) throw new NotFoundHttpException();
-        $noCheckModel = $model->getNoCheckModel();
-        $modelImage = new Image();
+        $model = Place::findOneModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $modelImage->load(Yii::$app->request->post())) {
-            /** @var User $user */
-            $user = \Yii::$app->user->getIdentity();
-            if (!$user || !$user->hasAccess(User::RULE_OWNER, ['model' => $this])) {
-                if (!$noCheckModel) {
-                    $clone = $model->getClone();
-                    $clone->save();
-                    $modelImage->uploadMainImage($clone);
-                }
-            } else {
-                if ($model->save()) {
-                    $modelImage->uploadMainImage($model);
+        if ($model->load(Yii::$app->request->post()) ) {
+            if ($post = Yii::$app->request->post()) {
+                /** @var Place $newModel */
+                $newModel = $model->getDuplicate();
+                if ($newModel->load(Yii::$app->request->post()) && $newModel->save()) {
+                    $newModel->uploadNewImageByUrl(
+                        array_merge(explode(',',$post['old_images']),explode(',',$post['images'])),
+                        ImageConstants::TYPE['MAIN_PLACE']);
+                    return $this->redirect(['index', 'place_id' => $newModel->id]);
+                } else {
+                    echo "<pre>";
+                    var_dump($newModel->getErrors());
+                    die();
                 }
             }
-            return $this->redirect(['view', 'id' => $model->id]);
-
         }
 
         return $this->render('update', [
             'model' => $model,
-            'modelImage' => $modelImage,
-            'noCheckModel' => $noCheckModel,
         ]);
 
     }

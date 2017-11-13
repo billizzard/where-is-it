@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\models\traits\UrlImageUploader;
 use Yii;
 
 /**
@@ -16,8 +17,9 @@ use Yii;
  * @property integer $status
  * @property boolean is_deleted
  */
-class Contact extends \yii\db\ActiveRecord
+class Contact extends BaseSubPlacesModel
 {
+    use UrlImageUploader;
     /**
      * @inheritdoc
      */

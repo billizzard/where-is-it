@@ -10,6 +10,7 @@ use yii\widgets\ActiveForm;
 $this->title = 'Галлерея';
 $this->params['breadcrumbs'][] = $this->title;
 $verifyImages = [];
+
 if ($images = $model->images) {
     foreach ($images as $image) {
         $verifyImages[] = [
@@ -29,9 +30,9 @@ if ($images = $model->images) {
     <?= \app\components\widgets\imageUploader\ImageUploaderWidget::widget([
         'config' => [
             'oldImages' => $verifyImages,
-            'uploadUrl' => '/place/upload-image/',
+            'uploadUrl' => '/admin/gallery/upload-image/',
             'inputFileName' => "Image[url][]",
-            'errorCallback' => 'galleryErrors',
+            'errorCallback' => 'widgetUploadErrors',
             'maxFiles' => 5,
         ]
     ]) ?>
@@ -41,10 +42,4 @@ if ($images = $model->images) {
 
     <?php ActiveForm::end(); ?>
 </div>
-
-<script>
-    function galleryErrors(success, message) {
-        flashError.setErrors(message);
-    }
-</script>
 

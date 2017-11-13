@@ -28,6 +28,7 @@ use Yii;
  * @property integer $parent_id
  * @property integer $status
  * @property boolean is_deleted
+ * @property string add_info
  * @property Place $place
  */
 class Schedule extends BaseSubPlacesModel
@@ -48,6 +49,7 @@ class Schedule extends BaseSubPlacesModel
         return [
             [['place_id', '1_from', '1_to', '2_from', '2_to', '3_from', '3_to', '4_from', '4_to', '5_from', '5_to', '6_from', '6_to', '7_from', '7_to', 'parent_id', 'status'], 'integer'],
             [['ip'], 'string', 'max' => 50],
+            [['add_info'], 'string', 'max' => 1000],
             [['is_deleted'], 'boolean'],
             [['place_id'], 'exist', 'skipOnError' => true, 'targetClass' => Place::className(), 'targetAttribute' => ['place_id' => 'id']],
         ];
@@ -78,10 +80,15 @@ class Schedule extends BaseSubPlacesModel
             'ip' => 'Ip',
             'parent_id' => 'Parent ID',
             'status' => 'Статус',
+            'add_info' => 'Дополнительная информация',
             'is_deleted' => 'Удалено ли',
         ];
     }
 
+    /**
+     * Возвращает график работы в определенном формате
+     * @return array
+     */
     public function getFormatSchedule()
     {
         $result = [];
@@ -106,7 +113,11 @@ class Schedule extends BaseSubPlacesModel
         }
         return $result;
     }
-    
+
+    /**
+     * Формирует поля модели из POST данных
+     * @param $post
+     */
     public function fromPost($post)
     {
         for ($i = 1; $i < 8; $i++) {
@@ -143,5 +154,7 @@ class Schedule extends BaseSubPlacesModel
         }
 
     }
-    
+
+    public function getAddInfo() {return $this->add_info;}
+    public function setAddInfo($add_info) {$this->add_info = $add_info;}
 }

@@ -69,7 +69,7 @@ class FileHelper
         if (substr($fromUrl, 0, 1) === '/') {
             $fromUrl = substr($fromUrl, 1);
         }
-        if ($fromUrl && file_exists($fromUrl)) {
+        if ($fromUrl && file_exists($fromUrl) && $toDir && file_exists($toDir)) {
             $info = pathinfo($fromUrl);
             $newUrl = $toDir . '/' . uniqid() . '.' . $info['extension'];
 

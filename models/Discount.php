@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\constants\ImageConstants;
+use app\models\traits\UrlImageUploader;
 use Yii;
 
 /**
@@ -20,8 +21,10 @@ use Yii;
  * @property boolean is_deleted
  * @property integer $created_at
  */
-class Discount extends \yii\db\ActiveRecord
+class Discount extends BaseSubPlacesModel
 {
+    use UrlImageUploader;
+
     /**
      * @inheritdoc
      */
@@ -64,25 +67,9 @@ class Discount extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function findByPlaceId($place_id)
-    {
-        return self::find()->andWhere(['place_id' => (int)$place_id]);
-    }
-
-    public static function findByPlaceAndStatus($place_id, $status) {
-        return self::findByPlaceId($place_id)->andWhere(['status' => (int)$status]);
-    }
-
     public function getMainImage()
     {
         return $this->hasOne(Image::className(), ['place_id' => 'id'])->andWhere(['image.type' => ImageConstants::TYPE['MAIN_DISCOUNT']]);
     }
 
-    public function getPlace() {
-        return $this->hasOne(Place::className(), ['id' =>'place_id']);
-    }
-
-    public static function getNoCheckModel() {
-        return null;
-    }
 }
