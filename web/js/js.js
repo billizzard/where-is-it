@@ -338,9 +338,16 @@ function BaseMap() {
     this.getBalloonContent = function (item) {
         var footer = "<div class='cus-balloon__footer'>";
         if (item.type == 0) {
-            footer += "<div class='confirmation js-yes-no'><span class='yes'>" + item.yes + "</span> / <span class='no'>" + item.no + "</span></div>";
+            footer += "<div class='confirmation'>" +
+                "<span class='stats glyphicon glyphicon-eye-open' style='margin-left:0;'></span> - " + item.yes + "" +
+                "<span class='stats glyphicon glyphicon-eye-close'></span> - " + item.no + "" +
+                "<span class='stats glyphicon glyphicon-star'></span> - " + item.stars + "</div>";
+            // footer += "<table><tr>" +
+            //     "<td><span class='yes glyphicon glyphicon-eye-open'></span>" + item.yes + "</td>" +
+            //     "<td><span class='no glyphicon glyphicon-eye-close'></span>" + item.no + "</td>" +
+            //     "</tr></table>";
         }
-        footer += "<a href='/place/" + item.id + "/' class='glyphicon glyphicon-share-alt more'></a>";
+        footer += "<a href='/place/" + item.id + "/' target='_blank' class='more'>Подробнее</a>";
         footer += "</div>";
 
         var image = '';
@@ -353,15 +360,8 @@ function BaseMap() {
             "<div class='cus-balloon'>" +
             "<div class='cus-balloon__header'>" + item.name + "</div>" +
             image +
-
             "<div class='cus-balloon__body'>" +
-            "<div class='work_time'>" + item.work_time + "</div>" +
-            "<div class='work_time'>" + item.work_time + "</div>" +
-            "<div class='work_time'>" + item.work_time + "</div>" +
-            "<div class='work_time'>" + item.work_time + "</div>" +
-            "<div class='work_time'>" + item.work_time + "</div>" +
-            "<div class='work_time'>" + item.work_time + "</div>" +
-            "<div class='description'>" + item.description + "</div>" +
+            "<div class='description'>" + item.prev_description + "</div>" +
             "</div>" +
             footer +
 

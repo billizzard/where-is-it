@@ -157,6 +157,7 @@ input.error {
     border-radius: 3px;
     max-height:300px;
     overflow: auto;
+    min-width:250px;
 }
 .cus-balloon .add-info {
     font-size: 10px;
@@ -183,9 +184,7 @@ input.error {
     padding-top: 5px;
     color: #3c3c3c;
 }
-.cus-balloon__body .work_time {
 
-}
 .cus-balloon__body .description {
     margin-top:8px;
 }
@@ -203,28 +202,29 @@ input.error {
     text-align: center;
 }
 .cus-balloon__footer .more {
-    float: right;
-    font-size: 20px;
-    margin-top: 5px;
-    position: absolute;
-    right: 0;
-    bottom: 0;
+    margin-top:5px;
+    display: block;
+    width: 100%;
+    background-color: #fff;
+    border: none;
+    border-radius: 3px;
+    color: #6f6f6f;
+    font-style: italic;
+    text-align: center;
+    text-decoration: none;
 }
-.cus-balloon__footer .more:hover:active {
-    color:#fff;
+.cus-balloon__footer .more:hover, .cus-balloon__footer .more:active {
+    background-color:#f3f3f3;
 }
 .cus-balloon__footer .confirmation {
     display: inline-block;
-    cursor: pointer;
     line-height: 16px;
     padding-top: 5px;
-    color: #309648;
+    color: #fff;
 }
-.cus-balloon__footer .confirmation .yes {
-    color: #309648;
-}
-.cus-balloon__footer .confirmation .no {
-    color: #c35f5f;
+.cus-balloon__footer .confirmation .stats {
+    color: #fff;
+    margin-left:15px;
 }
 .cus-balloon__footer .glyphicon-share-alt:before {
     position:absolute;

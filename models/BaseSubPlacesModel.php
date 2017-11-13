@@ -16,7 +16,7 @@ class BaseSubPlacesModel extends BaseModel implements ISubPlaces
     public static function isCanAddMore($place_id) {
         $class = static::className();
         $count = $class::find()->andWhere(['place_id' => (int)$place_id, 'status' => AppConstants::STATUS['NO_MODERATE']])->count();
-        return $count < 1;
+        return $count < 50;
     }
 
     public function isUpdatable() {

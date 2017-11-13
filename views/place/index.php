@@ -8,7 +8,12 @@ $url = [];
 ?>
 <? if ($model->getDescription()) {?>
     <div class="info">
-        <?=$model->getDescription()?>
+        <? if ($description = $model->getDescription()) {
+            echo $model->getDescription();
+        } else {
+            echo $model->getPrevDescription();
+        }
+        ?>
     </div>
 <? } ?>
 

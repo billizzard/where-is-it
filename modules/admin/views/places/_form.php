@@ -45,6 +45,7 @@ $user = Yii::$app->user->getIdentity();
 
     <?= $form->field($model, 'address')->textInput(['maxlength' => true]) ?>
     <div class="js-point-address" style="margin-top:-15px;">&nbsp;</div>
+    <?= $form->field($model, 'prev_description')->textarea(['maxlength' => true]) ?>
     <?= $form->field($model, 'description')->textarea(['maxlength' => true]) ?>
 
     <? if ($user && $user->isAdmin()) {?>

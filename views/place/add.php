@@ -42,7 +42,7 @@ use yii\captcha\Captcha;
             </div>-->
 
             <div class="form-place__column">
-                <textarea name="Place[description]" placeholder="Полезная информация"><?= isset($_POST['Place']['description']) ? $_POST['Place']['description'] : '' ?></textarea>
+                <textarea name="Place[prev_description]" placeholder="Краткая информация"><?= isset($_POST['Place']['prev_description']) ? $_POST['Place']['prev_description'] : '' ?></textarea>
                 <input type="file" name="Image[url]" id="image" accept="image/*" class="js-image" style="display:none;">
                 <div class="fake-image js-fake-image">
                     <span class="glyphicon glyphicon-camera camera-icon"></span>

@@ -52,7 +52,7 @@ class Image extends BaseSubPlacesModel
             [['is_deleted'], 'boolean'],
             [['url'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Максимум 2MB'],
             [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Максимум 2MB', 'maxFiles' => 2, 'on' => ImageConstants::SCENARIO['TEMP']],
-            [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Максимум 2MB', 'maxFiles' => 2, 'on' => ImageConstants::SCENARIO['GALLERY']],
+            [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Максимум 2MB', 'maxFiles' => 8, 'on' => ImageConstants::SCENARIO['GALLERY']],
             [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Максимум 2MB', 'maxFiles' => 1, 'on' => ImageConstants::SCENARIO['MAIN_DISCOUNT']],
             [['files'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Максимум 2MB', 'maxFiles' => 1, 'on' => ImageConstants::SCENARIO['MAIN_PLACE']],
 
@@ -194,9 +194,6 @@ class Image extends BaseSubPlacesModel
                 $urls[] = $this->createTempFile($this->files);
             }
         } else {
-            echo "<pre>";
-            var_dump($this->getErrors());
-            die();
             throw new ApiException($this->getErrors(), 400);
         }
 

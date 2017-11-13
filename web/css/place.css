@@ -1,6 +1,6 @@
 .place-wrapper {
     margin: 50px auto;
-    width:900px;
+    max-width:900px;
 }
 .place-wrapper .main-image {
     display:inline-block;

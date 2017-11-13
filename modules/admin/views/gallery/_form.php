@@ -33,7 +33,7 @@ if ($images = $model->images) {
             'uploadUrl' => '/admin/gallery/upload-image/',
             'inputFileName' => "Image[url][]",
             'errorCallback' => 'widgetUploadErrors',
-            'maxFiles' => 5,
+            'maxFiles' => 8,
         ]
     ]) ?>
     <div class="form-group">

@@ -17,10 +17,13 @@ trait ImageUploaderController
         $url = [];
         $modelImage = new Image(['scenario' => $this->getScenario()]);
         \Yii::$app->response->format = Response::FORMAT_JSON;
-
-        if ($modelImage->load(\Yii::$app->request->post())) {
-            $url = $modelImage->uploadTempImages();
+        if (\Yii::$app->request->post()) {
+            if ($modelImage->load(\Yii::$app->request->post())) {
+                $url = $modelImage->uploadTempImages();
+            }
         }
+
+
         
         return $this->getResultUrlArr($url);
     }

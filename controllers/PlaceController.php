@@ -38,7 +38,7 @@ class PlaceController extends BaseMapController
     public function actionIndex($id)
     {
         $this->layout = 'placeLayout';
-        $model = Place::findPlaceById($id)->one();
+        $model = Place::findByIdAndStatus($id)->one();
         if (!$model) throw new NotFoundHttpException();
         $this->view->params['model'] = $model;
         return $this->render('index', [
@@ -50,12 +50,13 @@ class PlaceController extends BaseMapController
     public function actionGallery($id) {
         $this->layout = 'placeLayout';
         /** @var Place $model */
-        $model = Place::findPlaceById($id)->one();
-        $model->getPlaceMenu();
+        $model = Place::findByIdAndStatus($id)->one();
         if (!$model) throw new NotFoundHttpException();
+        $gallery = $model->gallery;
+        if (!$gallery) throw new NotFoundHttpException();
         $this->view->params['model'] = $model;
         return $this->render('gallery', [
-            'model' => $model
+            'galleries' => $gallery
         ]);
     }
 
@@ -70,14 +71,11 @@ class PlaceController extends BaseMapController
             if ($category && is_array($post['size']) && (count($post['size']) == 2)) {
                 $model['color'] = $category->color;
 
-                $places = Place::findByCategoryId($post['category_id'], $post['size'])
-                    ->select(['place.id', 'name', 'lat', 'lon', 'yes', 'no', 'place.type', 'work_time', 'place.description', 'address', 'updated_at', 'image.url'])
-                    ->asArray()->all();
+                $places = Place::getForMapByCategoryId($post['category_id'], $post['size']);
 
                 foreach ($places as $key => $val) {
                     $places[$key]['url'] = ImageMainHandler::getAllImages($places[$key]['url']);
-                    $places[$key]['work_time'] = nl2br($val['work_time']);
-                    $places[$key]['description'] = nl2br($val['description']);
+                    $places[$key]['prev_description'] = $val['prev_description'] ? nl2br($val['prev_description']) : 'Нет краткого описания';
                 }
                 $model['places'] = $places;
             }

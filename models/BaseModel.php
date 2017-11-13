@@ -53,6 +53,9 @@ class BaseModel extends \yii\db\ActiveRecord
         if ($clone->hasAttribute('parent_id')) {
             $clone->parent_id = $this->id;
         }
+        if ($clone->hasAttribute('status')) {
+            $clone->status = AppConstants::STATUS['NO_MODERATE'];
+        }
         return $clone;
     }
 

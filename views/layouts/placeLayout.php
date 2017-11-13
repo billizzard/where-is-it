@@ -126,10 +126,12 @@ if ($model->mainImage) {
     <div class="place-wrapper">
 
         <div class="title">Костел св. Барбары</div>
+        <? if (isset($url)) { ?>
         <div class="image-wrapper" style="text-align:center">
             <div class="main-image" style="background: url(<?='/' . $url['original']?>) no-repeat;">
             </div>
         </div>
+        <? } ?>
 
         <nav class="menu">
 
