@@ -31,17 +31,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
         'columns' => [
             [
                 'attribute' => 'id',
-                'filter' => false,
             ],
             'phone',
             'email',
             [
                 'attribute' => 'status',
-                'filter'=> $statusesMap,
                 'value' => function($model) use ($statusesMap) {
                     return isset($statusesMap[$model->status]) ? $statusesMap[$model->status] : false;
                 }

@@ -21,7 +21,9 @@ $user = Yii::$app->user->getIdentity();
 
     <?= $form->field($model, 'email')->textarea() ?>
 
+    <? if ($user && $user->isAdmin()) { ?>
     <?= $form->field($model, 'status')->dropDownList(\app\constants\AppConstants::getStatusMap()) ?>
+    <? } ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Обновить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -60,6 +60,19 @@ class PlaceController extends BaseMapController
         ]);
     }
 
+    public function actionSchedule($id) {
+        $this->layout = 'placeLayout';
+        /** @var Place $model */
+        $model = Place::findByIdAndStatus($id)->one();
+        if (!$model) throw new NotFoundHttpException();
+        $schedule = $model->schedule;
+        if (!$schedule) throw new NotFoundHttpException();
+        $this->view->params['model'] = $model;
+        return $this->render('schedule', [
+            'schedule' => $schedule
+        ]);
+    }
+
     public function actionGetByCategory()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;

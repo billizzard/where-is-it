@@ -135,12 +135,18 @@ if ($model->mainImage) {
 
         <nav class="menu">
 
-            <ul id="w1" class="navbar-nav navbar-left nav">
-                <li style="float:left"><a href="/place/<?=$model->id?>/" class="glyphicon glyphicon-home" style="font-size:22px;"></a></li>
+            <ul id="w1" class="navbar-nav navbar-left nav place-menu">
+                <li><a href="/place/<?=$model->id?>/" class="glyphicon glyphicon-home"></a></li>
                 <? if ($model->gallery) { ?>
-                    <li style="float:left"><a href="/place/<?=$model->id?>/gallery/" class="glyphicon glyphicon-camera" style="font-size:22px;"></a></li>
+                    <li><a href="/place/<?=$model->id?>/gallery/" class="glyphicon glyphicon-camera"></a></li>
                 <? } ?>
-                <li style="float:left"><a href="#" onclick="return false;" data-modal="accept-city" class="modal-trigger glyphicon glyphicon-map-marker" style="font-size:22px;"></a></li>
+                <? if ($model->schedule) { ?>
+                    <li><a href="/place/<?=$model->id?>/schedule/" class="glyphicon glyphicon-time"></a></li>
+                <? } ?>
+                <? if ($model->contact) { ?>
+                    <li><a href="/place/<?=$model->id?>/contacts/" class="glyphicon glyphicon-phone-alt"></a></li>
+                <? } ?>
+                <li><a href="#" onclick="return false;" data-modal="accept-city" class="modal-trigger glyphicon glyphicon-map-marker"></a></li>
                 <!--<li style="float:left"><a href="/site/login">Login</a></li>-->
             </ul>
 

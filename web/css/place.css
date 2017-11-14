@@ -42,3 +42,128 @@
     padding:5px;
     line-height:26px;
 }
+/* TOP MENU */
+.place-menu li {
+    float:left;
+}
+.place-menu li a {
+    font-size:22px;
+}
+/* PLACE GALLERY */
+.place-gallery .img-container {
+    overflow: hidden;
+    margin:5px;
+    border: 3px solid #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+
+}
+.place-gallery .img-container img {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-transition: 1.2s ease-in-out;
+    transition: 1.2s ease-in-out;
+}
+.place-gallery .img-container:hover img {
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+}
+.column {
+    float: left;
+    width: 33%;
+    padding: 3px;
+}
+
+.column a {
+    display:block;
+    margin-top: 12px;
+}
+
+.column a img {
+    width:100%;
+}
+
+.columns:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+@media (max-width: 800px) {
+    .column {
+        width: 50%;
+    }
+}
+
+@media (max-width: 600px) {
+    .column {
+        width: 100%;
+    }
+}
+
+/* PLACE SCHEDULE */
+.place-schedule {
+    padding: 0 10px 20px 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.place-schedule > div {
+    margin-right: 10px;
+    margin-top: 20px;
+}
+
+.place-schedule .add_schedule {
+    flex-grow: 1;
+}
+
+.place-schedule .add_schedule .text {
+    padding: 5px;
+    color: #8b8e91;
+}
+
+.caption {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    color: #777;
+    text-align: center;
+    font-weight: bold;
+    background-color: #e7e6ea;
+    margin-bottom: 5px;
+}
+
+.table_col {
+    font-size: 14px;
+    background: white;
+    text-align: center;
+    border-collapse: collapse;
+    color: #3E4347;
+}
+
+.table_col tr:hover {
+    background-color: #b7c3e4;
+}
+
+.table_col tr:first-child:hover {
+    background-color: inherit;
+}
+
+.table_col th:first-child, .table_col td:first-child {
+    color: #F5F6F6;
+    border-left: none;
+}
+
+.table_col th {
+    text-align: center;
+    font-weight: normal;
+    border-bottom: 2px solid #F5E1A6;
+    border-right: 20px solid white;
+    border-left: 10px solid white;
+    padding: 8px 10px;
+}
+
+.table_col td {
+    border-right: 10px solid white;
+    border-left: 20px solid white;
+    padding: 12px 10px;
+    color: #8b8e91;
+}
