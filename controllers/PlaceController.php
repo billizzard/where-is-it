@@ -73,6 +73,32 @@ class PlaceController extends BaseMapController
         ]);
     }
 
+    public function actionContacts($id) {
+        $this->layout = 'placeLayout';
+        /** @var Place $model */
+        $model = Place::findByIdAndStatus($id)->one();
+        if (!$model) throw new NotFoundHttpException();
+        $contact = $model->contact;
+        if (!$contact) throw new NotFoundHttpException();
+        $this->view->params['model'] = $model;
+        return $this->render('contact', [
+            'contact' => $contact
+        ]);
+    }
+
+    public function actionDiscounts($id) {
+        $this->layout = 'placeLayout';
+        /** @var Place $model */
+        $model = Place::findByIdAndStatus($id)->one();
+        if (!$model) throw new NotFoundHttpException();
+        $discounts = $model->discounts;
+        if (!$discounts) throw new NotFoundHttpException();
+        $this->view->params['model'] = $model;
+        return $this->render('discount', [
+            'discounts' => $discounts
+        ]);
+    }
+
     public function actionGetByCategory()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;

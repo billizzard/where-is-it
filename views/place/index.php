@@ -6,6 +6,9 @@ $this->title = 'My Yii Application';
 $url = [];
 
 ?>
+<div class="place-page">
+    <h3>Главная</h3>
+
 <? if ($model->getDescription()) {?>
     <div class="info">
         <? if ($description = $model->getDescription()) {
@@ -20,3 +23,4 @@ $url = [];
 <? if ($model->lat) {?>
     <div id="placeMap" data-lat="<?=$model->lat?>" data-lon="<?=$model->lon?>" style="width:100%; height:300px; margin: 5px 0;"></div>
 <? } ?>
+</div>

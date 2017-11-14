@@ -17,8 +17,8 @@ foreach ($galleries as $gallery) {
         }
     }
 }?>
-<div class="place-gallery">
-
+<div class="place-gallery place-page">
+    <h3>Галлерея</h3>
     <div class="columns">
         <? foreach ($columns as $column) {?>
             <div class="column">

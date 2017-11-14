@@ -112,6 +112,10 @@ class Image extends BaseSubPlacesModel
             case ImageConstants::TYPE['TEMP']:
                 return ImageTempHandler::getAllImages($this->url);
                 break;
+
+            case ImageConstants::TYPE['MAIN_DISCOUNT']:
+                return ImageDiscountMain::getAllImages($this->url);
+                break;
         }
     }
 

@@ -49,6 +49,11 @@
 .place-menu li a {
     font-size:22px;
 }
+.place-menu .glyphicon-c_percent {
+    padding: 12px 8px;
+    line-height: 15px;
+    width:auto;
+}
 /* PLACE GALLERY */
 .place-gallery .img-container {
     overflow: hidden;
@@ -101,22 +106,21 @@
 }
 
 /* PLACE SCHEDULE */
-.place-schedule {
+.schedule-container {
     padding: 0 10px 20px 10px;
     display: flex;
     flex-wrap: wrap;
 }
 
-.place-schedule > div {
+.schedule-container > div {
     margin-right: 10px;
-    margin-top: 20px;
 }
 
-.place-schedule .add_schedule {
+.schedule-container .add_schedule {
     flex-grow: 1;
 }
 
-.place-schedule .add_schedule .text {
+.schedule-container .add_schedule .text {
     padding: 5px;
     color: #8b8e91;
 }
@@ -166,4 +170,21 @@
     border-left: 20px solid white;
     padding: 12px 10px;
     color: #8b8e91;
+}
+
+/* ALL PLACE PAGES */
+.place-page {
+    color:#8b8e91;
+    padding:5px;
+    margin-bottom:20px;
+}
+
+h3 {
+    margin-bottom: 25px;
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 40px;
+    color: #8eaace;
+    border-bottom: 1px solid rgba(53,86,129, 0.3);
+    margin-top: 10px;
 }

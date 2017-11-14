@@ -146,6 +146,10 @@ if ($model->mainImage) {
                 <? if ($model->contact) { ?>
                     <li><a href="/place/<?=$model->id?>/contacts/" class="glyphicon glyphicon-phone-alt"></a></li>
                 <? } ?>
+                <? if ($model->discounts) { ?>
+                    <li><a href="/place/<?=$model->id?>/discounts/" style="font-size:26px;" class="glyphicon glyphicon-c_percent">%</a></li>
+                <? } ?>
+
                 <li><a href="#" onclick="return false;" data-modal="accept-city" class="modal-trigger glyphicon glyphicon-map-marker"></a></li>
                 <!--<li style="float:left"><a href="/site/login">Login</a></li>-->
             </ul>

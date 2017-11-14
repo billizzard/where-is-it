@@ -8,8 +8,9 @@ $this->title = 'My Yii Application';
 $formatSchedule = $schedule->getFormatSchedule();
 $daysMap = \app\components\Helper::getDaysMap();
 ?>
-<div class="place-schedule">
-
+<div class="place-schedule place-page">
+    <h3>График работы</h3>
+    <div class="schedule-container">
     <? if ($formatSchedule) { ?>
     <div>
         <div class="caption">График работы</div>
@@ -50,6 +51,7 @@ $daysMap = \app\components\Helper::getDaysMap();
             <div class="text"><?= nl2br($schedule->add_info) ?></div>
         </div>
     <? } ?>
+    </div>
 
 </div>
 
