@@ -99,6 +99,22 @@ class PlaceController extends BaseMapController
         ]);
     }
 
+    public function actionReviews($id) {
+        $this->layout = 'placeLayout';
+        /** @var Place $model */
+        $model = Place::findByIdAndStatus($id)->one();
+        if (!$model) throw new NotFoundHttpException();
+        $reviews = $model->getReviews()->with(['user'])->all();
+        if (!$reviews) throw new NotFoundHttpException();
+        $this->view->params['model'] = $model;
+        return $this->render('reviews', [
+            'reviews' => $reviews,
+            'model' => $model
+        ]);
+    }
+
+
+
     public function actionGetByCategory()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -193,7 +209,7 @@ class PlaceController extends BaseMapController
         $user = Yii::$app->user->getIdentity();
         $model = new Review();
         /** @var Place $place */
-        $place = Place::findPlaceById($place_id)->one();
+        $place = Place::findByIdAndStatus($place_id)->one();
         if (!$place) throw new NotFoundHttpException();
 
         if ($type == MessageConstants::TYPE['REVIEW']) {

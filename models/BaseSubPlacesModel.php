@@ -47,4 +47,10 @@ class BaseSubPlacesModel extends BaseModel implements ISubPlaces
         return self::findByPlaceId($place_id)->andWhere('status = :status', [':status' => $status]);
     }
 
+    public function getCreatedData() {
+        if ($this->created_at) {
+            return date('H:i:s d-m-Y');
+        }
+    }
+
 }

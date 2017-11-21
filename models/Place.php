@@ -174,6 +174,11 @@ class Place extends BaseModel
         return $this->hasMany(Discount::className(), ['place_id' => 'id'])->andWhere(['discount.status' => AppConstants::STATUS['MODERATE']]);
     }
 
+    public function getReviews()
+    {
+        return $this->hasMany(Review::className(), ['place_id' => 'id'])->andWhere(['review.status' => AppConstants::STATUS['MODERATE']]);
+    }
+
     public function getSchedule() {
         return $this->hasOne(Schedule::className(), ['place_id' => 'id'])->andWhere(['schedule.status' => AppConstants::STATUS['MODERATE']]);
     }

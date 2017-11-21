@@ -24,9 +24,9 @@ class AppAsset extends AssetBundle
         'css/popup.css',
         'css/place.css',
         'css/jquery.fancybox.min.css',
+        'css/slider-pro.min.css',
     ];
     public $js = [
-        /*'js/jquery-3.2.1.min.js',*/
         'js/bootstrap.min.js',
         'js/add_functions.js',
         'js/fileUploader.js',
@@ -34,6 +34,7 @@ class AppAsset extends AssetBundle
         'js/yesNo.js',
         'js/placeMap.js',
         'js/jquery.fancybox.min.js',
+        'js/jquery.sliderPro.min.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

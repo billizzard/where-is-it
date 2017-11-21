@@ -127,8 +127,15 @@ if ($model->mainImage) {
 
         <div class="title">Костел св. Барбары</div>
         <? if (isset($url)) { ?>
+
+
+
+
+
+
         <div class="image-wrapper" style="text-align:center">
-            <div class="main-image" style="background: url(<?='/' . $url['original']?>) no-repeat;">
+            <div class="main-image" >
+                <img src="<?='/' . $url['original']?>">
             </div>
         </div>
         <? } ?>
@@ -148,6 +155,9 @@ if ($model->mainImage) {
                 <? } ?>
                 <? if ($model->discounts) { ?>
                     <li><a href="/place/<?=$model->id?>/discounts/" style="font-size:26px;" class="glyphicon glyphicon-c_percent">%</a></li>
+                <? } ?>
+                <? if ($model->reviews) { ?>
+                    <li><a href="/place/<?=$model->id?>/reviews/" style="font-size:26px;" class="glyphicon glyphicon-star"></a></li>
                 <? } ?>
 
                 <li><a href="#" onclick="return false;" data-modal="accept-city" class="modal-trigger glyphicon glyphicon-map-marker"></a></li>
