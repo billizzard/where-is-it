@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\controllers;
 
+use app\components\SiteException;
 use app\modules\admin\components\AccessRule;
 use app\modules\admin\components\DeleteAction;
 use Yii;
@@ -12,21 +13,57 @@ use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * UsersController implements the CRUD actions for User model.
  */
 class UsersController extends BaseController
 {
-
-    public function actions()
+    protected function getClassName()
     {
-        return [
-            'delete' => [
-                'class' => DeleteAction::className(),
-                'model_class' => User::className(),
+        return User::className();
+    }
+
+    public function behaviors()
+    {
+        $rules = parent::behaviors();
+
+        $rules['access']['rules'] = [
+            [
+                'actions' => ['delete'],
+                'allow' => true,
+                'roles' => [User::ROLE_ADMIN],
             ],
+            [
+                'actions' => ['index'],
+                'allow' => true,
+                'roles' => ['@'],
+            ],
+            [
+                'actions' => ['create'],
+                'allow' => true,
+                'roles' => [User::ROLE_ADMIN],
+            ],
+            [
+                'actions' => ['update'],
+                'allow' => true,
+                'roles' => ['@'],
+            ],
+            [
+                'actions' => ['avatars'],
+                'allow' => true,
+                'roles' => ['@'],
+            ],
+            [
+                'actions' => ['soft-delete'],
+                'allow' => true,
+                'roles' => [User::ROLE_ADMIN],
+                'className' => $this->getClassName()
+            ]
         ];
+
+        return $rules;
     }
 
     /**
@@ -35,8 +72,14 @@ class UsersController extends BaseController
      */
     public function actionIndex()
     {
+        /** @var User $user */
+        $user = Yii::$app->user->getIdentity();
         $searchModel = new UserSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $params = Yii::$app->request->queryParams;
+        if (!$user->isAdmin()) {
+            $params['UserSearch']['id'] = $user->getId();
+        }
+        $dataProvider = $searchModel->search($params);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -92,6 +135,42 @@ class UsersController extends BaseController
 
         return $this->render('update', [
             'model' => $model,
+        ]);
+    }
+
+    public function actionAvatars(int $page = 1)
+    {
+        if (($post = Yii::$app->request->post()) && Yii::$app->request->post('src')) {
+            /** @var User $user */
+            $user = Yii::$app->user->getIdentity();
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if (file_exists(Yii::getAlias('@webroot') . $post['src'])) {
+                $info = pathinfo($post['src']);
+                $user->setAvatar($info['basename']);
+                $user->save();
+                return true;
+            }
+            return false;
+        }
+        $count = 30;
+        $finish = $page * $count + 2;
+        $start = $finish - $count;
+        $files = scandir(Yii::getAlias('@webroot' . '/img/avatars/mult/'));
+        $avatars = [];
+
+        if ($start > 1 && isset($files[$start])) {
+            for ($i = $start; $i < $finish; $i++) {
+                if (isset($files[$i])) {
+                    $avatars[] = $files[$i];
+                }
+            }
+        } else {
+            throw new SiteException('Страница не найдена', 404);
+        }
+
+        
+        return $this->render('avatars', [
+            'avatars' => $avatars
         ]);
     }
 //

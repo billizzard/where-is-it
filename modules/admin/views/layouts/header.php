@@ -1,6 +1,6 @@
 <?php
 use yii\helpers\Html;
-
+$user = Yii::$app->user->getIdentity();
 /* @var $this \yii\web\View */
 /* @var $content string */
 ?>
@@ -217,16 +217,16 @@ use yii\helpers\Html;
 
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="<?= $directoryAsset ?>/img/user2-160x160.jpg" class="user-image" alt="User Image"/>
-                        <span class="hidden-xs">Alexander Pierce</span>
+                        <img src="<?= $user->getAvatar() ?>" class="user-image" alt="User Image"/>
+                        <span class="hidden-xs"><?=$user->getName()?></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li class="user-header">
-                            <img src="<?= $directoryAsset ?>/img/user2-160x160.jpg" class="img-circle"
+                            <img src="<?= $user->getAvatar() ?>" class="img-circle"
                                  alt="User Image"/>
 
                             <p>
-                                Alexander Pierce - Web Developer
+                                <?=$user->getName()?>
                                 <small>Member since Nov. 2012</small>
                             </p>
                         </li>

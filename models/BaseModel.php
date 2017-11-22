@@ -60,7 +60,7 @@ class BaseModel extends \yii\db\ActiveRecord
     }
 
     /**
-     * Можно ли тедактировать данную модель
+     * Можно ли редактировать данную модель
      * @return bool
      */
     public function isUpdatable() {

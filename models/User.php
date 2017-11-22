@@ -16,6 +16,7 @@ use app\constants\ImageConstants;
  * @property string access_token
  * @property string auth_key
  * @property string login
+ * @property string avatar
  * @property integer role
  * @property integer created_at
  * @property integer updated_at
@@ -53,6 +54,7 @@ class User extends BaseModel implements \yii\web\IdentityInterface
             [['updated_at', 'created_at', 'role'], 'integer'],
             [['password', 'access_token', 'auth_key'], 'string', 'max' => 200],
             [['login'], 'string', 'max' => 50],
+            [['avatar'], 'string', 'max' => 10],
             [['login', 'email'], 'unique'],
             [['name'], 'string', 'max' => 100],
             [['email'], 'email'],
@@ -74,6 +76,7 @@ class User extends BaseModel implements \yii\web\IdentityInterface
             'created_at' => 'Дата регистрации',
             'updated_at' => 'Дата изменния',
             'is_deleted' => 'Удалено ли',
+            'avatar' => 'Аватар',
         ];
     }
 
@@ -180,6 +183,8 @@ class User extends BaseModel implements \yii\web\IdentityInterface
                         if ($place && $place->getUserId()) {
                             return $this->getId() === $place->getUserId();
                         }
+                    } else if ($data['model']::className() == User::className()) {
+                        return $data['model']->getId() === \Yii::$app->user->getId();
                     }
                 }
                 return false;
@@ -206,4 +211,10 @@ class User extends BaseModel implements \yii\web\IdentityInterface
         }
         return true;
     }
+
+    public function setAvatar($avatar) {$this->avatar = $avatar; }
+    public function getAvatar() {
+        return $this->avatar ? '/img/avatars/mult/' . $this->avatar : null;
+    }
+    public function getName() {return $this->name;}
 }

@@ -7,27 +7,38 @@ use yii\grid\GridView;
 /* @var $searchModel app\modules\admin\models\search\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Пользователи';
+$this->title = 'Профиль';
 $this->params['breadcrumbs'][] = $this->title;
+/** @var \app\models\User $user */
+$user = Yii::$app->user->getIdentity();
 ?>
 <div class="user-index">
 
+    <? if ($user->isAdmin()) { ?>
     <p>
         <?= Html::a('Create User', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+    <? } ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+//        'filterModel' => $searchModel,
         'columns' => [
-            'id',
             'name',
             'email',
+            [
+                'label' => 'Аватарка',
+                'format' => 'raw',
+                'value' => function () {
+                    return '<a href="/admin/users/avatars/">выбрать аватар</a>';
+                }
+            ],
 
             [
-                'class' => 'yii\grid\ActionColumn',
+                'class' => 'app\modules\admin\components\actions\ActionColumn',
+                'contentOptions' => ['class' => 'add-info'],
                 //'template' => '{my-stadiums/schedule} {update} {delete}',
-                'template' => '{update} {delete}',
+                'template' => '{update_all} {delete}',
 //                'buttons' => [
 //                    'my-stadiums/schedule' => function ($url) {
 //                        //return Html::a( '<span class="glyphicon glyphicon-calendar"> </span>', $url, [ 'title' => 'Бронирования', 'data-pjax' => '0', ] );
