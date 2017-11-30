@@ -29,6 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <? } ?>
     </p>
 
+    <? if ($dataProvider->getTotalCount()) { ?>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
@@ -50,4 +52,5 @@ $this->params['breadcrumbs'][] = $this->title;
             ]
         ],
     ]); ?>
+    <? } ?>
 </div>

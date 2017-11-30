@@ -5,6 +5,7 @@ use app\models\User;
 class AccessRule extends \yii\filters\AccessRule {
 
     public $className;
+
     /**
      * @inheritdoc
      */

@@ -6,7 +6,7 @@
         <div >
             <ul id="w1" class="navbar-nav navbar-left nav" >
                 <li><a href="/" class="glyphicon glyphicon-home" title="Главная"></a></li>
-                <li><a class="menu-butt nav-toggle1" title="Меню"><span></span></a></li>
+                <li><a class="menu-butt nav-toggle1" style="margin-top:8px;" title="Меню"><span></span></a></li>
                 <li><a href="/add/" class="add" title="Добавить точку">+</a></li>
                 <? if ($user) { ?>
                     <li><a href="/logout/" class="glyphicon glyphicon-log-out" title="Выйти"></a></li>

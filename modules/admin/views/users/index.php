@@ -16,7 +16,7 @@ $user = Yii::$app->user->getIdentity();
 
     <? if ($user->isAdmin()) { ?>
     <p>
-        <?= Html::a('Create User', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Создать', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <? } ?>
 
@@ -29,8 +29,8 @@ $user = Yii::$app->user->getIdentity();
             [
                 'label' => 'Аватарка',
                 'format' => 'raw',
-                'value' => function () {
-                    return '<a href="/admin/users/avatars/">выбрать аватар</a>';
+                'value' => function ($model) {
+                    return '<a href="/admin/users/avatars/?user_id=' . $model->getId() . '">выбрать аватар</a>';
                 }
             ],
 

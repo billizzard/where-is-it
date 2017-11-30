@@ -54,7 +54,7 @@ class SiteController extends BaseMapController
             $model = new Message();
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 Helper::setMessage('Сообщение успешно отправлено.', Helper::TYPE_MESSAGE_SUCCESS);
-                return $this->redirect('/feedback/');
+                return $this->redirect($_SERVER['HTTP_REFERER']);
             }
         } else {
             throw new NotFoundHttpException();
@@ -64,7 +64,7 @@ class SiteController extends BaseMapController
 
         $place = null;
         if (isset($get['place_id'])) {
-            $place = Place::findPlaceById($get['place_id'])->one();
+            $place = Place::findByIdAndStatus($get['place_id'])->one();
             if ($place) {
                 $model->place_id = $place->id;
             }

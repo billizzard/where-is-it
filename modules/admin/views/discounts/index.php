@@ -28,15 +28,12 @@ $this->params['breadcrumbs'][] = $this->title;
         <? } ?>
     </p>
 
-
+    <? if ($dataProvider->getTotalCount()) { ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        'filterModel' => false,
         'columns' => [
-            [
-                'attribute' => 'id',
-                'filter' => false,
-            ],
+            'id',
             'title',
             'message',
             [
@@ -53,4 +50,5 @@ $this->params['breadcrumbs'][] = $this->title;
             ]
         ],
     ]); ?>
+    <? } ?>
 </div>

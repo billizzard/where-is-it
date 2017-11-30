@@ -114,7 +114,6 @@ class PlaceController extends BaseMapController
     }
 
 
-
     public function actionGetByCategory()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -173,7 +172,7 @@ class PlaceController extends BaseMapController
         $post = Yii::$app->request->post();
         if (isset($post['vote']) && isset($post['placeId'])) {
             /** @var Place $place */
-            $place = Place::findPlaceById($post['placeId'])->one();
+            $place = Place::findByIdAndStatus($post['placeId'])->one();
             if ($place) {
                 $vote = Vote::findByPlaceAndIp($place->id)->one();
                 if ($vote) {

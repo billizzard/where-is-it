@@ -16,6 +16,12 @@ class RegistrationForm extends User
     public $email;
     public $password;
     public $login;
+    public $is_deleted = false;
+
+    public static function tableName()
+    {
+        return 'user';
+    }
 
     /**
      * @return array the validation rules.
@@ -26,6 +32,7 @@ class RegistrationForm extends User
             // username and password are both required
             [['email', 'password', 'login'], 'required'],
             [['email'], 'email'],
+            [['is_deleted'], 'boolean'],
             [['login', 'email'], 'string', 'max' => 50],
             [['login', 'email'], 'unique'],
         ];

@@ -5,6 +5,8 @@ namespace app\models;
 use app\components\Helper;
 use app\components\SiteException;
 use app\constants\ImageConstants;
+use app\constants\UserConstants;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%user}}".
@@ -13,6 +15,8 @@ use app\constants\ImageConstants;
  * @property string name
  * @property string email
  * @property string password
+ * @property string new_password
+ * @property string old_password
  * @property string access_token
  * @property string auth_key
  * @property string login
@@ -33,8 +37,13 @@ class User extends BaseModel implements \yii\web\IdentityInterface
     const RULE_DELETE_USER = 2;
     const RULE_OWNER = 3;
     const RULE_DELETE_MODEL_FULL = 4;
+    const RULE_NO_DUPLICATE = 5;
 
     public $loginUrl = ['/auth/'];
+
+    public $old_password;
+    public $new_password;
+    public $re_password;
 
     /**
      * @inheritdoc
@@ -52,15 +61,32 @@ class User extends BaseModel implements \yii\web\IdentityInterface
         return [
             [['email', 'password'], 'required'],
             [['updated_at', 'created_at', 'role'], 'integer'],
-            [['password', 'access_token', 'auth_key'], 'string', 'max' => 200],
+            [['password', 'access_token', 'auth_key', 'old_password', 'new_password', 're_password'], 'string', 'max' => 200],
             [['login'], 'string', 'max' => 50],
             [['avatar'], 'string', 'max' => 10],
             [['login', 'email'], 'unique'],
             [['name'], 'string', 'max' => 100],
             [['email'], 'email'],
             [['is_deleted'], 'boolean'],
+            [['new_password'], 'compareNewPassword', 'on' => UserConstants::SCENARIO['CHANGE_PASSWORD']],
+            [['new_password', 'old_password', 're_password'], 'required', 'on' => UserConstants::SCENARIO['CHANGE_PASSWORD']],
+            [['old_password'], 'compareOldPassword', 'on' => UserConstants::SCENARIO['CHANGE_PASSWORD']],
 
         ];
+    }
+
+    public function compareNewPassword($attribute, $params)
+    {
+        if ($this->{$attribute} !== $this->re_password) {
+            $this->addError($attribute, 'Пароли не совпадают');
+        }
+    }
+
+    public function compareOldPassword($attribute, $params)
+    {
+        if (!$this->validatePassword($this->{$attribute})) {
+            $this->addError($attribute, 'Неверный пароль');
+        }
     }
 
     /**
@@ -77,6 +103,15 @@ class User extends BaseModel implements \yii\web\IdentityInterface
             'updated_at' => 'Дата изменния',
             'is_deleted' => 'Удалено ли',
             'avatar' => 'Аватар',
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+            ],
         ];
     }
 
@@ -173,6 +208,7 @@ class User extends BaseModel implements \yii\web\IdentityInterface
             case self::RULE_DELETE_USER: return $this->isAdmin(); break;
             case self::RULE_ADMIN_PANEL: return $this->isAdmin(); break;
             case self::RULE_DELETE_MODEL_FULL: return $this->isAdmin(); break;
+            case self::RULE_NO_DUPLICATE: return $this->isAdmin(); break;
             case self::RULE_OWNER:
                 if ($this->isAdmin()) return true;
                 if ($data['model']) {
@@ -212,9 +248,17 @@ class User extends BaseModel implements \yii\web\IdentityInterface
         return true;
     }
 
+    public static function getDefaultAvatar() {
+        return '/img/avatars/0.png';
+    }
+
     public function setAvatar($avatar) {$this->avatar = $avatar; }
     public function getAvatar() {
-        return $this->avatar ? '/img/avatars/mult/' . $this->avatar : null;
+        return $this->avatar ? '/img/avatars/mult/' . $this->avatar : self::getDefaultAvatar();
     }
     public function getName() {return $this->name;}
+    public function getLogin() {return $this->login;}
+    public function getCreatedAt($format = true) {
+        return $format ? date('d:m:Y', $this->created_at) : $this->created_at;
+    }
 }

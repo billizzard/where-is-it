@@ -8,7 +8,6 @@ use yii\web\Response;
 
 class ErrorHandler extends \yii\web\ErrorHandler
 {
-
     /**
      * @inheridoc
      */
@@ -37,7 +36,6 @@ class ErrorHandler extends \yii\web\ErrorHandler
 
     private function getAnswer($exception)
     {
-
         if (\Yii::$app->request->isAjax) {
             $response = \Yii::$app->response;
             $response->format = Response::FORMAT_JSON;

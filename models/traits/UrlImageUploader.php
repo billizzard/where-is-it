@@ -26,6 +26,12 @@ trait UrlImageUploader
 //        return $this;
 //    }
 
+    /**
+     * Сохраняет изображение по url и типу
+     * @param $urls
+     * @param $type
+     * @return $this
+     */
     public function uploadNewImageByUrl($urls, $type) {
         if ($urls) {
             if (!is_array($urls)) {

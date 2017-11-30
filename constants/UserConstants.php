@@ -3,19 +3,9 @@
 namespace app\constants;
 
 
-class PlaceConstants
+class UserConstants
 {
-    const TYPE = [
-        'NO_CONFIRM' => 0,
-        'CONFIRM' => 1,
+    const SCENARIO = [
+        'CHANGE_PASSWORD' => 'CHANGE_PASSWORD',
     ];
-
-    public static function getTypeMap()
-    {
-        return [
-            self::TYPE['NO_CONFIRM'] => 'Не подтверждено',
-            self::TYPE['CONFIRM'] => 'Подтверждено',
-        ];
-    }
-
 }

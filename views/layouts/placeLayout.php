@@ -129,42 +129,35 @@ if ($model->mainImage) {
         <? if (isset($url)) { ?>
 
 
+        <div class="image-wrapper" style="text-align:center; display:flex;">
+            <nav class="place-main-menu">
+                <ul id="p1">
+                    <li><a href="/place/<?=$model->id?>/"><span class="glyphicon glyphicon-home"></span><span class="item-text">Главная</span></a></li>
+                    <? if ($model->gallery) { ?>
+                        <li><a href="/place/<?=$model->id?>/gallery/"><span class="glyphicon glyphicon-camera"></span><span class="item-text">Галлерея</span></a></li>
+                    <? } ?>
+                    <? if ($model->schedule) { ?>
+                        <li><a href="/place/<?=$model->id?>/schedule/"> <span class="glyphicon glyphicon-time"></span><span class="item-text">Время работы</span></a></li>
+                    <? } ?>
+                    <? if ($model->contact) { ?>
+                        <li><a href="/place/<?=$model->id?>/contacts/"> <span class="glyphicon glyphicon-phone-alt"></span><span class="item-text">Контакты</span></a></li>
+                    <? } ?>
+                    <? if ($model->discounts) { ?>
+                        <li><a href="/place/<?=$model->id?>/discounts/"> <span class="glyphicon glyphicon-c_percent">%</span><span class="item-text">Акции, скидки</span></a></li>
+                    <? } ?>
+                    <? if ($model->reviews) { ?>
+                        <li><a href="/place/<?=$model->id?>/reviews/"> <span style="font-size:26px;" class="glyphicon glyphicon-star"></span><span class="item-text">Отзывы</span></a></li>
+                    <? } ?>
 
-
-
-
-        <div class="image-wrapper" style="text-align:center">
+                    <!--<li><a href="#" onclick="return false;" data-modal="accept-city" class="modal-trigger glyphicon glyphicon-map-marker"></a></li>-->
+                    <!--<li style="float:left"><a href="/site/login">Login</a></li>-->
+                </ul>
+            </nav>
             <div class="main-image" >
                 <img src="<?='/' . $url['original']?>">
             </div>
         </div>
         <? } ?>
-
-        <nav class="menu">
-
-            <ul id="w1" class="navbar-nav navbar-left nav place-menu">
-                <li><a href="/place/<?=$model->id?>/" class="glyphicon glyphicon-home"></a></li>
-                <? if ($model->gallery) { ?>
-                    <li><a href="/place/<?=$model->id?>/gallery/" class="glyphicon glyphicon-camera"></a></li>
-                <? } ?>
-                <? if ($model->schedule) { ?>
-                    <li><a href="/place/<?=$model->id?>/schedule/" class="glyphicon glyphicon-time"></a></li>
-                <? } ?>
-                <? if ($model->contact) { ?>
-                    <li><a href="/place/<?=$model->id?>/contacts/" class="glyphicon glyphicon-phone-alt"></a></li>
-                <? } ?>
-                <? if ($model->discounts) { ?>
-                    <li><a href="/place/<?=$model->id?>/discounts/" style="font-size:26px;" class="glyphicon glyphicon-c_percent">%</a></li>
-                <? } ?>
-                <? if ($model->reviews) { ?>
-                    <li><a href="/place/<?=$model->id?>/reviews/" style="font-size:26px;" class="glyphicon glyphicon-star"></a></li>
-                <? } ?>
-
-                <li><a href="#" onclick="return false;" data-modal="accept-city" class="modal-trigger glyphicon glyphicon-map-marker"></a></li>
-                <!--<li style="float:left"><a href="/site/login">Login</a></li>-->
-            </ul>
-
-        </nav>
 
         <?= $content ?>
 

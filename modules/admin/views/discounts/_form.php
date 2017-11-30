@@ -37,13 +37,11 @@ $user = Yii::$app->user->getIdentity();
     <?= $form->field($model, 'start_date')->textInput() ?>
     <?= $form->field($model, 'end_date')->textInput() ?>
 
-    <?= $form->field($model, 'status')->dropDownList(\app\constants\AppConstants::getStatusMap()) ?>
     <?= $form->field($model, 'type')->dropDownList(\app\constants\DiscountConstants::getTypeMap()) ?>
 
-
-<!--    <?/* if ($user && $user->hasAccess(\app\models\User::RULE_OWNER)) {*/?>
-        <?/*= $form->field($model, 'status')->dropDownList(\app\constants\AppConstants::getStatusMap()) */?>
-    --><?/* } */?>
+    <? if ($user && $user->hasAccess(\app\models\User::RULE_OWNER, ['model' => $model])) {?>
+        <?= $form->field($model, 'status')->dropDownList(\app\constants\AppConstants::getStatusMap()) ?>
+    <? } ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Обновить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -23,8 +23,6 @@ trait ImageUploaderController
             }
         }
 
-
-        
         return $this->getResultUrlArr($url);
     }
 

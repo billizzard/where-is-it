@@ -3,6 +3,7 @@
 namespace app\modules\admin\controllers;
 
 use app\constants\ImageConstants;
+use app\models\Category;
 use app\models\Image;
 use app\models\Place;
 use app\models\traits\ImageUploaderController;
@@ -19,6 +20,10 @@ use yii\web\Response;
 class PlacesController extends BaseController
 {
     use ImageUploaderController;
+
+    protected function getClassName() {
+        return Place::className();
+    }
 
     public function getScenario()
     {
@@ -58,21 +63,16 @@ class PlacesController extends BaseController
                 'actions' => ['remove-image'],
                 'allow' => true,
                 'roles' => ['@'],
+            ],
+            [
+                'actions' => ['soft-delete'],
+                'allow' => true,
+                'roles' => [User::ROLE_ADMIN],
             ]
         ];
 
         return $rules;
 
-    }
-
-    public function actions()
-    {
-        return [
-            'delete' => [
-                'class' => DeleteAction::className(),
-                'model_class' => Place::className(),
-            ],
-        ];
     }
 
     /**
@@ -92,6 +92,7 @@ class PlacesController extends BaseController
 
         $searchModel = new PlaceSearch();
         $dataProvider = $searchModel->search($params);
+
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -124,17 +125,15 @@ class PlacesController extends BaseController
 
         if ($model->load(Yii::$app->request->post()) ) {
             if ($post = Yii::$app->request->post()) {
+
                 /** @var Place $newModel */
                 $newModel = $model->getDuplicate();
+
                 if ($newModel->load(Yii::$app->request->post()) && $newModel->save()) {
                     $newModel->uploadNewImageByUrl(
                         array_merge(explode(',',$post['old_images']),explode(',',$post['images'])),
                         ImageConstants::TYPE['MAIN_PLACE']);
                     return $this->redirect(['index', 'place_id' => $newModel->id]);
-                } else {
-                    echo "<pre>";
-                    var_dump($newModel->getErrors());
-                    die();
                 }
             }
         }

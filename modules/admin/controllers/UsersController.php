@@ -3,6 +3,7 @@
 namespace app\modules\admin\controllers;
 
 use app\components\SiteException;
+use app\constants\UserConstants;
 use app\modules\admin\components\AccessRule;
 use app\modules\admin\components\DeleteAction;
 use Yii;
@@ -88,20 +89,6 @@ class UsersController extends BaseController
     }
 
     /**
-     * Displays a single User model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        $user = User::findOne($id);
-        if (!$user) return Yii::$app->response->redirect('/admin/users/index');
-        return $this->render('view', [
-            'model' => $user,
-        ]);
-    }
-
-    /**
      * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -111,7 +98,7 @@ class UsersController extends BaseController
         $model = new User();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -130,7 +117,17 @@ class UsersController extends BaseController
         $model = User::findOne($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->new_password) {
+                $model->setScenario(UserConstants::SCENARIO['CHANGE_PASSWORD']);
+                if ($model->validate()) {
+                    $model->setScenario(User::SCENARIO_DEFAULT);
+                    $model->setPassword($model->new_password);
+                    $model->save();
+                    return $this->redirect(['index']);
+                }
+            } else {
+                return $this->redirect(['index']);
+            }
         }
 
         return $this->render('update', [
@@ -138,11 +135,14 @@ class UsersController extends BaseController
         ]);
     }
 
-    public function actionAvatars(int $page = 1)
+    public function actionAvatars(int $user_id, int $page = 1)
     {
         if (($post = Yii::$app->request->post()) && Yii::$app->request->post('src')) {
             /** @var User $user */
             $user = Yii::$app->user->getIdentity();
+            if ($user->isAdmin()) {
+                $user = User::findOneModel($user_id);
+            }
             Yii::$app->response->format = Response::FORMAT_JSON;
             if (file_exists(Yii::getAlias('@webroot') . $post['src'])) {
                 $info = pathinfo($post['src']);
@@ -152,11 +152,12 @@ class UsersController extends BaseController
             }
             return false;
         }
-        $count = 30;
-        $finish = $page * $count + 2;
-        $start = $finish - $count;
+        $perPage = 30;
+        $finish = $page * $perPage + 2;
+        $start = $finish - $perPage;
         $files = scandir(Yii::getAlias('@webroot' . '/img/avatars/mult/'));
         $avatars = [];
+        $countPages = ceil(count($files)/$perPage);
 
         if ($start > 1 && isset($files[$start])) {
             for ($i = $start; $i < $finish; $i++) {
@@ -170,7 +171,8 @@ class UsersController extends BaseController
 
         
         return $this->render('avatars', [
-            'avatars' => $avatars
+            'avatars' => $avatars,
+            'countPages' => $countPages,
         ]);
     }
 //

@@ -7,34 +7,9 @@ $this->title = 'My Yii Application';
 $typeMap = \app\constants\DiscountConstants::getTypeMap();
 ?>
 <div class="place-contact place-page">
-<style>
-    .reviews .review {
-        display:flex;
-        margin-top:20px;
-    }
-    .review__left {
-        padding:5px;
-        width:60px;
-    }
-    .review__right {
-        padding:5px;
-    }
-    .review__name {
-        font-size: 16px;
-        font-weight: bold;
-        color: #656565;
-    }
-    .review__name span {
-        font-size:12px;
-        font-style:italic;
-        color:#c9ccd0;
-    }
-    .review__star .glyphicon {
-        font-size:18px;
-        color:#ffaf02;
-    }
-</style>
+
     <h3>Отзывы</h3>
+
     Всего отзывов: <?=$model->stars_count?> <br>
     Средняя оценка: <?=$model->stars?>
     <div class="reviews">
@@ -45,7 +20,7 @@ $typeMap = \app\constants\DiscountConstants::getTypeMap();
 
                 <div class="review">
                     <div class="review__left">
-
+                        <img src="<?=$review->user ? $review->user->getAvatar() : \app\models\User::getDefaultAvatar()?>">
                     </div>
                     <div class="review__right">
                         <div class="review__name">
@@ -63,7 +38,7 @@ $typeMap = \app\constants\DiscountConstants::getTypeMap();
                         <? } ?>
                         </div>
                         <div class="review__text">
-                            <?=$review->message;?>
+                            <?=nl2br($review->message);?>
                         </div>
                     </div>
                 </div>

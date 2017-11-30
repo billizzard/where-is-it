@@ -19,7 +19,7 @@ $user = Yii::$app->user->getIdentity();
 
             <ul class="nav navbar-nav">
 
-                <li class="dropdown messages-menu">
+                <!--<li class="dropdown messages-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-envelope-o"></i>
                         <span class="label label-success">4</span>
@@ -31,7 +31,7 @@ $user = Yii::$app->user->getIdentity();
                                 <li>
                                     <a href="#">
                                         <div class="pull-left">
-                                            <img src="<?= $directoryAsset ?>/img/user2-160x160.jpg" class="img-circle"
+                                            <img src="<?/*= $directoryAsset */?>/img/user2-160x160.jpg" class="img-circle"
                                                  alt="User Image"/>
                                         </div>
                                         <h4>
@@ -44,7 +44,7 @@ $user = Yii::$app->user->getIdentity();
                                 <li>
                                     <a href="#">
                                         <div class="pull-left">
-                                            <img src="<?= $directoryAsset ?>/img/user3-128x128.jpg" class="img-circle"
+                                            <img src="<?/*= $directoryAsset */?>/img/user3-128x128.jpg" class="img-circle"
                                                  alt="user image"/>
                                         </div>
                                         <h4>
@@ -57,7 +57,7 @@ $user = Yii::$app->user->getIdentity();
                                 <li>
                                     <a href="#">
                                         <div class="pull-left">
-                                            <img src="<?= $directoryAsset ?>/img/user4-128x128.jpg" class="img-circle"
+                                            <img src="<?/*= $directoryAsset */?>/img/user4-128x128.jpg" class="img-circle"
                                                  alt="user image"/>
                                         </div>
                                         <h4>
@@ -70,7 +70,7 @@ $user = Yii::$app->user->getIdentity();
                                 <li>
                                     <a href="#">
                                         <div class="pull-left">
-                                            <img src="<?= $directoryAsset ?>/img/user3-128x128.jpg" class="img-circle"
+                                            <img src="<?/*= $directoryAsset */?>/img/user3-128x128.jpg" class="img-circle"
                                                  alt="user image"/>
                                         </div>
                                         <h4>
@@ -83,7 +83,7 @@ $user = Yii::$app->user->getIdentity();
                                 <li>
                                     <a href="#">
                                         <div class="pull-left">
-                                            <img src="<?= $directoryAsset ?>/img/user4-128x128.jpg" class="img-circle"
+                                            <img src="<?/*= $directoryAsset */?>/img/user4-128x128.jpg" class="img-circle"
                                                  alt="user image"/>
                                         </div>
                                         <h4>
@@ -97,8 +97,8 @@ $user = Yii::$app->user->getIdentity();
                         </li>
                         <li class="footer"><a href="#">See All Messages</a></li>
                     </ul>
-                </li>
-                <li class="dropdown notifications-menu">
+                </li>-->
+                <!--<li class="dropdown notifications-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
                         <span class="label label-warning">10</span>
@@ -138,8 +138,8 @@ $user = Yii::$app->user->getIdentity();
                         </li>
                         <li class="footer"><a href="#">View all</a></li>
                     </ul>
-                </li>
-                <li class="dropdown tasks-menu">
+                </li>-->
+                <!--<li class="dropdown tasks-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-flag-o"></i>
                         <span class="label label-danger">9</span>
@@ -213,12 +213,12 @@ $user = Yii::$app->user->getIdentity();
                             <a href="#">View all tasks</a>
                         </li>
                     </ul>
-                </li>
+                </li>-->
 
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="<?= $user->getAvatar() ?>" class="user-image" alt="User Image"/>
-                        <span class="hidden-xs"><?=$user->getName()?></span>
+                        <span class="hidden-xs"><?=$user->getLogin()?></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li class="user-header">
@@ -226,11 +226,11 @@ $user = Yii::$app->user->getIdentity();
                                  alt="User Image"/>
 
                             <p>
-                                <?=$user->getName()?>
-                                <small>Member since Nov. 2012</small>
+                                <?=$user->getLogin()?>
+                                <small>Участник с <?=$user->getCreatedAt()?></small>
                             </p>
                         </li>
-                        <li class="user-body">
+                        <!--<li class="user-body">
                             <div class="col-xs-4 text-center">
                                 <a href="#">Followers</a>
                             </div>
@@ -240,15 +240,15 @@ $user = Yii::$app->user->getIdentity();
                             <div class="col-xs-4 text-center">
                                 <a href="#">Friends</a>
                             </div>
-                        </li>
+                        </li>-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                <a href="/admin/users/" class="btn btn-default btn-flat">Профиль</a>
                             </div>
                             <div class="pull-right">
                                 <?= Html::a(
-                                    'Sign out',
-                                    ['/site/logout'],
+                                    'Выйти',
+                                    ['/site/logout/'],
                                     ['data-method' => 'post', 'class' => 'btn btn-default btn-flat']
                                 ) ?>
                             </div>
@@ -256,9 +256,9 @@ $user = Yii::$app->user->getIdentity();
                     </ul>
                 </li>
 
-                <li>
+                <!--<li>
                     <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-                </li>
+                </li>-->
             </ul>
         </div>
     </nav>

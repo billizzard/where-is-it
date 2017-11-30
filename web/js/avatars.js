@@ -3,8 +3,12 @@ function Avatars() {
     var data = {};
     var sending = false;
     var target;
+    var userId;
 
     var init = function () {
+        if ($('.avatar-index').length) {
+            userId = $('.avatar-index').data('id');
+        }
         addEvents();
     };
 
@@ -24,7 +28,7 @@ function Avatars() {
         data['src'] = src;
         $.ajax({
             type: "POST",
-            url: "/admin/users/avatars/",
+            url: "/admin/users/avatars/?user_id=" + userId,
             data: data,
             dataType: "json",
             complete: function(res) {

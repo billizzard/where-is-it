@@ -18,6 +18,26 @@ if ($image) {
 }
 /** @var \app\models\User $user */
 $user = Yii::$app->user->getIdentity();
+
+$categories = \app\models\Category::getCategoryStructure();
+$select = [];
+$disabled = [];
+foreach ($categories as $category) {
+    $select[$category['id']] = $category['name'];
+    if (isset($category['children'])) {
+        $disabled[$category['id']] = ['disabled' => 'true'];
+        foreach ($category['children'] as $children) {
+            $select[$children['id']] = '-' . $children['name'];
+            if (isset($children['children'])) {
+                $disabled[$children['id']] = ['disabled' => 'true'];
+                foreach ($children['children'] as $val) {
+                    $select[$val['id']] = '--' . $val['name'];
+                }
+            }
+        }
+    }
+}
+
 ?>
 
 <div class="user-form">
@@ -26,7 +46,34 @@ $user = Yii::$app->user->getIdentity();
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'category_id')->dropDownList($categoryMap, ['prompt' => 'Выберите категорию']) ?>
+    <div class="form-group field-place-name required">
+    <?= $form->field($model, 'category_ids')->widget(\kartik\select2\Select2::classname(), [
+        'data' => $select,
+        'options' => ['placeholder' => 'Выберите категории', 'multiple' => true,
+            'options' => $disabled],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+    ]);
+//    echo \kartik\select2\Select2::widget([
+//        'name' => 'color_2',
+//        'value' => ['red', 'green'], // initial value
+//        'data' => $select,
+//        'showToggleAll' => false,
+//        'maintainOrder' => true,
+//        'options' => ['placeholder' => 'Выберите категории', 'multiple' => true,
+//            'options' => $disabled],
+//        'pluginOptions' => [
+//            'tags' => true,
+//        ],
+//    ]);
+    ?>
+    </div>
+
+<!--    --><?//= $form->field($model, 'category_ids')
+//        ->dropDownList($select, ['multiple' => true]) ?>
+<!--
+    --><?/*= $form->field($model, 'category_id')->dropDownList($categoryMap, ['prompt' => 'Выберите категорию']) */?>
 
     <?= \app\components\widgets\imageUploader\ImageUploaderWidget::widget([
         'config' => [
@@ -37,6 +84,8 @@ $user = Yii::$app->user->getIdentity();
             'maxFiles' => 1,
         ]
     ]) ?>
+
+
 
     <div id="ymapAdminPlaceMap" data-lat="<?=$model->lat?>" data-lon="<?=$model->lon?>" style="width:100%; height:320px;"></div>
 

@@ -61,7 +61,10 @@ class Category extends BaseModel
         return $this->id;
     }
 
-
+    /**
+     * Возвращает массив категорий
+     * @return array
+     */
     public static function getCategoriesMap() {
         $map = [];
         $models = self::find()->select(['id', 'name'])->asArray()->all();
@@ -75,6 +78,10 @@ class Category extends BaseModel
         return $map;
     }
 
+    /**
+     * Возвращает структурированный массив категорий
+     * @return array
+     */
     public static function getCategoryStructure() {
         $models = self::find()->select(['id', 'name', 'parent_id'])->asArray()->orderBy(['name' => SORT_ASC])->all();
         $menu = [];

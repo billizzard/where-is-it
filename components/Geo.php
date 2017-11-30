@@ -2,7 +2,6 @@
 
 namespace app\components;
 
-use app\models\City;
 
 class Geo
 {
@@ -10,6 +9,10 @@ class Geo
     const TIME = 60 * 60 * 24 * 300;
     const SITE_YANDEX = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=";
 
+    /**
+     * Получает данные о положении по ip в формате json
+     * @return mixed
+     */
     private static function getJsonFromSite()
     {
         $content = '';
@@ -36,6 +39,10 @@ class Geo
         return $cityName;
     }
 
+    /**
+     * Получает координаты с сайта
+     * @return array
+     */
     private static function getLatLonFromSite()
     {
         $result = [];
@@ -79,17 +86,29 @@ class Geo
         setcookie("city_name", $city_name, time() + self::TIME);
     }
 
+    /**
+     * Устанавливает координаты пользователя в куки
+     * @param $coords
+     */
     public static function setUserLatLon($coords)
     {
         setcookie("lat", $coords[0], time() + self::TIME);
         setcookie("lon", $coords[1], time() + self::TIME);
     }
 
+    /**
+     * Возвращает координаты по умолчанию, Минск
+     * @return array
+     */
     private static function getDefaultUserLatLon()
     {
         return [53.904098, 27.556899];
     }
 
+    /**
+     * Получает координаты пользователя, определенная по ip
+     * @return array
+     */
     public static function getUserLatLon()
     {
         $coords = self::getLatLonFromSite();

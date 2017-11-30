@@ -25,8 +25,8 @@ use yii\captcha\Captcha;
                    value="<?= isset($_POST['Place']['lon']) ? $_POST['Place']['lon'] : '' ?>">
             <input type="hidden" name="Place[address]" class="js-point-address"
                    value="<?= isset($_POST['Place']['address']) ? $_POST['Place']['address'] : '' ?>">
-            <input type="hidden" name="Place[category_id]" class="js-point-category_id required"
-                   value="<?= isset($_POST['Place']['category_id']) ? $_POST['Place']['category_id'] : '' ?>">
+            <input type="hidden" name="Place[category_ids][]" class="js-point-category_id required"
+                   value="<?= isset($_POST['Place']['category_ids']) ? $_POST['Place']['category_ids'] : '' ?>">
 
             <div class="form-place__column">
                 <input type="text" name="Place[category]" class="js-point-category required" disabled

@@ -1,10 +1,10 @@
 .place-wrapper {
     margin: 50px auto;
     max-width:900px;
+    padding:0 5px;
 }
 .place-wrapper .main-image {
     display:inline-block;
-    background-size:cover;
     width:100%;
 }
 .place-wrapper .image-wrapper {
@@ -15,11 +15,7 @@
     max-height:400px;
     max-width:100%;
 }
-.place-wrapper .menu {
-    min-height:45px;
-    width:100%;
-    background-color: #dadada;
-}
+
 .place-wrapper .title {
     text-align: center;
     font-size: 20px;
@@ -28,11 +24,6 @@
     color: #fff;
     background-color: #95a6e6;
     /*text-shadow: 0px 0px 6px rgba(255,255,255,0.7);*/
-}
-.place-wrapper .menu a {
-    height:45px;
-    top:0;
-    color:#484848;
 }
 
 .place-wrapper .info {
@@ -46,17 +37,69 @@
     padding:5px;
     line-height:26px;
 }
-/* TOP MENU */
-.place-menu li {
-    float:left;
+/* PLACE MAIN MENU */
+.place-main-menu {
+    width:300px;
+    display:inline-block;
+
 }
-.place-menu li a {
+#p1 {
+    padding:0 6px 0 0;
+    margin-bottom:0;
+}
+#p1 li {
+    list-style-type: none;
+
+    margin-bottom: 1px;
+    text-align: left;
+
+    font-size:14px;
+
+}
+#p1 li a {
+    cursor:pointer;
+    background-color: #eaeaea;
+    text-decoration: none;
+    display: block;
+    padding: 5px 0 0 10px;
+}
+#p1 li a:hover {
+    background-color: #d6d5d5;
+}
+#p1 li a:active {
+    background-color: #c7c5c5;
+}
+#p1 li .glyphicon {
     font-size:22px;
+    margin-right:9px;
+    color:#484848;
 }
-.place-menu .glyphicon-c_percent {
-    padding: 12px 8px;
-    line-height: 15px;
-    width:auto;
+#p1 li .item-text {
+    vertical-align: top;
+    line-height: 24px;
+    color:#6d6d6d;
+}
+#p1 li .glyphicon-c_percent {
+    text-align:left;
+    height:28px;
+    width:28px;
+    font-size:26px;
+}
+@media only screen and (max-width: 460px) {
+    .place-main-menu {
+        order:1;
+        width:100%;
+    }
+    .main-image {
+        order:0;
+        margin-bottom:5px;
+    }
+    #p1 {
+        padding-right:0;
+    }
+    .image-wrapper {
+        flex-wrap:wrap;
+    }
 }
 /* PLACE GALLERY */
 .masonry { /* Masonry container */
@@ -193,10 +236,38 @@
     color: #8b8e91;
 }
 
+/* PLACE REVIEWS */
+.reviews .review {
+    display:flex;
+    margin-top:20px;
+}
+.review__left {
+    padding:5px;
+}
+.review__left img {
+    max-width:100px;
+}
+.review__right {
+    padding:5px;
+}
+.review__name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #656565;
+}
+.review__name span {
+    font-size:12px;
+    font-style:italic;
+    color:#c9ccd0;
+}
+.review__star .glyphicon {
+    font-size:18px;
+    color:#ffaf02;
+}
+
 /* ALL PLACE PAGES */
 .place-page {
     color:#8b8e91;
-    padding:5px;
     margin-bottom:20px;
 }
 
@@ -207,5 +278,8 @@ h3 {
     line-height: 40px;
     color: #8eaace;
     border-bottom: 1px solid rgba(53,86,129, 0.3);
-    margin-top: 10px;
+    margin-top: 0px;
+    background-color: #f1f1f1;
+    border-top: 1px solid rgba(53,86,129, 0.3);
+    padding-left: 10px;
 }

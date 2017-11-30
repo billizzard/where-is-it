@@ -2,7 +2,6 @@
 
 namespace app\components\file;
 
-use Imagine\Image\Box;
 
 class FileHelper
 {
@@ -40,7 +39,9 @@ class FileHelper
                 }
             }
         }
-        rmdir($dir);
+        if (is_dir($dir)) {
+            rmdir($dir);
+        }
     }
 
     /**

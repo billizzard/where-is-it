@@ -11,9 +11,10 @@ $this->title = 'Аватары';
 $this->params['breadcrumbs'][] = $this->title;
 /** @var \app\models\User $user */
 $user = Yii::$app->user->getIdentity();
-$dir = '/img/avatars/mult/'
+$dir = '/img/avatars/mult/';
+$curPage = isset($_GET['page'])? $_GET['page'] : 1;
 ?>
-<div class="avatar-index">
+<div class="avatar-index" data-id="<?=$user->getId()?>">
     <div class="avatars">
         <? foreach ($avatars as $avatar) { ?>
         <div class="avatar <?=$user->avatar == $avatar ? 'picked' : ''?>">
@@ -22,6 +23,27 @@ $dir = '/img/avatars/mult/'
         </div>
         <? } ?>
     </div>
+
+    <ul class="pagination">
+        <? if ($curPage == 1) { ?>
+            <li class="prev disabled"><span>«</span></li>
+        <? } else { ?>
+            <li class="prev"><a href="/admin/users/avatars/?user_id=<?=$user->getId()?>&page=<?=$curPage - 1?>" data-page="<?=$curPage - 1?>">«</a></li>
+        <? } ?>
+
+        <? for ($i=1; $i <= $countPages; $i++) { ?>
+            <? if ($i == $curPage) { ?>
+                <li class="active"><a href="/admin/users/avatars/?user_id=<?=$user->getId()?>&page=<?=$i?>" data-page="<?=$i?>"><?=$i?></a></li>
+            <? } else { ?>
+                <li><a href="/admin/users/avatars/?user_id=<?=$user->getId()?>&page=<?=$i?>" data-page="<?=$i?>"><?=$i?></a></li>
+            <? } ?>
+        <? } ?>
+
+        <? if ($curPage == $countPages) {?>
+            <li class="next disabled"><span>»</span></li>
+        <? } else { ?>
+            <li class="next"><a href="/admin/users/avatars/?user_id=<?=$user->getId()?>&page=<?=$curPage + 1?>" data-page="<?=$curPage + 1?>">»</a></li></ul>
+        <? } ?>
 </div>
 <style>
     .avatar-index .avatars {

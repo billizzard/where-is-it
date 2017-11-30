@@ -28,6 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <? } ?>
     </p>
 
+    <? if ($dataProvider->getTotalCount()) { ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
@@ -41,9 +42,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'app\modules\admin\components\actions\ActionColumn',
-                'template' => '{update_all} {soft-delete_all}',
+                'template' => '{update_all} {soft-delete_all} {delete}',
                 'contentOptions' => ['class' => 'add-info']
             ]
         ],
     ]); ?>
+    <? } ?>
 </div>

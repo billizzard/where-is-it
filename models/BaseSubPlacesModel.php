@@ -9,16 +9,23 @@ use app\constants\AppConstants;
 use app\constants\ImageConstants;
 use yii\behaviors\TimestampBehavior;
 
-
-
 class BaseSubPlacesModel extends BaseModel implements ISubPlaces
 {
+    /**
+     * Можно ли добавить больше моделей в базу
+     * @param $place_id
+     * @return bool
+     */
     public static function isCanAddMore($place_id) {
         $class = static::className();
         $count = $class::find()->andWhere(['place_id' => (int)$place_id, 'status' => AppConstants::STATUS['NO_MODERATE']])->count();
-        return $count < 50;
+        return $count < 5;
     }
 
+    /**
+     * Можно ли обновлять модель, так как создается новая модель
+     * @return bool
+     */
     public function isUpdatable() {
         if ($this->hasAttribute('place_id')) {
             return self::isCanAddMore($this->place_id);

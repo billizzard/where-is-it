@@ -15,6 +15,11 @@ class Helper
     const TYPE_MESSAGE_ERROR = 1;
     const TYPE_MESSAGE_SUCCESS = 2;
 
+    /**
+     * Добавляет сообщение в сессию, для последующего изьятия
+     * @param $mes
+     * @param int $type
+     */
     public static function setMessage($mes, $type = 1) {
         $message = ['type' => $type];
         if (is_array($mes)) {
@@ -27,6 +32,10 @@ class Helper
 
     }
 
+    /**
+     * Получить сообщение
+     * @return string
+     */
     public static function getMessage() {
         if (!empty($_SESSION['messages'])) {
             $message = $_SESSION['messages'][0];
@@ -36,6 +45,10 @@ class Helper
         }
     }
 
+    /**
+     * Возвращает массив дней недели
+     * @return array
+     */
     public static function getDaysMap()
     {
         return [1 => 'Пн', 2 => 'Вт', 3 => 'Ср', 4 => 'Чт', 5 => 'Пт', 6 => 'Сб', 7 => 'Вс'];
