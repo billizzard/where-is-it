@@ -2,6 +2,8 @@
 
 namespace app\modules\admin\controllers;
 
+use app\components\Helper;
+use app\components\SiteException;
 use app\constants\ImageConstants;
 use app\models\Category;
 use app\models\Image;
@@ -36,6 +38,11 @@ class PlacesController extends BaseController
         $rules['access']['rules'] = [
             [
                 'actions' => ['delete'],
+                'allow' => true,
+                'roles' => [User::ROLE_ADMIN],
+            ],
+            [
+                'actions' => ['copy-to-parent'],
                 'allow' => true,
                 'roles' => [User::ROLE_ADMIN],
             ],
@@ -93,7 +100,6 @@ class PlacesController extends BaseController
         $searchModel = new PlaceSearch();
         $dataProvider = $searchModel->search($params);
 
-
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -123,17 +129,30 @@ class PlacesController extends BaseController
     {
         $model = Place::findOneModel($id);
 
-        if ($model->load(Yii::$app->request->post()) ) {
-            if ($post = Yii::$app->request->post()) {
+        if (!$model->isCanAddMore()) {
+            Helper::setMessage('Временно нельзя изменять информацию о месте');
+        } else {
+            if ($model->load(Yii::$app->request->post())) {
+                if ($post = Yii::$app->request->post()) {
 
-                /** @var Place $newModel */
-                $newModel = $model->getDuplicate();
+                    /** @var Place $newModel */
+                    $newModel = $model->getDuplicate();
 
-                if ($newModel->load(Yii::$app->request->post()) && $newModel->save()) {
-                    $newModel->uploadNewImageByUrl(
-                        array_merge(explode(',',$post['old_images']),explode(',',$post['images'])),
-                        ImageConstants::TYPE['MAIN_PLACE']);
-                    return $this->redirect(['index', 'place_id' => $newModel->id]);
+                    if ($newModel->load(Yii::$app->request->post()) && $newModel->save()) {
+                        $newModel->uploadNewImageByUrl(
+                            array_merge(explode(',', $post['old_images']), explode(',', $post['images'])),
+                            ImageConstants::TYPE['MAIN_PLACE']
+                        );
+
+                        if (isset($post['copy'])) {
+                            return $this->redirect(['copy-to-parent', 'id' => $id]);
+                        }
+
+                        Helper::setMessage('Изменения сохранены, ожидают проверки', Helper::TYPE_MESSAGE_SUCCESS);
+
+                        if ($model->parent_id) return $this->redirect(['index', 'place_id' => $model->parent_id]);
+                        else return $this->redirect(['index']);
+                    }
                 }
             }
         }
@@ -160,6 +179,14 @@ class PlacesController extends BaseController
             }
             return false;
         }
+    }
+
+    public function actionCopyToParent($id) {
+        $model = $this->getClassName()::findOneModel($id);
+        $model->copyToParent();
+        Helper::setMessage('Изменения некоторых полей перенесены', Helper::TYPE_MESSAGE_SUCCESS);
+        return $this->redirect(['index','place_id' => $model->parent_id]);
+
     }
 
 

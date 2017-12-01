@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\controllers;
 
+use app\components\Helper;
 use app\constants\ImageConstants;
 use app\models\Gallery;
 use app\models\Image;
@@ -93,6 +94,7 @@ class GalleryController extends BaseController
                 $newGallery->uploadNewImageByUrl(
                     array_merge(explode(',',$post['old_images']),explode(',',$post['images'])),
                     ImageConstants::TYPE['GALLERY']);
+                Helper::setMessage('Изменения сохранены, ожидают проверки', Helper::TYPE_MESSAGE_SUCCESS);
                 return $this->redirect(['index', 'place_id' => $newGallery->place_id]);
             }
         }

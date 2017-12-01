@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\controllers;
 
+use app\components\Helper;
 use app\components\SiteException;
 use app\models\Schedule;
 use app\models\User;
@@ -78,6 +79,12 @@ class SchedulesController extends BaseController
             $clone = $model->getDuplicate();
             $clone->fromPost(Yii::$app->request->post());
             $clone->save();
+            if (Yii::$app->request->post('copy')) {
+                return $this->redirect(['copy-to-parent', 'id' => $id]);
+            }
+
+            Helper::setMessage('Изменения сохранены, ожидают проверки', Helper::TYPE_MESSAGE_SUCCESS);
+
             return $this->redirect(['index', 'place_id' => $clone->place_id]);
         }
 

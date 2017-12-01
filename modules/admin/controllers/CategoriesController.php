@@ -69,20 +69,6 @@ class CategoriesController extends BaseController
     }
 
     /**
-     * Displays a single User model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        $model = Category::findOne($id);
-        if (!$model) return Yii::$app->response->redirect('/admin/categories/index');
-        return $this->render('view', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
      * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -92,7 +78,7 @@ class CategoriesController extends BaseController
         $model = new Category();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -111,7 +97,7 @@ class CategoriesController extends BaseController
         $model = Category::findOne($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [

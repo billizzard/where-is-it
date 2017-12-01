@@ -10,7 +10,6 @@ use Yii;
  * This is the model class for table "discount".
  *
  * @property integer $id
- * @property integer $image_id
  * @property integer $place_id
  * @property string $title
  * @property string $message
@@ -20,6 +19,7 @@ use Yii;
  * @property string $end_date
  * @property boolean is_deleted
  * @property integer $created_at
+ * @property integer $parent_id
  */
 class Discount extends BaseSubPlacesModel
 {
@@ -39,7 +39,7 @@ class Discount extends BaseSubPlacesModel
     public function rules()
     {
         return [
-            [['image_id', 'place_id', 'type', 'status', 'created_at'], 'integer'],
+            [['place_id', 'type', 'status', 'created_at', 'parent_id'], 'integer'],
             [['start_date', 'end_date'], 'safe'],
             [['is_deleted'], 'boolean'],
             [['title'], 'string', 'max' => 150],
@@ -54,7 +54,6 @@ class Discount extends BaseSubPlacesModel
     {
         return [
             'id' => 'ID',
-            'image_id' => 'Изображение',
             'place_id' => 'Место',
             'title' => 'Заголовок',
             'message' => 'Сообщение',
@@ -64,6 +63,17 @@ class Discount extends BaseSubPlacesModel
             'end_date' => 'Дата окончания',
             'created_at' => 'Дата создания',
             'is_deleted' => 'Удалено ли',
+            'parent_id' => 'Родитель',
+        ];
+    }
+
+    public function attributeForParent() {
+        return [
+            'title',
+            'message',
+            'type',
+            'start_date',
+            'end_date',
         ];
     }
 

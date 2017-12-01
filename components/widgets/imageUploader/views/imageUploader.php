@@ -6,7 +6,6 @@
  * Time: 12.09
  */
 ?>
-
 <div class="iu">
     <div class="iu_gallery">
         <? if ($oldImages) {
@@ -15,7 +14,10 @@
                     <div class="iu_uploaded_img js-image">
                         <img src="/<?=$image[0]?>">
                         <? if ($deleteButton) { ?>
-                        <span href="#" class="delete" data-params='<?=isset($image[1]) ? json_encode($image[1]) : ""?>'>x</span>
+                        <span  class="iu-icon iu-icon-remove js-delete glyphicon glyphicon-remove" data-params='<?=isset($image[1]) ? json_encode($image[1]) : ""?>'></span>
+                        <? } ?>
+                        <? if ($downloadButton) {?>
+                            <a target="_blank" href="/admin/default/download-image/<?= isset($image[1]['id']) ? '?id=' . $image[1]['id'] : ''?>" class="iu-icon iu-icon-download js-download glyphicon glyphicon-download" data-params='<?=isset($image[1]) ? json_encode($image[1]) : ""?>'></a>
                         <? } ?>
                     </div>
                 <?}

@@ -34,6 +34,8 @@ class ContactSearch extends Contact
             'defaultOrder' => ['id' => SORT_ASC]
         ]);
 
+        $query->andWhere(['parent_id' => 0]);
+
         $this->load($params);
 
         if (!$this->validate()) {

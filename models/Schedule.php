@@ -85,6 +85,26 @@ class Schedule extends BaseSubPlacesModel
         ];
     }
 
+    public function attributeForParent() {
+        return [
+            '1_from',
+            '1_to',
+            '2_from',
+            '2_to',
+            '3_from',
+            '3_to',
+            '4_from',
+            '4_to',
+            '5_from',
+            '5_to',
+            '6_from',
+            '6_to',
+            '7_from',
+            '7_to',
+            'add_info',
+        ];
+    }
+
     /**
      * Возвращает график работы в определенном формате
      * @return array

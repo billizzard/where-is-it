@@ -14,6 +14,7 @@ class ImageUploaderWidget extends Widget
         'deleteUrl' => '',
         'deleteButton' => true,
         'uploadButton' => true,
+        'downloadButton' => false,
         'oldImages' => []
     ];
 

@@ -35,6 +35,8 @@ class ScheduleSearch extends Schedule
 
         $this->load($params);
 
+        $query->andWhere(['parent_id' => 0]);
+
         if (!$this->validate()) {
             return $dataProvider;
         }

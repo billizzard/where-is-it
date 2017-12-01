@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\controllers;
 
+use app\components\Helper;
 use app\constants\AppConstants;
 use app\models\Category;
 use app\models\City;
@@ -83,6 +84,13 @@ class ContactsController extends BaseController
             /** @var Discount $newModel */
             $newModel = $model->getDuplicate();
             if ($newModel->load(Yii::$app->request->post()) && $newModel->save()) {
+
+                if (isset($post['copy'])) {
+                    return $this->redirect(['copy-to-parent', 'id' => $id]);
+                }
+
+                Helper::setMessage('Изменения сохранены, ожидают проверки', Helper::TYPE_MESSAGE_SUCCESS);
+
                 return $this->redirect(['index', 'place_id' => $newModel->place_id]);
             }
         }

@@ -3,6 +3,7 @@
 namespace app\modules\admin\controllers;
 
 use app\components\Helper;
+use app\models\Image;
 use app\models\LoginForm;
 use app\models\RegistrationForm;
 use app\models\User;
@@ -53,7 +54,6 @@ class DefaultController extends BaseController
                     [
                         'actions' => ['index'],
                         'allow' => true,
-                        // Allow moderators and admins to update
                         'roles' => [
                             User::ROLE_ADMIN,
                         ],
@@ -61,7 +61,13 @@ class DefaultController extends BaseController
                     [
                         'actions' => ['delete'],
                         'allow' => true,
-                        // Allow admins to delete
+                        'roles' => [
+                            User::ROLE_ADMIN
+                        ],
+                    ],
+                    [
+                        'actions' => ['download-image'],
+                        'allow' => true,
                         'roles' => [
                             User::ROLE_ADMIN
                         ],
@@ -136,5 +142,23 @@ class DefaultController extends BaseController
         return $this->render('registration', [
             'model' => $model,
         ]);
+    }
+
+    public function actionDownloadImage($id) {
+        $image = Image::findOneModel($id);
+        if ($image) {
+            if(file_exists($image->getUrl())) {
+                header('Content-Description: File Transfer');
+                header('Content-Type: application/octet-stream');
+                header('Content-Disposition: attachment; filename="'.basename($image->getUrl()).'"');
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate');
+                header('Pragma: public');
+                header('Content-Length: ' . filesize($image->getUrl()));
+                flush(); // Flush system output buffer
+                readfile($image->getUrl());
+                exit;
+            }
+        }
     }
 }

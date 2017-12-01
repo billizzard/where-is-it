@@ -14,7 +14,7 @@ $image = $model->mainImage;
 
 $verifyImages = [];
 if ($image) {
-    $verifyImages[] = [$image->url];
+    $verifyImages[] = [$image->url, ['id' => $image->id]];
 }
 /** @var \app\models\User $user */
 $user = Yii::$app->user->getIdentity();
@@ -70,11 +70,6 @@ foreach ($categories as $category) {
     ?>
     </div>
 
-<!--    --><?//= $form->field($model, 'category_ids')
-//        ->dropDownList($select, ['multiple' => true]) ?>
-<!--
-    --><?/*= $form->field($model, 'category_id')->dropDownList($categoryMap, ['prompt' => 'Выберите категорию']) */?>
-
     <?= \app\components\widgets\imageUploader\ImageUploaderWidget::widget([
         'config' => [
             'oldImages' => $verifyImages,
@@ -82,6 +77,7 @@ foreach ($categories as $category) {
             'inputFileName' => "Image[url][]",
             'errorCallback' => 'widgetUploadErrors',
             'maxFiles' => 1,
+            'downloadButton' => $user->hasAccess(\app\models\User::RULE_DOWNLOAD_IMAGE) ? true : false
         ]
     ]) ?>
 
@@ -109,6 +105,10 @@ foreach ($categories as $category) {
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Обновить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <? if ($model->parent_id) { ?>
+            <input type="hidden" name="copy" value="1">
+            <?= Html::submitButton('Скопировать' , ['class' => 'btn btn-primary']) ?>
+        <? } ?>
     </div>
 
     <?php ActiveForm::end(); ?>

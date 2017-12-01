@@ -50,6 +50,8 @@ class PlaceSearch extends Place
             return $dataProvider;
         }
 
+        $query->andWhere(['parent_id' => 0]);
+
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,

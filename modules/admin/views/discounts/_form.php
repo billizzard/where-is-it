@@ -30,6 +30,7 @@ $user = Yii::$app->user->getIdentity();
             'uploadUrl' => '/admin/discounts/upload-image/',
             'inputFileName' => "Image[url][]",
             'errorCallback' => 'widgetUploadErrors',
+            'downloadButton' => $user->hasAccess(\app\models\User::RULE_DOWNLOAD_IMAGE) ? true : false
         ]
     ]) ?>
 
@@ -45,6 +46,12 @@ $user = Yii::$app->user->getIdentity();
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Обновить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+
+        <? if ($model->parent_id) { ?>
+            <input type="hidden" name="copy" value="1">
+            <?= Html::submitButton('Скопировать' , ['class' => 'btn btn-primary']) ?>
+        <? } ?>
+
     </div>
 
 

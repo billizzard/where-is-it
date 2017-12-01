@@ -78,7 +78,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'class' => 'app\modules\admin\components\actions\ActionColumn',
                     'contentOptions' => ['class' => 'add-info'],
-                    'template' => '{update_all} {soft-delete_all} {delete}',
+                    'template' => '{soft-delete_all} {delete}',
                 ]
             ],
         ]); ?>

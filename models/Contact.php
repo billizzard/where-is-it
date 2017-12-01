@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\models\traits\UrlImageUploader;
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "contact".
@@ -54,6 +55,23 @@ class Contact extends BaseSubPlacesModel
             'place_id' => 'Место',
             'status' => 'Статус',
             'is_deleted' => 'Удалено ли',
+        ];
+    }
+
+    public function attributeForParent() {
+        return [
+            'phone',
+            'email',
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'updatedAtAttribute' => false
+            ],
         ];
     }
 }

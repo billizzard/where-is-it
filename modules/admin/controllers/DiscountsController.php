@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\controllers;
 
+use app\components\Helper;
 use app\constants\AppConstants;
 use app\constants\ImageConstants;
 use app\models\Category;
@@ -105,6 +106,13 @@ class DiscountsController extends BaseController
                 $newModel->uploadNewImageByUrl(
                     array_merge(explode(',',$post['old_images']),explode(',',$post['images'])),
                     ImageConstants::TYPE['MAIN_DISCOUNT']);
+
+                if (isset($post['copy'])) {
+                    return $this->redirect(['copy-to-parent', 'id' => $id]);
+                }
+
+                Helper::setMessage('Изменения сохранены, ожидают проверки', Helper::TYPE_MESSAGE_SUCCESS);
+
                 return $this->redirect(['index', 'place_id' => $newModel->place_id]);
             }
         }

@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\controllers;
 
+use app\components\Helper;
 use app\components\SiteException;
 use app\models\User;
 use app\modules\admin\components\AccessRule;
@@ -64,6 +65,11 @@ class BaseController extends Controller
                         'allow' => true,
                         'roles' => ['?'],
                     ],
+                    [
+                        'actions' => ['copy-to-parent'],
+                        'allow' => true,
+                        'roles' => [User::ROLE_ADMIN],
+                    ],
                 ],
             ],
         ];
@@ -82,6 +88,14 @@ class BaseController extends Controller
             }
         }
         throw new SiteException('Действие запрещено', 404);
+    }
+
+    public function actionCopyToParent($id) {
+        $model = $this->getClassName()::findOneModel($id);
+        $model->copyToParent();
+        Helper::setMessage('Изменения некоторых полей перенесены', Helper::TYPE_MESSAGE_SUCCESS);
+        return $this->redirect(['index','place_id' => $model->place_id]);
+
     }
 
 }

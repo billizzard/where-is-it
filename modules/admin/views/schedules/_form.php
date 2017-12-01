@@ -67,6 +67,12 @@ $format = $model->getFormatSchedule();
 
     <div class="form-group" style="margin-top:15px;">
         <?= Html::submitButton('Сохранить', ['class' =>'btn btn-success']) ?>
+
+        <? if ($model->parent_id) { ?>
+            <input type="hidden" name="copy" value="1">
+            <?= Html::submitButton('Скопировать' , ['class' => 'btn btn-primary']) ?>
+        <? } ?>
+
     </div>
 
     <?php ActiveForm::end(); ?>

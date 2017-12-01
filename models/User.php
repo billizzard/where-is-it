@@ -38,8 +38,9 @@ class User extends BaseModel implements \yii\web\IdentityInterface
     const RULE_OWNER = 3;
     const RULE_DELETE_MODEL_FULL = 4;
     const RULE_NO_DUPLICATE = 5;
+    const RULE_DOWNLOAD_IMAGE = 6;
 
-    public $loginUrl = ['/auth/'];
+    public $loginUrl = ['/login/'];
 
     public $old_password;
     public $new_password;
@@ -209,6 +210,7 @@ class User extends BaseModel implements \yii\web\IdentityInterface
             case self::RULE_ADMIN_PANEL: return $this->isAdmin(); break;
             case self::RULE_DELETE_MODEL_FULL: return $this->isAdmin(); break;
             case self::RULE_NO_DUPLICATE: return $this->isAdmin(); break;
+            case self::RULE_DOWNLOAD_IMAGE: return $this->isAdmin(); break;
             case self::RULE_OWNER:
                 if ($this->isAdmin()) return true;
                 if ($data['model']) {

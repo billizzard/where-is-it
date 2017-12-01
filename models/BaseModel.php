@@ -13,6 +13,7 @@ use yii\behaviors\TimestampBehavior;
 
 class BaseModel extends \yii\db\ActiveRecord
 {
+
     public static function findOneModel($condition)
     {
         $model = self::findOne($condition);
@@ -57,7 +58,9 @@ class BaseModel extends \yii\db\ActiveRecord
         $clone = new $class();
         $clone->attributes = $this->attributes;
         if ($clone->hasAttribute('parent_id')) {
-            $clone->parent_id = $this->id;
+            if (!$clone->parent_id) {
+                $clone->parent_id = $this->id;
+            }
         }
         if ($clone->hasAttribute('status')) {
             $clone->status = AppConstants::STATUS['NO_MODERATE'];
@@ -113,6 +116,17 @@ class BaseModel extends \yii\db\ActiveRecord
 
     public function getDir() {
         return $this->place->getDir();
+    }
+
+    public function copyToParent() {
+        if ($this->parent_id) {
+            $parent = self::findOneModel($this->parent_id);
+            $attributes = $this->attributeForParent();
+            foreach ($attributes as $attribute) {
+                $parent->{$attribute} = $this->{$attribute};
+            }
+            $parent->save();
+        }
     }
 
 
