@@ -58,43 +58,6 @@ class ActionColumn extends \yii\grid\ActionColumn
         $this->initUpdateButton();
         $this->initSoftDeleteButton();
         $this->initDeleteButton();
-
-//
-//        if (!isset($this->buttons['arrow_up'])) {
-//            $this->buttons['up'] = function ($url, $model) {
-//                return Html::a('<span class="glyphicon glyphicon-arrow-up"></span>', $url, [
-//                    'title' => 'Поднять выше',
-//                    'data-pjax' => '0',
-//                ]);
-//            };
-//        }
-//
-//        if (!isset($this->buttons['arrow_down'])) {
-//            $this->buttons['down'] = function ($url, $model) {
-//                return Html::a('<span class="glyphicon glyphicon-arrow-down"></span>', $url, [
-//                    'title' => 'Опустить ниже',
-//                    'data-pjax' => '0',
-//                ]);
-//            };
-//        }
-//
-//        if (!isset($this->buttons['cancel'])) {
-//            $this->buttons['cancel'] = function ($url, $model) {
-//                if (strpos($url, 'new_tab:')) {
-//                    $new_tab = true;
-//                    $url = str_replace('new_tab:', '', $url);
-//                    $url = str_replace('//', '/', $url);
-//                } else {
-//                    $new_tab = false;
-//                }
-//                return Html::a('<span class="glyphicon glyphicon-minus"></span>', $url, [
-//                    'title' => 'В архив',
-//                    'data-pjax' => '0',
-//                    'data-confirm' => 'Вы уверены, что хотите отменить?',
-//                    'target' => $new_tab ? '_blank' : ''
-//                ]);
-//            };
-//        }
     }
 
     private function initUpdateButton() {

@@ -4,6 +4,7 @@ namespace app\modules\admin\controllers;
 
 use app\components\Helper;
 use app\components\SiteException;
+use app\constants\UserConstants;
 use app\models\User;
 use app\modules\admin\components\AccessRule;
 use app\modules\admin\components\actions\DeleteAction;
@@ -48,7 +49,7 @@ class BaseController extends Controller
                     [
                         'actions' => ['delete'],
                         'allow' => true,
-                        'roles' => [User::ROLE_ADMIN],
+                        'roles' => [UserConstants::ROLE['ADMIN']],
                     ],
                     [
                         'actions' => ['index'],
@@ -68,7 +69,7 @@ class BaseController extends Controller
                     [
                         'actions' => ['copy-to-parent'],
                         'allow' => true,
-                        'roles' => [User::ROLE_ADMIN],
+                        'roles' => [UserConstants::ROLE['ADMIN']],
                     ],
                 ],
             ],

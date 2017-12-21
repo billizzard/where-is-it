@@ -29,17 +29,6 @@ use yii\behaviors\TimestampBehavior;
 
 class User extends BaseModel implements \yii\web\IdentityInterface
 {
-    const ROLE_GUEST = 0;
-    const ROLE_ADMIN = 1;
-    const ROLE_OWNER = 2;
-
-    const RULE_ADMIN_PANEL = 1;
-    const RULE_DELETE_USER = 2;
-    const RULE_OWNER = 3;
-    const RULE_DELETE_MODEL_FULL = 4;
-    const RULE_NO_DUPLICATE = 5;
-    const RULE_DOWNLOAD_IMAGE = 6;
-
     public $loginUrl = ['/login/'];
 
     public $old_password;
@@ -130,13 +119,8 @@ class User extends BaseModel implements \yii\web\IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
-
-        return null;
+        $model = self::findOne(['access_token' => $token]);
+        return $model ? $model : null;
     }
 
     /**
@@ -196,7 +180,7 @@ class User extends BaseModel implements \yii\web\IdentityInterface
      * @return bool
      */
     public function isAdmin() {
-        return $this->getRole() == self::ROLE_ADMIN;
+        return $this->getRole() == UserConstants::ROLE['ADMIN'];
     }
 
     /**
@@ -206,12 +190,12 @@ class User extends BaseModel implements \yii\web\IdentityInterface
      */
     public function hasAccess($rule, $data = []) {
         switch($rule) {
-            case self::RULE_DELETE_USER: return $this->isAdmin(); break;
-            case self::RULE_ADMIN_PANEL: return $this->isAdmin(); break;
-            case self::RULE_DELETE_MODEL_FULL: return $this->isAdmin(); break;
-            case self::RULE_NO_DUPLICATE: return $this->isAdmin(); break;
-            case self::RULE_DOWNLOAD_IMAGE: return $this->isAdmin(); break;
-            case self::RULE_OWNER:
+            case UserConstants::RULE['DELETE_USER']: return $this->isAdmin(); break;
+            case UserConstants::RULE['ADMIN_PANEL']: return $this->isAdmin(); break;
+            case UserConstants::RULE['DELETE_MODEL_FULL']: return $this->isAdmin(); break;
+            case UserConstants::RULE['NO_DUPLICATE']: return $this->isAdmin(); break;
+            case UserConstants::RULE['DOWNLOAD_IMAGE']: return $this->isAdmin(); break;
+            case UserConstants::RULE['OWNER']:
                 if ($this->isAdmin()) return true;
                 if ($data['model']) {
                     if ($data['model']->hasAttribute('user_id')) {

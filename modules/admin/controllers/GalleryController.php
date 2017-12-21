@@ -4,6 +4,7 @@ namespace app\modules\admin\controllers;
 
 use app\components\Helper;
 use app\constants\ImageConstants;
+use app\constants\UserConstants;
 use app\models\Gallery;
 use app\models\Image;
 use app\models\Schedule;
@@ -43,7 +44,7 @@ class GalleryController extends BaseController
         $rules['access']['rules'][] = [
             'actions' => ['soft-delete'],
             'allow' => true,
-            'roles' => [User::ROLE_OWNER],
+            'roles' => [UserConstants::ROLE['ADMIN']],
             'className' =>  Gallery::className(),
         ];
 

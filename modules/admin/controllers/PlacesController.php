@@ -5,6 +5,7 @@ namespace app\modules\admin\controllers;
 use app\components\Helper;
 use app\components\SiteException;
 use app\constants\ImageConstants;
+use app\constants\UserConstants;
 use app\models\Category;
 use app\models\Image;
 use app\models\Place;
@@ -39,12 +40,12 @@ class PlacesController extends BaseController
             [
                 'actions' => ['delete'],
                 'allow' => true,
-                'roles' => [User::ROLE_ADMIN],
+                'roles' => [UserConstants::ROLE['ADMIN']],
             ],
             [
                 'actions' => ['copy-to-parent'],
                 'allow' => true,
-                'roles' => [User::ROLE_ADMIN],
+                'roles' => [UserConstants::ROLE['ADMIN']],
             ],
             [
                 'actions' => ['index'],
@@ -54,7 +55,7 @@ class PlacesController extends BaseController
             [
                 'actions' => ['create'],
                 'allow' => true,
-                'roles' => [User::ROLE_ADMIN],
+                'roles' => [UserConstants::ROLE['ADMIN']],
             ],
             [
                 'actions' => ['update'],
@@ -74,7 +75,7 @@ class PlacesController extends BaseController
             [
                 'actions' => ['soft-delete'],
                 'allow' => true,
-                'roles' => [User::ROLE_ADMIN],
+                'roles' => [UserConstants::ROLE['ADMIN']],
             ]
         ];
 
@@ -171,7 +172,7 @@ class PlacesController extends BaseController
             if ((int)$id) {
                 $image = Image::findOne((int)$id);
                 if ($image) {
-                    if ($user->hasAccess(User::RULE_OWNER, ['model' => $image])) {
+                    if ($user->hasAccess(UserConstants::RULE['OWNER'], ['model' => $image])) {
                         $image->delete();
                         return true;
                     }

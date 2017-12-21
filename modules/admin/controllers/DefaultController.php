@@ -3,6 +3,7 @@
 namespace app\modules\admin\controllers;
 
 use app\components\Helper;
+use app\constants\UserConstants;
 use app\models\Image;
 use app\models\LoginForm;
 use app\models\RegistrationForm;
@@ -55,21 +56,21 @@ class DefaultController extends BaseController
                         'actions' => ['index'],
                         'allow' => true,
                         'roles' => [
-                            User::ROLE_ADMIN,
+                            UserConstants::ROLE['ADMIN'],
                         ],
                     ],
                     [
                         'actions' => ['delete'],
                         'allow' => true,
                         'roles' => [
-                            User::ROLE_ADMIN
+                            UserConstants::ROLE['ADMIN']
                         ],
                     ],
                     [
                         'actions' => ['download-image'],
                         'allow' => true,
                         'roles' => [
-                            User::ROLE_ADMIN
+                            UserConstants::ROLE['ADMIN']
                         ],
                     ],
                 ],
@@ -100,7 +101,7 @@ class DefaultController extends BaseController
         /** @var User $user */
         $user = \Yii::$app->user->getIdentity();
 
-        if ($user && $user->hasAccess(User::RULE_ADMIN_PANEL)) {
+        if ($user && $user->hasAccess(UserConstants::RULE['ADMIN_PANEL'])) {
             return $this->redirect('/admin');
         }
 

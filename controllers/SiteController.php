@@ -21,7 +21,6 @@ use app\models\PlaceForm;
 
 class SiteController extends BaseMapController
 {
-
     /**
      * Displays homepage.
      *
@@ -31,7 +30,6 @@ class SiteController extends BaseMapController
     {
         return $this->render('index');
     }
-
 
     /**
      * Displays about page.
@@ -48,27 +46,15 @@ class SiteController extends BaseMapController
         return $this->render('error_404');
     }
 
-    public function actionFeedback() {
-        $get = Yii::$app->request->get();
-        if ($get['type'] == MessageConstants::TYPE['COMPLAIN']) {
-            $model = new Message();
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                Helper::setMessage('Сообщение успешно отправлено.', Helper::TYPE_MESSAGE_SUCCESS);
-                return $this->redirect($_SERVER['HTTP_REFERER']);
-            }
-        } else {
-            throw new NotFoundHttpException();
+    public function actionFeedback($type, $place_id) {
+        $model = new Message();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Helper::setMessage('Сообщение успешно отправлено.', Helper::TYPE_MESSAGE_SUCCESS);
+            return $this->redirect($_SERVER['HTTP_REFERER']);
         }
 
-        $type = $get['type'];
-
-        $place = null;
-        if (isset($get['place_id'])) {
-            $place = Place::findByIdAndStatus($get['place_id'])->one();
-            if ($place) {
-                $model->place_id = $place->id;
-            }
-        }
+        $place = Place::findByIdAndStatus($place_id)->one();
+        $model->place_id = $place ? $place->id : null;
 
         return $this->render('message', [
             'model' => $model,

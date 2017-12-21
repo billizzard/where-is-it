@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\controllers;
 
+use app\constants\UserConstants;
 use app\models\Category;
 use app\models\User;
 use app\modules\admin\models\search\CategorySearch;
@@ -25,27 +26,27 @@ class CategoriesController extends BaseController
             [
                 'actions' => ['delete'],
                 'allow' => true,
-                'roles' => [User::ROLE_ADMIN],
+                'roles' => [UserConstants::ROLE['ADMIN']],
             ],
             [
                 'actions' => ['index'],
                 'allow' => true,
-                'roles' => [User::ROLE_ADMIN],
+                'roles' => [UserConstants::ROLE['ADMIN']],
             ],
             [
                 'actions' => ['create'],
                 'allow' => true,
-                'roles' => [User::ROLE_ADMIN],
+                'roles' => [UserConstants::ROLE['ADMIN']],
             ],
             [
                 'actions' => ['update'],
                 'allow' => true,
-                'roles' => [User::ROLE_ADMIN],
+                'roles' => [UserConstants::ROLE['ADMIN']],
             ],
             [
                 'actions' => ['soft-delete'],
                 'allow' => true,
-                'roles' => [User::ROLE_ADMIN],
+                'roles' => [UserConstants::ROLE['ADMIN']],
                 'className' => $this->getClassName()
             ]
         ];

@@ -2,17 +2,12 @@
 
 namespace app\models;
 
-use app\components\file\FileHelper;
-use app\components\file\ImagePlaceHandler;
-use app\components\SiteException;
 use app\constants\AppConstants;
-use app\constants\ImageConstants;
-use yii\behaviors\TimestampBehavior;
 
 class BaseSubPlacesModel extends BaseModel implements ISubPlaces
 {
     /**
-     * Можно ли добавить больше моделей в базу
+     * Можно ли добавить больше моделей для этого места в базу
      * @param $place_id
      * @return bool
      */
@@ -23,7 +18,7 @@ class BaseSubPlacesModel extends BaseModel implements ISubPlaces
     }
 
     /**
-     * Можно ли обновлять модель, так как создается новая модель
+     * Можно ли обновлять модель, так как при обновлении создается новая модель и есть предел
      * @return bool
      */
     public function isUpdatable() {
@@ -56,7 +51,7 @@ class BaseSubPlacesModel extends BaseModel implements ISubPlaces
 
     public function getCreatedData() {
         if ($this->created_at) {
-            return date('H:i:s d-m-Y');
+            return date('H:i:s d-m-Y', $this->created_at);
         }
     }
 

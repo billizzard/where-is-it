@@ -131,29 +131,6 @@ class Image extends BaseSubPlacesModel
         return $this->hasOne(Discount::className(), ['id' => 'place_id']);
     }
 
-    public function uploadMainImage(Place $model) {
-        $this->url = UploadedFile::getInstance($this, 'url');
-
-        if ($this->url) {
-            if ($oldImage = $model->mainImage) {
-                $oldImage->delete();
-            }
-            $this->place_id = $model->id;
-            $name = uniqid() . '.' . $this->url->extension;
-            $url = $model->getDir() . '/' . $name;
-
-            if ($this->validate()) {
-                $this->url->saveAs($url);
-                ImageMainHandler::createThumbs($url);
-                $this->url = $url;
-                $this->type = ImageConstants::TYPE['MAIN_PLACE'];
-                return $this->save();
-            } else {
-                throw new SiteException($this->getErrors(), 400);
-            }
-        }
-    }
-
     /**
      * Создает файлы в временной папке
      * @param $file
@@ -196,9 +173,7 @@ class Image extends BaseSubPlacesModel
         $countFiles = $this->getCountFiles();
         $this->files = UploadedFile::getInstances($this, 'url');
         // Если нужет только один, то беру первый
-        if ($countFiles && $countFiles < 2) {
-            $this->files = $this->files[0];
-        }
+        $this->files = $countFiles < 2 ? $this->files[0] : $this->files;
 
         if ($this->validate()) {
             if (is_array($this->files)) {

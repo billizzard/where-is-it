@@ -4,6 +4,7 @@ namespace app\modules\admin\controllers;
 
 use app\components\Helper;
 use app\components\SiteException;
+use app\constants\UserConstants;
 use app\models\Schedule;
 use app\models\User;
 use app\modules\admin\components\actions\DeleteAction;
@@ -27,7 +28,7 @@ class SchedulesController extends BaseController
         $rules['access']['rules'][] = [
                 'actions' => ['soft-delete'],
                 'allow' => true,
-                'roles' => [User::ROLE_OWNER],
+                'roles' => [UserConstants::ROLE['ADMIN']],
                 'className' => Schedule::className()
         ];
 

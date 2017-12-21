@@ -3,27 +3,21 @@
 namespace app\controllers;
 
 use app\components\ApiException;
-use app\components\file\FileHelper;
 use app\components\file\ImageMainHandler;
 use app\components\Helper;
 use app\components\SiteException;
 use app\constants\ImageConstants;
 use app\constants\MessageConstants;
+use app\models\forms\AddForm;
 use app\models\Category;
-use app\models\Image;
 use app\models\Place;
 use app\models\Review;
 use app\models\Star;
 use app\models\traits\ImageUploaderController;
 use app\models\User;
-use app\models\Vote;
 use Yii;
-use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
-use yii\filters\VerbFilter;
-use app\models\LoginForm;
 use app\models\PlaceForm;
 
 class PlaceController extends BaseMapController
@@ -153,7 +147,6 @@ class PlaceController extends BaseMapController
                 Helper::setMessage('После проверки, точка появится на карте (<a href="/admin/places/?place_id=' . $model->id . '" target="_blank">заполнить детально</a>).', Helper::TYPE_MESSAGE_SUCCESS);
                 if ($imageUrl = Yii::$app->request->post('image')) {
                     $model->uploadNewImageByUrl($imageUrl, ImageConstants::TYPE['MAIN_PLACE']);
-                    //Image::createMainImageFromTemp($model, $imageUrl);
                 }
                 return $this->refresh();
             } else {
@@ -173,30 +166,8 @@ class PlaceController extends BaseMapController
         if (isset($post['vote']) && isset($post['placeId'])) {
             /** @var Place $place */
             $place = Place::findByIdAndStatus($post['placeId'])->one();
-            if ($place) {
-                $vote = Vote::findByPlaceAndIp($place->id)->one();
-                if ($vote) {
-                    if ($vote->created_at > (time() - 60 * 60 * 24 * 7 * 4)) {
-                        throw new ApiException('Вы уже голосовали в этом месяце', 403);
-                    }
-                } else {
-                    $vote = new Vote();
-                    $vote->ip = ip2long($_SERVER['REMOTE_ADDR']);
-                    $vote->place_id = $place->id;
-                }
-
-                if ($post['vote'] === 'yes') {
-                    $vote->vote = true;
-                    $place->yes++;
-                } else {
-                    $vote->vote = false;
-                    $place->no++;
-                }
-                if ($vote->save()) {
-                    $place->save();
-                    return ['success' => true];
-                }
-
+            if ($place && $place->addVote($post['vote'])) {
+                return ['success' => true];
             }
         }
         throw new ApiException('Не удалось записать голос. Попробуйте позже');
@@ -213,12 +184,9 @@ class PlaceController extends BaseMapController
 
         if ($type == MessageConstants::TYPE['REVIEW']) {
             if ($user) {
-
                 if ($model->load(Yii::$app->request->post())) {
-                    $model->star = $model->star > 5 ? 5 : $model->star;
-                    $model->star = $model->star < 1 ? 1 : $model->star;
+                    $model->user_id = $user->id;
                     if ($user->isCanPostReviewOnPlace($place->id)) {
-                        $model->user_id = $user->id;
                         if ($model->save()) {
                             $place->setStars();
                             $place->save();

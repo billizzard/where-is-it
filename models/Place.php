@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\ApiException;
 use app\components\file\FileHelper;
 use app\components\file\ImagePlaceHandler;
 use app\constants\AppConstants;
@@ -274,18 +275,6 @@ class Place extends BaseModel
         return $this->prev_description;
     }
 
-    public function isCanAddGallery()
-    {
-        if (!$this->gallery || !$this->galleryNewVariant) {
-            return true;
-        }
-        /** @var User $user */
-        if ($user = \Yii::$app->user->getIdentity()) {
-            return $user->hasAccess(User::RULE_OWNER, ['model' => $this]);
-        }
-        return false;
-    }
-
     public static function findChildren($parent_id)
     {
         return self::find()->andWhere(['parent_id' => (int)$parent_id]);
@@ -297,6 +286,28 @@ class Place extends BaseModel
             $this->stars = round($res['sum'] / $res['count'], 1);
             $this->stars_count = $res['count'];
         }
+    }
+
+    public function addVote($userVote) {
+        $vote = Vote::findByPlaceAndIp($this->id)->one();
+        if ($vote) {
+            throw new ApiException('Вы уже голосовали', 403);
+        }
+
+        $vote = new Vote([
+            'ip' => ip2long($_SERVER['REMOTE_ADDR']),
+            'place_id' => $this->id,
+            'vote' => $userVote == 'yes' ? true : false
+        ]);
+
+        $vote->vote ? $this->yes++ : $this->no++;
+
+        if ($vote->save()) {
+            $this->save();
+            return true;
+        }
+
+        return false;
     }
 
 

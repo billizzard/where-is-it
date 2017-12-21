@@ -35,7 +35,7 @@ if ($images = $model->images) {
             'inputFileName' => "Image[url][]",
             'errorCallback' => 'widgetUploadErrors',
             'maxFiles' => 8,
-            'downloadButton' => $user->hasAccess(\app\models\User::RULE_DOWNLOAD_IMAGE) ? true : false
+            'downloadButton' => $user->hasAccess(\app\constants\UserConstants::RULE['DOWNLOAD_IMAGE']) ? true : false
         ]
     ]) ?>
     <div class="form-group">

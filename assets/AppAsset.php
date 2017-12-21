@@ -25,6 +25,7 @@ class AppAsset extends AssetBundle
         'css/place.css',
         'css/jquery.fancybox.min.css',
         'css/slider-pro.min.css',
+        'css/contact-page.css',
     ];
     public $js = [
         'js/bootstrap.min.js',

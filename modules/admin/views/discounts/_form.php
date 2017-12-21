@@ -30,7 +30,7 @@ $user = Yii::$app->user->getIdentity();
             'uploadUrl' => '/admin/discounts/upload-image/',
             'inputFileName' => "Image[url][]",
             'errorCallback' => 'widgetUploadErrors',
-            'downloadButton' => $user->hasAccess(\app\models\User::RULE_DOWNLOAD_IMAGE) ? true : false
+            'downloadButton' => $user->hasAccess(\app\constants\UserConstants::RULE['DOWNLOAD_IMAGE']) ? true : false
         ]
     ]) ?>
 
@@ -40,7 +40,7 @@ $user = Yii::$app->user->getIdentity();
 
     <?= $form->field($model, 'type')->dropDownList(\app\constants\DiscountConstants::getTypeMap()) ?>
 
-    <? if ($user && $user->hasAccess(\app\models\User::RULE_OWNER, ['model' => $model])) {?>
+    <? if ($user && $user->hasAccess(\app\constants\UserConstants::RULE['OWNER'], ['model' => $model])) {?>
         <?= $form->field($model, 'status')->dropDownList(\app\constants\AppConstants::getStatusMap()) ?>
     <? } ?>
 

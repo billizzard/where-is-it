@@ -34,7 +34,7 @@ $user = Yii::$app->user->getIdentity();
             <!--<li class="header"><span><span>Menu Yii2</span></span></li>-->
             <li><a href="/admin/places/<?=isset($_SESSION['place_id']) ? '?place_id=' . $_SESSION['place_id'] : ''?>"><i class="glyphicon glyphicon-map-marker"></i>  <span>Места</span></a></li>
             <li><a href="/admin/users/"><i class="glyphicon glyphicon-cog"></i>  <span>Профиль</span></a></li>
-            <? if ($user && $user->hasAccess(\app\models\User::RULE_ADMIN_PANEL)) { ?>
+            <? if ($user && $user->hasAccess(\app\constants\UserConstants::RULE['ADMIN_PANEL'])) { ?>
                 <li><a href="/admin/categories"><i class="glyphicon glyphicon-th-list"></i>  <span>Категории</span></a></li>
             <? } ?>
             <!--<li><a href="/debug"><i class="fa fa-dashboard"></i>  <span>Categories</span></a></li>

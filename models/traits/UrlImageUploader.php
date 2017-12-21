@@ -9,23 +9,6 @@ trait UrlImageUploader
 {
     abstract public function getDir();
 
-//    public function stayOnlyImageByUrl($urls) {
-//        if ($urls) {
-//            if (!is_array($urls)) {
-//                $urls = explode(',', $urls);
-//            }
-//            $images = $this->images;
-//
-//            /** @var Image $image */
-//            foreach ($images as $image) {
-//                if (in_array('/' . $image->url, $urls)) {
-//                    Image::createImageFromTemp($this, '/' . $image->url, $this->getDir(), ImageConstants::TYPE['GALLERY']);
-//                }
-//            }
-//        }
-//        return $this;
-//    }
-
     /**
      * Сохраняет изображение по url и типу
      * @param $urls

@@ -1,5 +1,6 @@
 <?php
 namespace app\modules\admin\components;
+use app\constants\UserConstants;
 use app\models\User;
 
 class AccessRule extends \yii\filters\AccessRule {
@@ -18,20 +19,24 @@ class AccessRule extends \yii\filters\AccessRule {
             if ($role === '?') {
                 return true;
             } elseif ($role === '@') {
+
                 if (!$user->getIsGuest()) {
                     return true;
                 }
+
             } elseif (!$user->getIsGuest() && $role === $user->identity->role) {
-                if ($role === User::ROLE_OWNER) {
+
+                if ($role === UserConstants::ROLE['OWNER']) {
                     if ($this->className) {
                         $model = $this->className::findOne((int)$_GET['id']);
-                        if ($user->getIdentity()->hasAccess(User::RULE_OWNER, ['model' => $model])) {
+                        if ($user->getIdentity()->hasAccess(UserConstants::RULE['OWNER'], ['model' => $model])) {
                             return true;
                         }
                     }
                 } else {
                     return true;
                 }
+
             }
         }
 

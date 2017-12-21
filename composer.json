@@ -22,7 +22,8 @@
         "yiisoft/yii2-imagine": "^2.1",
         "kartik-v/yii2-widget-timepicker": "*",
         "kartik-v/yii2-widget-select2": "@dev",
-        "voskobovich/yii2-linker-behavior": "^4.0"
+        "voskobovich/yii2-linker-behavior": "^4.0",
+        "mongosoft/yii2-upload-behavior": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

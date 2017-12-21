@@ -37,6 +37,7 @@ class ImageTempHandler extends FileHandler
 
     /**
      * Возвращает актуальную дитекторию для хранения временных файлов
+     * так как они затираются в зависимости от времени
      * @return string
      */
     private static function getCurrPathTempFolder()

@@ -35,7 +35,7 @@ class ImageConstants
             self::TYPE['MAIN_PLACE'] => 'Главное изображение',
             self::TYPE['GALLERY'] => 'Изображение галлереи',
             self::TYPE['TEMP'] => 'Временное изображение',
-            self::TYPE['MAIN_DISCOUNT'] => 'Главное изображение',
+            self::TYPE['MAIN_DISCOUNT'] => 'Главное изображение скидок',
         ];
     }
 

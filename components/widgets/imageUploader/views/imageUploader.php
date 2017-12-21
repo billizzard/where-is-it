@@ -24,15 +24,18 @@
             }
         }?>
     </div>
-    <input type="file" name="<?=$inputFileName?>" data-uploadUrl="<?=$uploadUrl?>"
+    <input type="file" name="<?=$inputFileName?>"
+           data-uploadUrl="<?=$uploadUrl?>"
            data-maxFiles="<?=$maxFiles?>"
            data-errorCallback="<?=$errorCallback?>"
            data-deleteUrl="<?=$deleteUrl?>"
            data-deleteButton="<?=$deleteButton?>"
-    <?= $maxFiles > 1 ? 'multiple' : ''?>>
+            <?= $maxFiles > 1 ? 'multiple' : ''?>
+    >
 
     <input type="hidden" class="js-image-url" value="" name="<?=$inputUrlName?>">
     <input type="hidden" class="js-image-old-url" value="" name="old_<?=$inputUrlName?>">
+
     <? if ($uploadButton) { ?>
     <button class="add js-add">Добавить фото</button>
     <? } ?>

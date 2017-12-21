@@ -77,7 +77,7 @@ foreach ($categories as $category) {
             'inputFileName' => "Image[url][]",
             'errorCallback' => 'widgetUploadErrors',
             'maxFiles' => 1,
-            'downloadButton' => $user->hasAccess(\app\models\User::RULE_DOWNLOAD_IMAGE) ? true : false
+            'downloadButton' => $user->hasAccess(\app\constants\UserConstants::RULE['DOWNLOAD_IMAGE']) ? true : false
         ]
     ]) ?>
 
@@ -99,7 +99,7 @@ foreach ($categories as $category) {
         <?= $form->field($model, 'type')->dropDownList(\app\constants\PlaceConstants::getTypeMap()) ?>
     <? } ?>
 
-    <? if ($user && $user->hasAccess(\app\models\User::RULE_OWNER, ['model' => $model])) {?>
+    <? if ($user && $user->hasAccess(\app\constants\UserConstants::RULE['OWNER'], ['model' => $model])) {?>
         <?= $form->field($model, 'status')->dropDownList(\app\constants\AppConstants::getStatusMap()) ?>
     <? } ?>
 

@@ -27,7 +27,7 @@ trait ImageUploaderController
     }
 
     /**
-     * Указывает какие выбирать из массива для возвращения
+     * Указывает какие выбирать из массива thumb для возвращения во view
      * @return string
      */
     protected function getPrefix() {

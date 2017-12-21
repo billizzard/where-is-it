@@ -34,7 +34,7 @@ class UsersController extends BaseController
             [
                 'actions' => ['delete'],
                 'allow' => true,
-                'roles' => [User::ROLE_ADMIN],
+                'roles' => [UserConstants::ROLE['ADMIN']],
             ],
             [
                 'actions' => ['index'],
@@ -44,7 +44,7 @@ class UsersController extends BaseController
             [
                 'actions' => ['create'],
                 'allow' => true,
-                'roles' => [User::ROLE_ADMIN],
+                'roles' => [UserConstants::ROLE['ADMIN']],
             ],
             [
                 'actions' => ['update'],
@@ -59,7 +59,7 @@ class UsersController extends BaseController
             [
                 'actions' => ['soft-delete'],
                 'allow' => true,
-                'roles' => [User::ROLE_ADMIN],
+                'roles' => [UserConstants::ROLE['ADMIN']],
                 'className' => $this->getClassName()
             ]
         ];
@@ -175,39 +175,5 @@ class UsersController extends BaseController
             'countPages' => $countPages,
         ]);
     }
-//
-//    /**
-//     * Deletes an existing User model.
-//     * If deletion is successful, the browser will be redirected to the 'index' page.
-//     * @param integer $id
-//     * @return mixed
-//     */
-//    public function actionDelete($id)
-//    {
-//
-//        $connection = Yii::$app->getDb();
-//
-//        // Лайки
-//        $connection->createCommand()->delete('user_like', ['like_from_user_id' => $id])->execute();
-//
-//        // Чаты. Удаляем те, где он создатель
-//        $connection->createCommand()->delete('chats', ['creator_id' => $id])->execute();
-//
-//
-//        $connection->createCommand()->delete('chat_users', ['user_id' => $id])->execute();
-//
-//
-//
-//
-//        $this->findModel($id)->delete();
-//
-//
-//        //$connection->createCommand()->delete('profile', ['creator_id' => $id])->execute();
-//
-//
-//        return $this->redirect(['index']);
-//    }
-
-
 
 }

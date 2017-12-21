@@ -2,13 +2,9 @@
 
 namespace app\models;
 
-use app\components\file\FileHelper;
-use app\components\file\ImagePlaceHandler;
 use app\components\SiteException;
 use app\constants\AppConstants;
-use app\constants\ImageConstants;
-use yii\behaviors\TimestampBehavior;
-
+use app\constants\UserConstants;
 
 
 class BaseModel extends \yii\db\ActiveRecord
@@ -35,33 +31,32 @@ class BaseModel extends \yii\db\ActiveRecord
         return false;
     }
 
-//    public function cloneParentImages() {
-//        if ($this->hasAttribute('parent_id')) {
-//            $parent = $this::className()::findOne($this->parent_id);
-//            if ($parent) {
-//                foreach ($parent->images as $image) {
-//                    Image::createImageFromTemp($this, '/'.$image->url, $this->getDir(), $image->type);
-//                }
-//            }
-//        }
-//    }
-
+    /**
+     * Возвращает дубликат модели
+     * @return BaseModel
+     */
     public function getDuplicate() {
         /** @var User $user */
         $user = \Yii::$app->user->getIdentity();
-        return $user && $user->hasAccess(User::RULE_NO_DUPLICATE) ? $this : $this->createDuplicate();
+        return $user && $user->hasAccess(UserConstants::RULE['NO_DUPLICATE']) ? $this : $this->createDuplicate();
     }
 
+    /**
+     * Создает дубликат модели
+     * @return BaseModel
+     */
     public function createDuplicate() {
         $class = $this::className();
         /** @var BaseModel $clone */
         $clone = new $class();
         $clone->attributes = $this->attributes;
+
         if ($clone->hasAttribute('parent_id')) {
             if (!$clone->parent_id) {
                 $clone->parent_id = $this->id;
             }
         }
+
         if ($clone->hasAttribute('status')) {
             $clone->status = AppConstants::STATUS['NO_MODERATE'];
         }
@@ -75,16 +70,20 @@ class BaseModel extends \yii\db\ActiveRecord
     public function isUpdatable() {
         /** @var User $user */
         $user = \Yii::$app->user->getIdentity();
-        if ($user->hasAccess(User::RULE_OWNER, ['model' => $this])) {
+        if ($user->hasAccess(UserConstants::RULE['OWNER'], ['model' => $this])) {
             return true;
         }
         return false;
     }
 
+    /**
+     * Можно ли удалять данную модель, используется для отображения значка мягкого удаления
+     * @return bool
+     */
     public function isSoftDeletable() {
         /** @var User $user */
         $user = \Yii::$app->user->getIdentity();
-        if ($user->hasAccess(User::RULE_OWNER, ['model' => $this])) {
+        if ($user->hasAccess(UserConstants::RULE['OWNER'], ['model' => $this])) {
             return true;
         }
         return false;
@@ -93,7 +92,7 @@ class BaseModel extends \yii\db\ActiveRecord
     public function isDeletable() {
         /** @var User $user */
         $user = \Yii::$app->user->getIdentity();
-        if ($user->hasAccess(User::RULE_DELETE_MODEL_FULL)) {
+        if ($user->hasAccess(UserConstants::RULE['DELETE_MODEL_FULL'])) {
             return true;
         }
         return false;
