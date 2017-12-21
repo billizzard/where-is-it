@@ -3,13 +3,13 @@
 namespace app\models;
 
 use app\constants\ImageConstants;
+use app\models\traits\UrlImageUploader;
 use Yii;
 
 /**
  * This is the model class for table "discount".
  *
  * @property integer $id
- * @property integer $image_id
  * @property integer $place_id
  * @property string $title
  * @property string $message
@@ -17,10 +17,14 @@ use Yii;
  * @property integer $status
  * @property string $start_date
  * @property string $end_date
+ * @property boolean is_deleted
  * @property integer $created_at
+ * @property integer $parent_id
  */
-class Discount extends \yii\db\ActiveRecord
+class Discount extends BaseSubPlacesModel
 {
+    use UrlImageUploader;
+
     /**
      * @inheritdoc
      */
@@ -35,8 +39,9 @@ class Discount extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['image_id', 'place_id', 'type', 'status', 'created_at'], 'integer'],
+            [['place_id', 'type', 'status', 'created_at', 'parent_id'], 'integer'],
             [['start_date', 'end_date'], 'safe'],
+            [['is_deleted'], 'boolean'],
             [['title'], 'string', 'max' => 150],
             [['message'], 'string', 'max' => 1000],
         ];
@@ -49,7 +54,6 @@ class Discount extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'image_id' => 'Изображение',
             'place_id' => 'Место',
             'title' => 'Заголовок',
             'message' => 'Сообщение',
@@ -58,16 +62,19 @@ class Discount extends \yii\db\ActiveRecord
             'start_date' => 'Дата начала',
             'end_date' => 'Дата окончания',
             'created_at' => 'Дата создания',
+            'is_deleted' => 'Удалено ли',
+            'parent_id' => 'Родитель',
         ];
     }
 
-    public static function findByPlaceId($place_id)
-    {
-        return self::find()->andWhere(['place_id' => (int)$place_id]);
-    }
-
-    public static function findByPlaceAndStatus($place_id, $status) {
-        return self::findByPlaceId($place_id)->andWhere(['status' => (int)$status]);
+    public function attributeForParent() {
+        return [
+            'title',
+            'message',
+            'type',
+            'start_date',
+            'end_date',
+        ];
     }
 
     public function getMainImage()
@@ -75,11 +82,4 @@ class Discount extends \yii\db\ActiveRecord
         return $this->hasOne(Image::className(), ['place_id' => 'id'])->andWhere(['image.type' => ImageConstants::TYPE['MAIN_DISCOUNT']]);
     }
 
-    public function getPlace() {
-        return $this->hasOne(Place::className(), ['id' =>'place_id']);
-    }
-
-    public static function getNoCheckModel() {
-        return null;
-    }
 }

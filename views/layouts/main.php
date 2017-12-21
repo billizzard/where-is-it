@@ -4,12 +4,10 @@
 /* @var $content string */
 
 use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 AppAsset::register($this);
 $user = Yii::$app->user->getIdentity();
+$menu = \app\models\Category::getCategoryStructure();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -42,16 +40,9 @@ $user = Yii::$app->user->getIdentity();
 
 
 
-
 <input type="checkbox" id="nav-toggle" hidden>
 <nav class="nav-menu">
 
-    <? $menu = \app\models\Category::getCategoryStructure(); ?>
-
-    <!--
-Здесь размещаете любую разметку,
-если это меню, то скорее всего неупорядоченный список <ul>
--->
     <div class="nav-menu__close">X</div>
     <h2 class="logo">
         <a href="/">where-is-it</a>
@@ -115,30 +106,7 @@ $user = Yii::$app->user->getIdentity();
         </div>
     </div>
 
-
-    <nav id="w0" class="navbar-inverse navbar-fixed-top navbar" role="navigation">
-        <div class="container">
-<!--            <div class="navbar-header" style="float:left">
-                <a class="navbar-brand" href="/">My Company</a>
-            </div>-->
-            <div >
-                <ul id="w1" class="navbar-nav navbar-left nav" >
-                    <li style="float:left"><a href="/" class="glyphicon glyphicon-home" style="font-size:22px;"></a></li>
-                    <li style="float:left"><a class="menu-butt nav-toggle1"><span></span></a></li>
-                    <li style="float:left"><a href="/add/" style="font-size:38px;">+</a></li>
-                    <? if ($user) { ?>
-                        <li style="float:left"><a href="/logout/" class="glyphicon glyphicon-log-out" style="font-size:22px;"></a></li>
-                    <? } else {?>
-                        <li style="float:left"><a href="/login/" class="glyphicon glyphicon-log-in" style="font-size:22px;"></a></li>
-                    <? } ?>
-                    <li style="float:left"><a href="#" onclick="return false;" data-modal="accept-city" class="modal-trigger glyphicon glyphicon-map-marker" style="font-size:22px;"></a></li>
-                    <!--<li style="float:left"><a href="/site/login">Login</a></li>-->
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-
+    <? include_once(__DIR__ . '/../parts/top-menu.php'); ?>
 
     <?= $content ?>
 

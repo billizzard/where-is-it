@@ -6,7 +6,7 @@
 /* @var $exception Exception */
 
 ?>
-<div class="site-error">
+<div class="site-error" style="margin-top:60px;">
 
     <h1>404</h1>
 

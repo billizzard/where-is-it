@@ -120,51 +120,44 @@ if ($model->mainImage) {
         </div>
     </div>
 
-
-    <nav id="w0" class="navbar-inverse navbar-fixed-top navbar" role="navigation">
-        <div class="container">
-<!--            <div class="navbar-header" style="float:left">
-                <a class="navbar-brand" href="/">My Company</a>
-            </div>-->
-            <div >
-                <ul id="w1" class="navbar-nav navbar-left nav" >
-                    <li style="float:left"><a href="/" class="glyphicon glyphicon-home" style="font-size:22px;"></a></li>
-                    <li style="float:left"><a class="menu-butt nav-toggle1"><span></span></a></li>
-                    <li style="float:left"><a href="/add/" style="font-size:38px;">+</a></li>
-                    <? if ($user) { ?>
-                        <li style="float:left"><a href="/logout/" class="glyphicon glyphicon-log-out" style="font-size:22px;"></a></li>
-                    <? } else {?>
-                        <li style="float:left"><a href="/login/" class="glyphicon glyphicon-log-in" style="font-size:22px;"></a></li>
-                    <? } ?>
-                    <li style="float:left"><a href="#" onclick="return false;" data-modal="accept-city" class="modal-trigger glyphicon glyphicon-map-marker" style="font-size:22px;"></a></li>
-                    <!--<li style="float:left"><a href="/site/login">Login</a></li>-->
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    <? include_once(__DIR__ . '/../parts/top-menu.php'); ?>
 
 
     <div class="place-wrapper">
 
         <div class="title">Костел св. Барбары</div>
-        <div class="image-wrapper" style="text-align:center">
-            <div class="main-image" style="background: url(<?='/' . $url['original']?>) no-repeat;">
+        <? if (isset($url)) { ?>
+
+
+        <div class="image-wrapper" style="text-align:center; display:flex;">
+            <nav class="place-main-menu">
+                <ul id="p1">
+                    <li><a href="/place/<?=$model->id?>/"><span class="glyphicon glyphicon-home"></span><span class="item-text">Главная</span></a></li>
+                    <? if ($model->gallery) { ?>
+                        <li><a href="/place/<?=$model->id?>/gallery/"><span class="glyphicon glyphicon-camera"></span><span class="item-text">Галлерея</span></a></li>
+                    <? } ?>
+                    <? if ($model->schedule) { ?>
+                        <li><a href="/place/<?=$model->id?>/schedule/"> <span class="glyphicon glyphicon-time"></span><span class="item-text">Время работы</span></a></li>
+                    <? } ?>
+                    <? if ($model->contact) { ?>
+                        <li><a href="/place/<?=$model->id?>/contacts/"> <span class="glyphicon glyphicon-phone-alt"></span><span class="item-text">Контакты</span></a></li>
+                    <? } ?>
+                    <? if ($model->discounts) { ?>
+                        <li><a href="/place/<?=$model->id?>/discounts/"> <span class="glyphicon glyphicon-c_percent">%</span><span class="item-text">Акции, скидки</span></a></li>
+                    <? } ?>
+                    <? if ($model->reviews) { ?>
+                        <li><a href="/place/<?=$model->id?>/reviews/"> <span style="font-size:26px;" class="glyphicon glyphicon-star"></span><span class="item-text">Отзывы</span></a></li>
+                    <? } ?>
+
+                    <!--<li><a href="#" onclick="return false;" data-modal="accept-city" class="modal-trigger glyphicon glyphicon-map-marker"></a></li>-->
+                    <!--<li style="float:left"><a href="/site/login">Login</a></li>-->
+                </ul>
+            </nav>
+            <div class="main-image" >
+                <img src="<?='/' . $url['original']?>">
             </div>
         </div>
-
-        <nav class="menu">
-
-            <ul id="w1" class="navbar-nav navbar-left nav">
-                <li style="float:left"><a href="/place/<?=$model->id?>/" class="glyphicon glyphicon-home" style="font-size:22px;"></a></li>
-                <? if ($model->gallery) { ?>
-                    <li style="float:left"><a href="/place/<?=$model->id?>/gallery/" class="glyphicon glyphicon-camera" style="font-size:22px;"></a></li>
-                <? } ?>
-                <li style="float:left"><a href="#" onclick="return false;" data-modal="accept-city" class="modal-trigger glyphicon glyphicon-map-marker" style="font-size:22px;"></a></li>
-                <!--<li style="float:left"><a href="/site/login">Login</a></li>-->
-            </ul>
-
-        </nav>
+        <? } ?>
 
         <?= $content ?>
 

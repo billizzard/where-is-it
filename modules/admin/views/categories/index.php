@@ -25,8 +25,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'parent_id',
             'sort',
             [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{update} {delete}',
+                'class' => 'app\modules\admin\components\actions\ActionColumn',
+                'contentOptions' => ['class' => 'add-info'],
+                'template' => '{update_all} {delete} {soft-delete_all}',
             ]
         ],
     ]); ?>

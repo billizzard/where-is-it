@@ -9,15 +9,13 @@ class AdminAssets extends AssetBundle
         'js/js.js',
         'js/datetimepicker.js',
         'js/adminPlaceMap.js',
-        'js/admin.js'
-        // more plugin Js here
+        'js/admin.js',
+        'js/avatars.js'
     ];
     public $css = [
         '/css/site.css',
         '/css/admin/admin.css',
         '/css/datepicker.css'
-
-        // more plugin CSS here
     ];
     public $depends = [
         //'dmstr\web\AdminLteAsset',

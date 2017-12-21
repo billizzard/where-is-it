@@ -8,23 +8,19 @@ use yii\web\Response;
 
 class ErrorHandler extends \yii\web\ErrorHandler
 {
-
     /**
      * @inheridoc
      */
 
     protected function renderException($exception)
     {
-        //if (YII_ENV !== 'prod') {
-        if (true) {
+        if (YII_ENV === 'prod') {
             parent::renderException($exception);
         } else {
             if ($exception->getCode() == 403) {
                 Helper::setMessage('Доступ запрещен');
                 header('Location: /auth/');
                 die();
-            } else if ($exception->getCode() == 400) {
-                $this->getAnswer($exception);
             } else if ($exception->getCode() == 404) {
                 header('Location: /404');
                 die();
@@ -37,7 +33,6 @@ class ErrorHandler extends \yii\web\ErrorHandler
 
     private function getAnswer($exception)
     {
-
         if (\Yii::$app->request->isAjax) {
             $response = \Yii::$app->response;
             $response->format = Response::FORMAT_JSON;
@@ -45,9 +40,10 @@ class ErrorHandler extends \yii\web\ErrorHandler
             $response->statusCode = $exception->getCode() ? $exception->getCode() : 400;
             $response->send();
         } else {
-            if ($exception->getCode()) {
+            if ($exception->statusCode) {
+                $code = \Yii::$app->request->referrer ? \Yii::$app->request->referrer : '/404';
                 Helper::setMessage($exception->getMessage());
-                \Yii::$app->response->redirect(\Yii::$app->request->referrer)->send();
+                \Yii::$app->response->redirect($code)->send();
             }
 
         }

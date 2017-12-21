@@ -18,7 +18,7 @@ class DiscountSearch extends Discount
     public function rules()
     {
         return [
-            [['image_id', 'place_id', 'type', 'status', 'created_at'], 'integer'],
+            [['place_id', 'type', 'status', 'created_at'], 'integer'],
             [['start_date', 'end_date'], 'safe'],
             [['title'], 'string', 'max' => 150],
             [['message'], 'string', 'max' => 1000],
@@ -42,6 +42,8 @@ class DiscountSearch extends Discount
         $dataProvider->setSort([
             'defaultOrder' => ['id' => SORT_ASC]
         ]);
+
+        $query->andWhere(['parent_id' => 0]);
 
         $this->load($params);
 

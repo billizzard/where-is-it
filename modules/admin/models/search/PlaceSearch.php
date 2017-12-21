@@ -19,7 +19,7 @@ class PlaceSearch extends Place
     public function rules()
     {
         return [
-            [['lat', 'lon', 'category_id', 'status', 'id'], 'number'],
+            [['lat', 'lon', 'status', 'id'], 'number'],
             [['name', 'address'], 'string', 'max' => 255],
             [['description'], 'string'],
         ];
@@ -50,10 +50,12 @@ class PlaceSearch extends Place
             return $dataProvider;
         }
 
+        $query->andWhere(['parent_id' => 0]);
+
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'category_id' => $this->category_id,
+            //'category_id' => $this->category_id,
             'status' => $this->status,
         ]);
 

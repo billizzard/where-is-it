@@ -2,38 +2,34 @@
 
 namespace app\modules\admin\controllers;
 
-use app\constants\AppConstants;
-use app\models\Category;
-use app\models\City;
+use app\components\Helper;
+use app\components\SiteException;
+use app\constants\UserConstants;
 use app\models\Schedule;
-use app\modules\admin\components\AccessRule;
-use app\modules\admin\components\DeleteAction;
-use app\modules\admin\models\search\CategorySearch;
-use app\modules\admin\models\search\CitySearch;
-use Yii;
 use app\models\User;
-use app\modules\admin\models\search\UserSearch;
-use yii\filters\AccessControl;
-use yii\web\Controller;
-use yii\web\ForbiddenHttpException;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use app\modules\admin\components\actions\DeleteAction;
+use app\modules\admin\components\actions\SoftDeleteAction;
+use app\modules\admin\models\search\ScheduleSearch;
+use Yii;
 
 /**
  * UsersController implements the CRUD actions for User model.
  */
 class SchedulesController extends BaseController
 {
+    protected function getClassName()
+    {
+        return Schedule::className();
+    }
 
     public function behaviors()
     {
         $rules = parent::behaviors();
-        $rules['access']['rules'] = [
-            [
-                'actions' => ['index'],
+        $rules['access']['rules'][] = [
+                'actions' => ['soft-delete'],
                 'allow' => true,
-                'roles' => ['?'],
-            ],
+                'roles' => [UserConstants::ROLE['ADMIN']],
+                'className' => Schedule::className()
         ];
 
         return $rules;
@@ -45,26 +41,56 @@ class SchedulesController extends BaseController
      */
     public function actionIndex($place_id)
     {
-        $model = Schedule::findByPlaceAndStatus($place_id, AppConstants::STATUS['MODERATE'])->one();
-        $noCheckModel = Schedule::findByPlaceAndStatus($place_id, AppConstants::STATUS['NO_MODERATE'])->one();
-        
-        if (!$model) {
-            $model = new Schedule();
-        }
+        $searchModel = new ScheduleSearch();
+        $params = Yii::$app->request->queryParams;
+        $params['ScheduleSearch']['place_id'] = $place_id;
 
-        if (Yii::$app->request->post() && !$noCheckModel) {
-            if ($id = $model->id) {
-                $model = new Schedule();
-                $model->parent_id = $id;
-            }
-            $model->fromPost(Yii::$app->request->post());
-            $model->save();
-            $noCheckModel = $model;
-        }
+        $dataProvider = $searchModel->search($params);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'isCanAdd' => Schedule::isCanAddMore($place_id)
+        ]);
+    }
+
+    public function actionCreate($place_id)
+    {
+        $this->isCanAddMore($place_id);
+        $model = new Schedule();
+        $model->place_id = $place_id;
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->fromPost(Yii::$app->request->post());
+            $model->save();
+            return $this->redirect(['index', 'place_id' => $model->place_id]);
+        }
+
+        return $this->render('create', [
             'model' => $model,
-            'noCheckModel' => $noCheckModel
+        ]);
+    }
+
+    public function actionUpdate($id)
+    {
+        $model = Schedule::findOneModel($id);
+        $this->isCanAddMore($model->place_id);
+
+        if ($model->load(Yii::$app->request->post())) {
+            $clone = $model->getDuplicate();
+            $clone->fromPost(Yii::$app->request->post());
+            $clone->save();
+            if (Yii::$app->request->post('copy')) {
+                return $this->redirect(['copy-to-parent', 'id' => $id]);
+            }
+
+            Helper::setMessage('Изменения сохранены, ожидают проверки', Helper::TYPE_MESSAGE_SUCCESS);
+
+            return $this->redirect(['index', 'place_id' => $clone->place_id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
         ]);
     }
 

@@ -2,6 +2,8 @@
 
 namespace app\modules\admin\controllers;
 
+use app\components\SiteException;
+use app\constants\UserConstants;
 use app\modules\admin\components\AccessRule;
 use app\modules\admin\components\DeleteAction;
 use Yii;
@@ -12,21 +14,57 @@ use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * UsersController implements the CRUD actions for User model.
  */
 class UsersController extends BaseController
 {
-
-    public function actions()
+    protected function getClassName()
     {
-        return [
-            'delete' => [
-                'class' => DeleteAction::className(),
-                'model_class' => User::className(),
+        return User::className();
+    }
+
+    public function behaviors()
+    {
+        $rules = parent::behaviors();
+
+        $rules['access']['rules'] = [
+            [
+                'actions' => ['delete'],
+                'allow' => true,
+                'roles' => [UserConstants::ROLE['ADMIN']],
             ],
+            [
+                'actions' => ['index'],
+                'allow' => true,
+                'roles' => ['@'],
+            ],
+            [
+                'actions' => ['create'],
+                'allow' => true,
+                'roles' => [UserConstants::ROLE['ADMIN']],
+            ],
+            [
+                'actions' => ['update'],
+                'allow' => true,
+                'roles' => ['@'],
+            ],
+            [
+                'actions' => ['avatars'],
+                'allow' => true,
+                'roles' => ['@'],
+            ],
+            [
+                'actions' => ['soft-delete'],
+                'allow' => true,
+                'roles' => [UserConstants::ROLE['ADMIN']],
+                'className' => $this->getClassName()
+            ]
         ];
+
+        return $rules;
     }
 
     /**
@@ -35,26 +73,18 @@ class UsersController extends BaseController
      */
     public function actionIndex()
     {
+        /** @var User $user */
+        $user = Yii::$app->user->getIdentity();
         $searchModel = new UserSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $params = Yii::$app->request->queryParams;
+        if (!$user->isAdmin()) {
+            $params['UserSearch']['id'] = $user->getId();
+        }
+        $dataProvider = $searchModel->search($params);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Displays a single User model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        $user = User::findOne($id);
-        if (!$user) return Yii::$app->response->redirect('/admin/users/index');
-        return $this->render('view', [
-            'model' => $user,
         ]);
     }
 
@@ -68,7 +98,7 @@ class UsersController extends BaseController
         $model = new User();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -87,46 +117,63 @@ class UsersController extends BaseController
         $model = User::findOne($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->new_password) {
+                $model->setScenario(UserConstants::SCENARIO['CHANGE_PASSWORD']);
+                if ($model->validate()) {
+                    $model->setScenario(User::SCENARIO_DEFAULT);
+                    $model->setPassword($model->new_password);
+                    $model->save();
+                    return $this->redirect(['index']);
+                }
+            } else {
+                return $this->redirect(['index']);
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
         ]);
     }
-//
-//    /**
-//     * Deletes an existing User model.
-//     * If deletion is successful, the browser will be redirected to the 'index' page.
-//     * @param integer $id
-//     * @return mixed
-//     */
-//    public function actionDelete($id)
-//    {
-//
-//        $connection = Yii::$app->getDb();
-//
-//        // Лайки
-//        $connection->createCommand()->delete('user_like', ['like_from_user_id' => $id])->execute();
-//
-//        // Чаты. Удаляем те, где он создатель
-//        $connection->createCommand()->delete('chats', ['creator_id' => $id])->execute();
-//
-//
-//        $connection->createCommand()->delete('chat_users', ['user_id' => $id])->execute();
-//
-//
-//
-//
-//        $this->findModel($id)->delete();
-//
-//
-//        //$connection->createCommand()->delete('profile', ['creator_id' => $id])->execute();
-//
-//
-//        return $this->redirect(['index']);
-//    }
 
+    public function actionAvatars(int $user_id, int $page = 1)
+    {
+        if (($post = Yii::$app->request->post()) && Yii::$app->request->post('src')) {
+            /** @var User $user */
+            $user = Yii::$app->user->getIdentity();
+            if ($user->isAdmin()) {
+                $user = User::findOneModel($user_id);
+            }
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if (file_exists(Yii::getAlias('@webroot') . $post['src'])) {
+                $info = pathinfo($post['src']);
+                $user->setAvatar($info['basename']);
+                $user->save();
+                return true;
+            }
+            return false;
+        }
+        $perPage = 30;
+        $finish = $page * $perPage + 2;
+        $start = $finish - $perPage;
+        $files = scandir(Yii::getAlias('@webroot' . '/img/avatars/mult/'));
+        $avatars = [];
+        $countPages = ceil(count($files)/$perPage);
 
+        if ($start > 1 && isset($files[$start])) {
+            for ($i = $start; $i < $finish; $i++) {
+                if (isset($files[$i])) {
+                    $avatars[] = $files[$i];
+                }
+            }
+        } else {
+            throw new SiteException('Страница не найдена', 404);
+        }
+
+        
+        return $this->render('avatars', [
+            'avatars' => $avatars,
+            'countPages' => $countPages,
+        ]);
+    }
 
 }

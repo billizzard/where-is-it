@@ -2,7 +2,6 @@
 
 namespace app\components\file;
 
-use Imagine\Image\Box;
 
 class FileHelper
 {
@@ -23,11 +22,8 @@ class FileHelper
      */
     protected static function getNameFromDir($dir)
     {
-        $pos = strripos($dir, '/');
-        if ($pos !== false) {
-            $dir = substr($dir, $pos + 1);
-        }
-        return $dir;
+        $info = pathinfo($dir);
+        return $info['basename'];
     }
 
     /**
@@ -43,7 +39,9 @@ class FileHelper
                 }
             }
         }
-        rmdir($dir);
+        if (is_dir($dir)) {
+            rmdir($dir);
+        }
     }
 
     /**
@@ -62,24 +60,31 @@ class FileHelper
     }
 
     /**
-     * Перемещает файл в директорию
+     * Перемещает или копирует файл в директорию
      * @param $fromUrl
      * @param $toDir
+     * @param bool $copy
      * @return bool|string
      */
-    public static function moveFileToDir($fromUrl, $toDir) {
+    public static function moveFileToDir($fromUrl, $toDir, $copy = false) {
         if (substr($fromUrl, 0, 1) === '/') {
             $fromUrl = substr($fromUrl, 1);
         }
-        if ($fromUrl && file_exists($fromUrl)) {
-
-            $newUrl = $toDir . '/' . self::getNameFromDir($fromUrl);
+        if ($fromUrl && file_exists($fromUrl) && $toDir && file_exists($toDir)) {
+            $info = pathinfo($fromUrl);
+            $newUrl = $toDir . '/' . uniqid() . '.' . $info['extension'];
 
             if (file_exists($newUrl)) {
                 $newUrl = self::addPrefix($newUrl,'9');
             }
-            if (rename($fromUrl, $newUrl)) {
-                return $newUrl;
+            if ($copy) {
+                if (copy($fromUrl, $newUrl)) {
+                    return $newUrl;
+                }
+            } else {
+                if (rename($fromUrl, $newUrl)) {
+                    return $newUrl;
+                }
             }
         }
         return false;

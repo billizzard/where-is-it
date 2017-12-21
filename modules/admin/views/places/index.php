@@ -10,66 +10,21 @@ $categoriesMap = \app\models\Category::getCategoriesMap();
 $statusesMap = \app\constants\AppConstants::getStatusMap();
 /** @var \app\models\User $user */
 $user = Yii::$app->user->getIdentity();
+$this->title = 'Места';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<? if ($user && $user->hasAccess(\app\models\User::RULE_ADMIN_PANEL)) { ?>
-    <?
-    $this->title = 'Места';
-    $this->params['breadcrumbs'][] = $this->title;
-    ?>
-<div class="user-index">
 
-    <p>
-        <?= Html::a('Создать место', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            [
-                'attribute' => 'id',
-                'filter' => false,
-            ],
-            'name',
-            [
-                'attribute' => 'category_id',
-                'filter'=> $categoriesMap,
-                'value' => function($model) use ($categoriesMap) {
-                    return isset($categoriesMap[$model->category_id]) ? $categoriesMap[$model->category_id] : false;
-                }
-            ],
-            [
-                'label' => 'Добавление информации',
-                'contentOptions' => ['class' => 'add-info'],
-                'format' => 'raw',
-                'filter' => "серый - не заполено <br> черный - заполнено",
-                'value' => function ($model) {
-                    return '<a href="/admin/schedules/?place_id=' . $model->id . '" class="glyphicon glyphicon-time"></a> 
-<a href="/admin/gallery/?place_id=' . $model->id . '" class="glyphicon glyphicon-camera"></a>
-<div class="glyphicon glyphicon-time"></div>';
-                }
-            ],
-            [
-                'attribute' => 'status',
-                'filter'=> $statusesMap,
-                'value' => function($model) use ($statusesMap) {
-                    return isset($statusesMap[$model->status]) ? $statusesMap[$model->status] : false;
-                }
-            ],
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{update} {delete}',
-            ]
-        ],
-    ]); ?>
-</div>
-<? } else { ?>
 
     <?
     $this->title = 'Место';
     ?>
-    <div class="user-index">
+    <div class="place-index">
+        <? if ($user && $user->isAdmin()) { ?>
+        <p>
+            <?= Html::a('Создать место', ['create'], ['class' => 'btn btn-success']) ?>
+        </p>
+        <? } ?>
 
         <p>
             Тут вы можете заполнить информацию о месте более подробно.
@@ -96,32 +51,36 @@ $user = Yii::$app->user->getIdentity();
                     }
                 ],
                 [
-                    'attribute' => 'category_id',
-                    'value' => function($model) use ($categoriesMap) {
-                        return isset($categoriesMap[$model->category_id]) ? $categoriesMap[$model->category_id] : false;
-                    }
-                ],
-                [
                     'label' => 'Добавление информации',
                     'contentOptions' => ['class' => 'add-info'],
                     'format' => 'raw',
                     'value' => function ($model) {
-                        return '<a href="/admin/schedules/?place_id=' . $model->id . '" class="glyphicon icon glyphicon-time"></a> - заполните время работы <br> 
-<a href="/admin/gallery/?place_id=' . $model->id . '" class="glyphicon icon glyphicon-camera"></a> - заполните галлерею  <br>
+                        return '<a href="/admin/schedules/?place_id=' . $model->id . '" class="glyphicon icon glyphicon-time"></a> - время работы <br> 
+<a href="/admin/gallery/?place_id=' . $model->id . '" class="glyphicon icon glyphicon-camera"></a> - галлерея  <br>
 <a href="/admin/places/update/?id=' . $model->id . '" class="glyphicon icon glyphicon-pencil"></a> - редактровать объект  <br>
 <a href="/admin/discounts/?place_id=' . $model->id . '" class="glyphicon icon glyphicon-c_percent">%</a> - акции и скидки <br> 
 <a href="/admin/contacts/?place_id=' . $model->id . '" class="glyphicon icon glyphicon-phone-alt"></a> - контакты <br>  
 ';
                     }
                 ],
+//                [
+//                    'attribute' => 'category_id',
+//                    'value' => function($model) use ($categoriesMap) {
+//                        return isset($categoriesMap[$model->category_id]) ? $categoriesMap[$model->category_id] : false;
+//                    }
+//                ],
                 [
                     'attribute' => 'status',
                     'value' => function($model) use ($statusesMap) {
                         return isset($statusesMap[$model->status]) ? $statusesMap[$model->status] : false;
                     }
                 ],
+                [
+                    'class' => 'app\modules\admin\components\actions\ActionColumn',
+                    'contentOptions' => ['class' => 'add-info'],
+                    'template' => '{soft-delete_all} {delete}',
+                ]
             ],
         ]); ?>
     </div>
 
-<? } ?>

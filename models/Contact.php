@@ -2,7 +2,9 @@
 
 namespace app\models;
 
+use app\models\traits\UrlImageUploader;
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "contact".
@@ -14,9 +16,11 @@ use Yii;
  * @property integer $created_at
  * @property integer $place_id
  * @property integer $status
+ * @property boolean is_deleted
  */
-class Contact extends \yii\db\ActiveRecord
+class Contact extends BaseSubPlacesModel
 {
+    use UrlImageUploader;
     /**
      * @inheritdoc
      */
@@ -32,6 +36,7 @@ class Contact extends \yii\db\ActiveRecord
     {
         return [
             [['phone', 'email'], 'string'],
+            [['is_deleted'], 'boolean'],
             [['parent_id', 'created_at', 'place_id', 'status'], 'integer'],
         ];
     }
@@ -49,6 +54,24 @@ class Contact extends \yii\db\ActiveRecord
             'created_at' => 'Дата создания',
             'place_id' => 'Место',
             'status' => 'Статус',
+            'is_deleted' => 'Удалено ли',
+        ];
+    }
+
+    public function attributeForParent() {
+        return [
+            'phone',
+            'email',
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'updatedAtAttribute' => false
+            ],
         ];
     }
 }

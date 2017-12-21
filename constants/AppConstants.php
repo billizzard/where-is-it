@@ -5,6 +5,8 @@ namespace app\constants;
 
 class AppConstants
 {
+    const COUNT_COPIES = 5;
+
     const STATUS = [
         'NO_MODERATE' => 0,
         'MODERATE' => 1,

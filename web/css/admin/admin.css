@@ -1,5 +1,6 @@
 .uploaded_img {
-  width:300px;
+  display:inline-block;
+  max-width:300px;
   max-height:200px;
   position:relative;
   margin-bottom:10px;
@@ -30,21 +31,28 @@
 }
 
 /* Страница с графиками */
+.schedule__table {
+  margin-bottom: 20px;
+}
 .schedule__table td, .schedule__table th {
   text-align: center;
   padding: 0 3px;
 }
 .schedule__time {
   display: inline-block;
-  width:65px;
+  vertical-align: middle;
+  width:100px;
 }
 .schedule__day {
-  display: inline-block;
+ /* display: inline-block;*/
   width:27px;
 }
 .schedule__table .form-control {
   border-radius: 5px;
-  margin: 2px;
+}
+.schedule__table .time-container {
+  min-width:110px;
+  padding:5px;
 }
 
 /* Страница Места */
@@ -76,3 +84,7 @@
 .grid-view .add-info .glyphicon:active{
   background-color:#969696;
 }*/
+
+.content .grid-view {
+  overflow: auto;
+}

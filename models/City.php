@@ -2,26 +2,25 @@
 
 namespace app\models;
 
-use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveQuery;
-use yii\db\ActiveRecord;
+use Yii;
 
 /**
- * This is the model class for table "{{%city}}".
+ * This is the model class for table "city".
  *
- * @property integer id
- * @property string name
+ * @property integer $id
+ * @property string $name
+ * @property double $lat
+ * @property double $lon
+ * @property integer $status
  */
-
-class City extends BaseModel
+class City extends \yii\db\ActiveRecord
 {
-
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%city}}';
+        return 'city';
     }
 
     /**
@@ -30,7 +29,8 @@ class City extends BaseModel
     public function rules()
     {
         return [
-            [['name'], 'required'],
+            [['lat', 'lon'], 'number'],
+            [['status'], 'integer'],
             [['name'], 'string', 'max' => 100],
         ];
     }
@@ -41,32 +41,11 @@ class City extends BaseModel
     public function attributeLabels()
     {
         return [
-            'name' => 'Название',
+            'id' => 'ID',
+            'name' => 'Name',
+            'lat' => 'Lat',
+            'lon' => 'Lon',
+            'status' => 'Status',
         ];
-    }
-
-    /**
-     * @param $name
-     * @return ActiveQuery
-     */
-    public static function findByName($name)
-    {
-        return self::find()->andWhere('name = :name', [':name' => $name]);
-    }
-
-    public static function getDefaultCity()
-    {
-        return self::findOne(1);
-    }
-
-    public static function getCityMap()
-    {
-        $result = [];
-        $models = self::find()->select(['id', 'name'])->asArray()->orderBy(['name' => SORT_ASC])->all();
-
-        foreach ($models as $model) {
-            $result[$model['id']] = $model['name'];
-        }
-        return $result;
     }
 }

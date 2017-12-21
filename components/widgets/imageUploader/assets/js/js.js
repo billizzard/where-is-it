@@ -8,7 +8,16 @@ function ImageUploader() {
     var hasError = false;
 
     var init = function() {
+        fillOldImages();
         addEvents();
+    };
+
+    var fillOldImages = function() {
+        $('.js-image-old-url').each(function() {
+            setConfig($(this));
+            updateInputUrlValue();
+        })
+
     };
 
     var addEvents = function() {
@@ -23,7 +32,7 @@ function ImageUploader() {
             upload();
         });
 
-        $('.iu').on('click', '.delete', function() {
+        $('.iu').on('click', '.js-delete', function() {
             if (confirm('Удалить?')) {
                 setConfig($(this));
                 deleteImage($(this));
@@ -142,7 +151,8 @@ function ImageUploader() {
                 var content = '<div class="iu_uploaded_img js-new-image">' +
                     '<img src="' + url + '">';
                 if (config.deleteButton) {
-                    content += '<span href="#" class="delete" data-id=">">x</span>'
+                   // content += '<span href="#" class="delete" data-id=">">x</span>'
+                    content += '<span class="iu-icon iu-icon-remove js-delete glyphicon glyphicon-remove"></span>'
                 }
                 content += '</div>';
                 iu.find('.iu_gallery').append(content);
@@ -153,10 +163,15 @@ function ImageUploader() {
 
     var updateInputUrlValue = function() {
         var urlArr = [];
+        var urlOldArr = [];
         iu.find('.js-new-image img').each(function() {
             urlArr.push($(this).attr('src'));
         });
+        iu.find('.js-image img').each(function() {
+            urlOldArr.push($(this).attr('src'));
+        });
         iu.find('.js-image-url').val(urlArr.join(','));
+        iu.find('.js-image-old-url').val(urlOldArr.join(','));
     };
 
     var showSuccess = function(message) {

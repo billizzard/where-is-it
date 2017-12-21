@@ -1,50 +1,36 @@
 <?php
 
 /* @var $this yii\web\View */
+/* @var $galleries \app\models\Gallery[] */
 
 $this->title = 'My Yii Application';
 
-
-$gallery = $model->gallery;
-
-
-?>
-<style>
-    .place-gallery {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: left;
+/** @var \app\models\Image $image */
+$i = 0;
+$columns = [];
+foreach ($galleries as $gallery) {
+    $images = $gallery->images;
+    if ($images) {
+        foreach ($images as $image) {
+            $columns[$i][] = $image->getImageSizes();
+            $i = $i === 3 ? 0 : $i + 1;
+        }
     }
-    .place-gallery .img-container {
-        overflow: hidden;
-        margin:5px;
-        border: 3px solid #fff;
-        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+} ?>
 
-    }
-    .place-gallery .img-container img {
-        max-height:265px;
-        -webkit-transform: scale(1);
-        transform: scale(1);
-        -webkit-transition: 1.2s ease-in-out;
-        transition: 1.2s ease-in-out;
-    }
-    .place-gallery .img-container:hover img {
-        -webkit-transform: scale(1.2);
-        transform: scale(1.2);
-    }
-</style>
+<div class="place-gallery place-page">
+    <h3>Галлерея</h3>
+    <div class="masonry">
+        <? foreach ($columns as $column) { ?>
+            <? foreach ($column as $url) { ?>
 
-    <div class="place-gallery">
-        <?
-        /** @var \app\models\Image $image */
-        foreach ($gallery as $image) {
-            $url = $image->getImageSizes();
-            ?>
-            <a class="img-container" data-fancybox="gallery" href="">
-                <img src="/<?=$url['original']?>">
-            </a>
-        <?
-        }?>
+                <a class="item " data-fancybox="gallery" href="/<?= $url['original'] ?>">
+                    <img src="/<?= $url['original'] ?>">
+                </a>
+            <? } ?>
+        <? } ?>
     </div>
+
+</div>
+
 

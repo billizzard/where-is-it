@@ -2,33 +2,37 @@
 
 namespace app\modules\admin\controllers;
 
-use app\constants\AppConstants;
+use app\components\Helper;
+use app\components\SiteException;
+use app\constants\ImageConstants;
+use app\constants\UserConstants;
 use app\models\Category;
-use app\models\City;
 use app\models\Image;
-use app\models\Message;
 use app\models\Place;
-use app\modules\admin\components\AccessRule;
-use app\modules\admin\components\DeleteAction;
-use app\modules\admin\models\search\CategorySearch;
-use app\modules\admin\models\search\CitySearch;
+use app\models\traits\ImageUploaderController;
+use app\modules\admin\components\actions\DeleteAction;
 use app\modules\admin\models\search\PlaceSearch;
 use Yii;
 use app\models\User;
-use app\modules\admin\models\search\UserSearch;
-use yii\filters\AccessControl;
-use yii\web\Controller;
-use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\web\Response;
-use yii\web\UploadedFile;
 
 /**
  * UsersController implements the CRUD actions for User model.
  */
 class PlacesController extends BaseController
 {
+    use ImageUploaderController;
+
+    protected function getClassName() {
+        return Place::className();
+    }
+
+    public function getScenario()
+    {
+        return ImageConstants::SCENARIO['MAIN_PLACE'];
+    }
+
     public function behaviors()
     {
         $rules = parent::behaviors();
@@ -36,7 +40,12 @@ class PlacesController extends BaseController
             [
                 'actions' => ['delete'],
                 'allow' => true,
-                'roles' => [User::ROLE_ADMIN],
+                'roles' => [UserConstants::ROLE['ADMIN']],
+            ],
+            [
+                'actions' => ['copy-to-parent'],
+                'allow' => true,
+                'roles' => [UserConstants::ROLE['ADMIN']],
             ],
             [
                 'actions' => ['index'],
@@ -46,12 +55,7 @@ class PlacesController extends BaseController
             [
                 'actions' => ['create'],
                 'allow' => true,
-                'roles' => [User::ROLE_ADMIN],
-            ],
-            [
-                'actions' => ['view'],
-                'allow' => true,
-                'roles' => ['?'],
+                'roles' => [UserConstants::ROLE['ADMIN']],
             ],
             [
                 'actions' => ['update'],
@@ -59,24 +63,24 @@ class PlacesController extends BaseController
                 'roles' => ['?'],
             ],
             [
+                'actions' => ['upload-image'],
+                'allow' => true,
+                'roles' => ['?'],
+            ],
+            [
                 'actions' => ['remove-image'],
                 'allow' => true,
                 'roles' => ['@'],
+            ],
+            [
+                'actions' => ['soft-delete'],
+                'allow' => true,
+                'roles' => [UserConstants::ROLE['ADMIN']],
             ]
         ];
 
         return $rules;
 
-    }
-
-    public function actions()
-    {
-        return [
-            'delete' => [
-                'class' => DeleteAction::className(),
-                'model_class' => Place::className(),
-            ],
-        ];
     }
 
     /**
@@ -104,21 +108,6 @@ class PlacesController extends BaseController
     }
 
     /**
-     * Displays a single User model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        $model = Place::findOne($id);
-        if (!$model) return Yii::$app->response->redirect('/admin/places/index');
-
-        return $this->render('view', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
      * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -126,52 +115,51 @@ class PlacesController extends BaseController
     public function actionCreate()
     {
         $model = new Place();
-        $modelImage = new Image();
 
-        if ($model->load(Yii::$app->request->post()) && $modelImage->load(Yii::$app->request->post())) {
-            if ($model->save()) {
-                $modelImage->uploadMainImage($model);
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->uploadNewImageByUrl(Yii::$app->request->post('images'), ImageConstants::TYPE['MAIN_PLACE']);
+            return $this->redirect(['index', 'place_id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'modelImage' => $modelImage,
             ]);
         }
     }
 
     public function actionUpdate($id)
     {
-        $model = Place::findOne($id);
-        if (!$model) throw new NotFoundHttpException();
-        $noCheckModel = $model->getNoCheckModel();
-        $modelImage = new Image();
+        $model = Place::findOneModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $modelImage->load(Yii::$app->request->post())) {
-            /** @var User $user */
-            $user = \Yii::$app->user->getIdentity();
-            if (!$user || !$user->hasAccess(User::RULE_OWNER, ['model' => $this])) {
-                if (!$noCheckModel) {
-                    $clone = new Place();
-                    $clone->attributes = $model->attributes;
-                    $clone->parent_id = $model->id;
-                    $clone->save();
-                    $modelImage->uploadMainImage($clone);
-                }
-            } else {
-                if ($model->save()) {
-                    $modelImage->uploadMainImage($model);
+        if (!$model->isCanAddMore()) {
+            Helper::setMessage('Временно нельзя изменять информацию о месте');
+        } else {
+            if ($model->load(Yii::$app->request->post())) {
+                if ($post = Yii::$app->request->post()) {
+
+                    /** @var Place $newModel */
+                    $newModel = $model->getDuplicate();
+
+                    if ($newModel->load(Yii::$app->request->post()) && $newModel->save()) {
+                        $newModel->uploadNewImageByUrl(
+                            array_merge(explode(',', $post['old_images']), explode(',', $post['images'])),
+                            ImageConstants::TYPE['MAIN_PLACE']
+                        );
+
+                        if (isset($post['copy'])) {
+                            return $this->redirect(['copy-to-parent', 'id' => $id]);
+                        }
+
+                        Helper::setMessage('Изменения сохранены, ожидают проверки', Helper::TYPE_MESSAGE_SUCCESS);
+
+                        if ($model->parent_id) return $this->redirect(['index', 'place_id' => $model->parent_id]);
+                        else return $this->redirect(['index']);
+                    }
                 }
             }
-            return $this->redirect(['view', 'id' => $model->id]);
-
         }
 
         return $this->render('update', [
             'model' => $model,
-            'modelImage' => $modelImage,
-            'noCheckModel' => $noCheckModel,
         ]);
 
     }
@@ -184,7 +172,7 @@ class PlacesController extends BaseController
             if ((int)$id) {
                 $image = Image::findOne((int)$id);
                 if ($image) {
-                    if ($user->hasAccess(User::RULE_OWNER, ['model' => $image])) {
+                    if ($user->hasAccess(UserConstants::RULE['OWNER'], ['model' => $image])) {
                         $image->delete();
                         return true;
                     }
@@ -192,6 +180,14 @@ class PlacesController extends BaseController
             }
             return false;
         }
+    }
+
+    public function actionCopyToParent($id) {
+        $model = $this->getClassName()::findOneModel($id);
+        $model->copyToParent();
+        Helper::setMessage('Изменения некоторых полей перенесены', Helper::TYPE_MESSAGE_SUCCESS);
+        return $this->redirect(['index','place_id' => $model->parent_id]);
+
     }
 
 

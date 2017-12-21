@@ -13,7 +13,7 @@ use yii\helpers\Html;
     $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
     $user = Yii::$app->user->getIdentity();
     $class = '';
-if (!$user || $user->hasAccess(\app\models\User::RULE_ADMIN_PANEL)) {
+if (!$user || $user->hasAccess(\app\constants\UserConstants::RULE['ADMIN_PANEL'])) {
     $class = 'guest-wrapper';
 }
     ?>
